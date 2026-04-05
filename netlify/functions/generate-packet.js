@@ -21,6 +21,15 @@ const { PDFDocument } = require('pdf-lib');
 const PDF_TEMPLATE_B64 = require('./meps-template-b64.js');
 const PDF_TEMPLATE = Buffer.from(PDF_TEMPLATE_B64, 'base64');
 
+// ─── HELPERS ───
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  // Convert YYYY-MM-DD → MM/DD/YYYY for display
+  const match = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (match) return `${match[2]}/${match[3]}/${match[1]}`;
+  return dateStr.trim();
+}
+
 // ─── FIELD MAPPING ───
 function mapFormDataToPDFFields(data) {
   const get = (key, fallback = '') => (data[key] || fallback || '').trim();
@@ -29,7 +38,7 @@ function mapFormDataToPDFFields(data) {
   const last = get('last_name');
   const mi = get('middle_name', '').charAt(0);
   const suffix = get('suffix');
-  const dob = get('date_of_birth');
+  const dob = formatDate(get('date_of_birth'));
 
   let fullName = `${last}, ${first}`;
   if (mi) fullName += ` ${mi}.`;
@@ -144,8 +153,8 @@ function mapFormDataToPDFFields(data) {
 
   // ── Spouse ──
   if (get('spouse_name')) fields['spouse_name'] = get('spouse_name');
-  if (get('spouse_dob')) fields['spouse_dob'] = get('spouse_dob');
-  if (get('spouse_marriage_date')) fields['spouse_marriage_date'] = get('spouse_marriage_date');
+  if (get('spouse_dob')) fields['spouse_dob'] = formatDate(get('spouse_dob'));
+  if (get('spouse_marriage_date')) fields['spouse_marriage_date'] = formatDate(get('spouse_marriage_date'));
   if (get('spouse_address')) fields['spouse_address'] = get('spouse_address');
 
   // ── Emergency Contact ──
@@ -174,7 +183,7 @@ function mapFormDataToPDFFields(data) {
 
   // ── Medical Release ──
   fields['med_release_name'] = fullName;
-  fields['med_release_dob'] = dob;
+  fields['med_release_dob'] = dob; // already formatted via formatDate above
   fields['med_release_address'] = [get('street_address'), get('city'), get('state'), get('zip_code')].filter(Boolean).join(', ');
   fields['med_release_phone'] = get('primary_phone');
   if (get('medical_insurer_name')) fields['med_release_insurer'] = get('medical_insurer_name');
