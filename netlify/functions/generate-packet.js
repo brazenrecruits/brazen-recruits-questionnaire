@@ -402,16 +402,22 @@ async function forwardToWeb3Forms(data, emailBody) {
   try {
     const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'BrazenRecruits/1.0',
+      },
       body: JSON.stringify(payload),
     });
     const text = await response.text();
+    console.log('Web3Forms HTTP status:', response.status);
+    console.log('Web3Forms response (first 300 chars):', text.substring(0, 300));
     try {
       const result = JSON.parse(text);
       console.log('Web3Forms result:', JSON.stringify(result));
       return result;
     } catch (parseErr) {
-      console.error('Web3Forms returned non-JSON:', text.substring(0, 200));
+      console.error('Web3Forms returned non-JSON (status ' + response.status + '):', text.substring(0, 300));
       return { success: false, error: 'Non-JSON response from Web3Forms' };
     }
   } catch (e) {
