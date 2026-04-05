@@ -1,0 +1,9 @@
+{
+  "name": "brazen-recruits-questionnaire",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Brazen Recruits screening form site with serverless functions",
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  }
+}

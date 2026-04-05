@@ -1,0 +1,46 @@
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Host-based routing: serve the correct page for each subdomain
+# The "from" catches all paths, "to" serves the right HTML file
+# Status 200 = rewrite (URL stays clean, content changes)
+
+[[redirects]]
+  from = "/*"
+  to = "/screening.html"
+  status = 200
+  force = true
+  conditions = {Host = ["form.brazenrecruits.com"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/faq.html"
+  status = 200
+  force = true
+  conditions = {Host = ["faq.brazenrecruits.com"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/part-time.html"
+  status = 200
+  force = true
+  conditions = {Host = ["parttime.brazenrecruits.com"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/refer.html"
+  status = 200
+  force = true
+  conditions = {Host = ["refer.brazenrecruits.com"]}
+
+# 3things serves the same page as faq
+[[redirects]]
+  from = "/*"
+  to = "/faq.html"
+  status = 200
+  force = true
+  conditions = {Host = ["3things.brazenrecruits.com"]}
+
+# eligibility.brazenrecruits.com serves index.html (the default),
+# so no redirect rule is needed — it just works.

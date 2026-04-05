@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3 Things You Didn't Know | Texas Army National Guard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0D0A;
+    --card-bg: #1A1C16;
+    --border: #2A2D22;
+    --gold: #C5A55A;
+    --gold-light: #DFC07F;
+    --gold-accent: #E8A832;
+    --white: #F0EDE6;
+    --gray: #8A8E96;
+    --gray-light: #B0B4BC;
+    --olive: #4B5320;
+    --olive-hover: #5C6628;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(75, 83, 32, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(197, 165, 90, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+  }
+  .header {
+    text-align: center;
+    padding: 40px 0 24px;
+  }
+  .header-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 15px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .page-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-top: 24px;
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--gray-light);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .fact-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 20px;
+  }
+  .fact-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 42px;
+    color: var(--gold-accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .fact-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .fact-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+  .fact-text strong {
+    color: var(--white);
+  }
+
+  .cta-card {
+    background: var(--card-bg);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 32px 24px;
+    margin-top: 28px;
+    text-align: center;
+  }
+  .cta-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .cta-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--olive);
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .cta-btn:hover {
+    background: var(--olive-hover);
+    transform: translateY(-1px);
+  }
+  .contact-line {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .contact-line a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .benefit-pill {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-light);
+  }
+  .benefit-pill .emoji {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 28px 16px;
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  @media (max-width: 400px) {
+    .fact-card, .cta-card { padding: 24px 18px; }
+    .benefits-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="txarng-shield-logo.png" alt="Texas Army National Guard" width="90" style="display:block;margin:0 auto;" />
+    <div class="page-title">3 Things Most People Don't Know About the Guard</div>
+    <p class="page-subtitle">You might be surprised what's actually on the table.</p>
+  </div>
+
+  <!-- FACT 1 -->
+  <div class="fact-card">
+    <div class="fact-number">01</div>
+    <div class="fact-title">You Stay Home. You Keep Your Life.</div>
+    <p class="fact-text">
+      Unlike active duty, <strong>the National Guard lets you serve part-time</strong>. One weekend a month plus two weeks a year. You keep your civilian job, stay close to family, and still get full military benefits. You live your life in Texas while serving your state and country.
+    </p>
+  </div>
+
+  <!-- FACT 2 -->
+  <div class="fact-card">
+    <div class="fact-number">02</div>
+    <div class="fact-title">Free College Is Real. Not a Gimmick.</div>
+    <p class="fact-text">
+      Texas Army National Guard members qualify for <strong>100% state tuition assistance</strong> at any Texas public university or college, on top of the federal GI Bill and additional federal tuition assistance. That's potentially <strong>zero out-of-pocket for a full degree</strong>. If eligible, you can also receive an <strong>additional direct payment of up to ~$1,300/month</strong> while enrolled as a full-time college student. Most people don't find this out until it's too late.
+    </p>
+  </div>
+
+  <!-- FACT 3 -->
+  <div class="fact-card">
+    <div class="fact-number">03</div>
+    <div class="fact-title">You Get Paid to Learn a Skill the World Needs.</div>
+    <p class="fact-text">
+      During Basic and your job training (AIT), you earn a full paycheck while learning a real-world skill like <strong>cybersecurity, aviation, healthcare, engineering, law enforcement</strong>, and more. When you come back to Texas, that training transfers directly to civilian certifications and careers. You get paid to become more valuable.
+    </p>
+  </div>
+
+  <!-- BONUS BENEFITS -->
+  <div class="benefits-grid">
+    <div class="benefit-pill"><span class="emoji">&#128176;</span>Signing Bonuses up to $20K</div>
+    <div class="benefit-pill"><span class="emoji">&#127968;</span>VA Home Loan Eligibility</div>
+    <div class="benefit-pill"><span class="emoji">&#128137;</span>Full Health &amp; Dental Coverage</div>
+    <div class="benefit-pill"><span class="emoji">&#127941;</span>Retirement Benefits</div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <div class="cta-title">Ready to Take the Next Step?</div>
+    <p class="cta-text">SGT Andrews is local to the DFW area and ready to answer your questions. No pressure, no commitment.</p>
+    <a href="https://form.brazenrecruits.com" class="cta-btn" style="background:var(--gold);color:#0C0D0A;">GET A HEAD START - FILL OUT THE SCREENING FORM</a>
+    <a href="https://info.brazenrecruits.com" class="cta-btn" style="margin-top:12px;">CONNECT WITH SGT ANDREWS</a>
+    <p class="contact-line">Or text/call directly: <a href="tel:9033720877">903-372-0877</a></p>
+  </div>
+
+  <!-- EXPLORE MORE -->
+  <div style="text-align:center;margin-top:32px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:16px;">Keep Exploring</div>
+    <a href="https://parttime.brazenrecruits.com" style="display:block;width:100%;padding:14px 24px;background:var(--card-bg);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;text-decoration:none;border-radius:8px;text-align:center;transition:border-color 0.3s ease;margin-bottom:10px;">
+      WHAT'S IT LIKE TO SERVE PART-TIME?
+      <span style="display:block;font-family:'Barlow',sans-serif;font-size:11px;letter-spacing:0.5px;color:var(--gray);margin-top:2px;text-transform:none;">Drill weekends, pay, myths vs. reality</span>
+    </a>
+    <a href="https://eligibility.brazenrecruits.com" style="display:block;width:100%;padding:14px 24px;background:var(--card-bg);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;text-decoration:none;border-radius:8px;text-align:center;transition:border-color 0.3s ease;">
+      SEE IF YOU QUALIFY IN 2 MINUTES
+      <span style="display:block;font-family:'Barlow',sans-serif;font-size:11px;letter-spacing:0.5px;color:var(--gray);margin-top:2px;text-transform:none;">Quick eligibility check, no commitment</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    TEXAS ARMY NATIONAL GUARD &bull; SGT KARA ANDREWS &bull; DFW AREA
+  </div>
+
+</div>
+</body>
+</html>

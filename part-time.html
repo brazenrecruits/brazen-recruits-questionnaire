@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's It Like to Serve Part-Time? | Texas Army National Guard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0D0A;
+    --card-bg: #1A1C16;
+    --border: #2A2D22;
+    --gold: #C5A55A;
+    --gold-light: #DFC07F;
+    --gold-accent: #E8A832;
+    --white: #F0EDE6;
+    --gray: #8A8E96;
+    --gray-light: #B0B4BC;
+    --olive: #4B5320;
+    --olive-hover: #5C6628;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(75, 83, 32, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(197, 165, 90, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+  }
+  .header {
+    text-align: center;
+    padding: 40px 0 24px;
+  }
+  .page-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-top: 24px;
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--gray-light);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* Timeline styles */
+  .timeline {
+    margin-top: 24px;
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), var(--olive), var(--gold));
+    border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+  .timeline-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .timeline-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+  .timeline-text strong { color: var(--white); }
+
+  /* Fact cards */
+  .fact-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 20px;
+  }
+  .fact-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 42px;
+    color: var(--gold-accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .fact-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .fact-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+  .fact-text strong { color: var(--white); }
+
+  /* Breakdown grid */
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .breakdown-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .breakdown-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .breakdown-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .breakdown-detail {
+    font-size: 12px;
+    color: var(--gray-light);
+    line-height: 1.5;
+  }
+
+  /* Myth buster */
+  .myth-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 16px;
+  }
+  .myth-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .myth-x {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    color: #e74c3c;
+    background: rgba(231,76,60,0.12);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+  .myth-check {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    color: #27ae60;
+    background: rgba(39,174,96,0.12);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+  .myth-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 17px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  .myth-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.6;
+    margin-left: 0;
+  }
+
+  /* Section divider */
+  .section-divider {
+    text-align: center;
+    margin: 36px 0 8px;
+  }
+  .section-divider-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--gold);
+  }
+  .section-divider-sub {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+
+  /* CTA cards */
+  .cta-card {
+    background: var(--card-bg);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 32px 24px;
+    margin-top: 28px;
+    text-align: center;
+  }
+  .cta-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .cta-text {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .cta-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 14px 32px;
+    background: var(--olive);
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-align: center;
+  }
+  .cta-btn:hover {
+    background: var(--olive-hover);
+    transform: translateY(-1px);
+  }
+  .cta-btn-gold {
+    background: var(--gold);
+    color: #0C0D0A;
+  }
+  .cta-btn-gold:hover {
+    background: var(--gold-light);
+  }
+  .cta-btn + .cta-btn { margin-top: 12px; }
+  .contact-line {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .contact-line a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  /* Explore more */
+  .explore-section {
+    margin-top: 32px;
+    text-align: center;
+  }
+  .explore-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 16px;
+  }
+  .explore-btn {
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    border-radius: 8px;
+    text-align: center;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    margin-bottom: 10px;
+  }
+  .explore-btn:hover {
+    border-color: var(--gold);
+    background: rgba(197, 165, 90, 0.06);
+  }
+  .explore-btn-sub {
+    display: block;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--gray);
+    margin-top: 2px;
+    text-transform: none;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 28px 16px;
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  @media (max-width: 400px) {
+    .fact-card, .cta-card, .myth-card { padding: 24px 18px; }
+    .breakdown-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="txarng-shield-logo.png" alt="Texas Army National Guard" width="90" style="display:block;margin:0 auto;" />
+    <div class="page-title">What's It Like to Serve Part-Time?</div>
+    <p class="page-subtitle">The Guard isn't what most people think. Here's what your life actually looks like.</p>
+  </div>
+
+  <!-- YOUR TYPICAL MONTH -->
+  <div class="section-divider">
+    <div class="section-divider-label">Your Typical Month</div>
+    <div class="section-divider-sub">Here's how the time actually breaks down.</div>
+  </div>
+
+  <div class="breakdown-grid">
+    <div class="breakdown-card">
+      <div class="breakdown-icon">&#128197;</div>
+      <div class="breakdown-label">1 Weekend / Month</div>
+      <div class="breakdown-detail">Saturday &amp; Sunday drill with your unit. That's it.</div>
+    </div>
+    <div class="breakdown-card">
+      <div class="breakdown-icon">&#9992;&#65039;</div>
+      <div class="breakdown-label">2 Weeks / Year</div>
+      <div class="breakdown-detail">Annual Training. Often feels more like a paid trip than work.</div>
+    </div>
+    <div class="breakdown-card">
+      <div class="breakdown-icon">&#128188;</div>
+      <div class="breakdown-label">Your Civilian Job</div>
+      <div class="breakdown-detail">Federally protected. Your employer legally can't fire you for serving.</div>
+    </div>
+    <div class="breakdown-card">
+      <div class="breakdown-icon">&#127968;</div>
+      <div class="breakdown-label">You Stay in Texas</div>
+      <div class="breakdown-detail">No moving across the country. You live at home.</div>
+    </div>
+  </div>
+
+  <!-- WHAT A DRILL WEEKEND LOOKS LIKE -->
+  <div class="section-divider" style="margin-top:40px;">
+    <div class="section-divider-label">What a Drill Weekend Looks Like</div>
+    <div class="section-divider-sub">A real look at a typical drill weekend.</div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-label">Saturday Morning</div>
+      <div class="timeline-title">Show Up, Formation, Briefing</div>
+      <div class="timeline-text">You report to your unit, get accountability done, and hear the plan for the weekend. Coffee is involved.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-label">Saturday Day</div>
+      <div class="timeline-title">Training &amp; MOS Work</div>
+      <div class="timeline-text">Hands-on training in your military job, whether that's <strong>medical, logistics, comms, engineering</strong>, or combat arms. This is where you sharpen real skills.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-label">Saturday Evening</div>
+      <div class="timeline-title">Done for the Day</div>
+      <div class="timeline-text">Most drills release you by late afternoon. You go home, see your family, handle your life. <strong>You're not stuck on a base.</strong></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-label">Sunday</div>
+      <div class="timeline-title">Wrap Up &amp; Release</div>
+      <div class="timeline-text">Finish training, close out admin tasks, and you're done. Back to your regular life by Sunday afternoon. <strong>Monday you're at your normal job.</strong></div>
+    </div>
+  </div>
+
+  <!-- MYTHS vs REALITY -->
+  <div class="section-divider" style="margin-top:40px;">
+    <div class="section-divider-label">Myths vs. Reality</div>
+    <div class="section-divider-sub">What people assume vs. what it's actually like.</div>
+  </div>
+
+  <div class="myth-card">
+    <div class="myth-header">
+      <span class="myth-x">MYTH</span>
+      <span class="myth-label">"You'll get deployed right away."</span>
+    </div>
+    <p class="myth-text">Deployments can happen, but they're not automatic. Many Guard members serve years without deploying. And when deployments do come, you have advance notice and legal job protections.</p>
+  </div>
+
+  <div class="myth-card">
+    <div class="myth-header">
+      <span class="myth-x">MYTH</span>
+      <span class="myth-label">"You have to quit your job."</span>
+    </div>
+    <p class="myth-text">The opposite. Federal law (USERRA) protects your civilian job. Your employer legally cannot fire you, deny you a promotion, or retaliate for your service. Many employers actually prefer hiring Guard members.</p>
+  </div>
+
+  <div class="myth-card">
+    <div class="myth-header">
+      <span class="myth-x">MYTH</span>
+      <span class="myth-label">"Part-time means part benefits."</span>
+    </div>
+    <p class="myth-text">Wrong. Guard members get access to the full GI Bill, state tuition assistance, low-cost health and dental (TRICARE), VA home loans, life insurance, retirement, and signing bonuses up to $20K. Part-time commitment, full-time benefits.</p>
+  </div>
+
+  <div class="myth-card">
+    <div class="myth-header">
+      <span class="myth-x">MYTH</span>
+      <span class="myth-label">"It's only for people who couldn't go active."</span>
+    </div>
+    <p class="myth-text">A lot of Guard members chose the Guard on purpose because they wanted to serve without giving up their career, school, or family. It's a strategic choice, not a backup plan.</p>
+  </div>
+
+  <!-- PAY SNAPSHOT -->
+  <div class="section-divider" style="margin-top:40px;">
+    <div class="section-divider-label">What You Actually Get Paid</div>
+    <div class="section-divider-sub">Just for drill weekends alone.</div>
+  </div>
+
+  <div class="fact-card">
+    <div class="fact-title">Monthly Drill Pay (E-1 to E-4)</div>
+    <div class="fact-text">
+      A brand new Private (E-1) earns roughly <strong>$230/month</strong> just for drill weekends. By E-4 (Specialist), that jumps to around <strong>$330/month</strong>. That's for one weekend.
+      <br><br>
+      During Annual Training (2 weeks), you earn <strong>full active-duty pay</strong>, roughly $1,800-$2,400 depending on rank.
+      <br><br>
+      And that's before tuition assistance, bonuses, housing allowances during training, and other benefits that don't show up in a paycheck.
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <div class="cta-title">Sound Like Your Kind of Thing?</div>
+    <p class="cta-text">SGT Andrews can answer your specific questions and walk you through what your path would look like. No pressure, no commitment.</p>
+    <a href="https://form.brazenrecruits.com" class="cta-btn cta-btn-gold">GET A HEAD START - FILL OUT THE SCREENING FORM</a>
+    <a href="https://info.brazenrecruits.com" class="cta-btn">CONNECT WITH SGT ANDREWS</a>
+    <p class="contact-line">Or text/call directly: <a href="tel:9033720877">903-372-0877</a></p>
+  </div>
+
+  <!-- EXPLORE MORE -->
+  <div class="explore-section">
+    <div class="explore-label">Keep Exploring</div>
+    <a href="https://3things.brazenrecruits.com" class="explore-btn">
+      3 THINGS MOST PEOPLE DON'T KNOW ABOUT THE GUARD
+      <span class="explore-btn-sub">Free college, paid training, and more</span>
+    </a>
+    <a href="https://eligibility.brazenrecruits.com" class="explore-btn">
+      SEE IF YOU QUALIFY IN 2 MINUTES
+      <span class="explore-btn-sub">Quick eligibility check, no commitment</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    TEXAS ARMY NATIONAL GUARD &bull; SGT KARA ANDREWS &bull; DFW AREA
+  </div>
+
+</div>
+</body>
+</html>
