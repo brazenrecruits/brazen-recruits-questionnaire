@@ -21,6 +21,106 @@ const { PDFDocument } = require('pdf-lib');
 const PDF_TEMPLATE_B64 = require('./meps-template-b64.js');
 const PDF_TEMPLATE = Buffer.from(PDF_TEMPLATE_B64, 'base64');
 
+// ─── FIELD WIDTH TABLE (measured from PDF template, in points) ───
+// Used by setTextFit() to auto-scale font size so text never overflows.
+const FIELD_WIDTHS = {
+  // Cover
+  cover_applicant_name: 350, cover_mos: 120, cover_prid: 120, cover_ship_date: 120,
+  // Applicant info
+  app_first_name: 200, app_last_name: 220, app_mi: 50, app_suffix: 80,
+  app_street: 512, app_city: 250, app_state: 50, app_zip: 80,
+  app_phone: 200, app_email: 250, app_dob: 130, app_ssn: 120,
+  app_height_ft: 80, app_height_in: 80, app_weight_lbs: 100,
+  app_city_birth: 200, app_county_birth: 200, app_state_birth: 150,
+  app_dependents_total: 100, app_dependents_minor: 100,
+  app_prid: 120, app_rank_grade: 160,
+  // School
+  school_name: 512, school_street: 512, school_city: 250,
+  school_state: 50, school_zip: 80, school_grade_level: 250,
+  // Spouse
+  spouse_name: 512, spouse_address: 512, spouse_dob: 140,
+  spouse_marriage_date: 140, spouse_ssn: 160,
+  // Emergency contact
+  emergency_name: 512, emergency_address: 512, emergency_phone: 220, emergency_email: 230,
+  // Tattoos (the tight ones — most likely to overflow)
+  tattoo_0_description: 171, tattoo_0_location: 116, tattoo_0_meaning: 146,
+  tattoo_1_description: 171, tattoo_1_location: 116, tattoo_1_meaning: 146,
+  tattoo_2_description: 171, tattoo_2_location: 116, tattoo_2_meaning: 146,
+  tattoo_3_description: 171, tattoo_3_location: 116, tattoo_3_meaning: 146,
+  tattoo_4_description: 171, tattoo_4_location: 116, tattoo_4_meaning: 146,
+  tattoo_5_description: 171, tattoo_5_location: 116, tattoo_5_meaning: 146,
+  // Beneficiaries (also narrow)
+  primary_benef_0_name: 216, primary_benef_0_relation: 106, primary_benef_0_pct: 76,
+  primary_benef_1_name: 216, primary_benef_1_relation: 106, primary_benef_1_pct: 76,
+  primary_benef_2_name: 216, primary_benef_2_relation: 106, primary_benef_2_pct: 76,
+  contingent_benef_0_name: 216, contingent_benef_0_relation: 106, contingent_benef_0_pct: 76,
+  // Beneficiary fields (old names used in mapping)
+  beneficiary_1_name: 216, beneficiary_1_relationship: 106, beneficiary_1_percentage: 76,
+  beneficiary_1_address: 512,
+  beneficiary_2_name: 216, beneficiary_2_relationship: 106, beneficiary_2_percentage: 76,
+  beneficiary_2_address: 512,
+  contingent_name: 216, contingent_relationship: 106, contingent_percentage: 76,
+  contingent_address: 512,
+  // W-4
+  w4_first_name: 300, w4_last_name: 160, w4_address: 512,
+  w4_city: 250, w4_state: 50, w4_zip: 80,
+  // DD 1966
+  dd1966_name: 512,
+  // Medical release
+  med_release_name: 512, med_release_dob: 140, med_release_address: 512,
+  med_release_phone: 200, med_release_insurer: 512, med_release_insurer_addr: 512,
+  med_release_provider: 512, med_release_provider_addr: 512,
+  // Drug/Alcohol form
+  form408_name: 280,
+  // Cerumen
+  ear_wax_patient_name: 250, ear_wax_patient_dob: 140,
+  // HRR 900
+  hrr900_student_name: 280, hrr900_school_name: 512,
+  hrr900_school_city: 250, hrr900_school_state: 50, hrr900_school_zip: 80,
+  hrr900_parent_name: 250,
+  // HRR 907
+  hrr907_applicant: 250,
+};
+
+// Default width for fields not in the table (generous assumption)
+const DEFAULT_FIELD_WIDTH = 300;
+
+// Font-size tiers to try, from preferred (largest) to fallback (smallest).
+// avg char width ≈ 0.52 × fontSize for Helvetica (pdf-lib default)
+const FONT_TIERS = [
+  { size: 10, charFactor: 0.52 },
+  { size: 9,  charFactor: 0.52 },
+  { size: 8,  charFactor: 0.52 },
+  { size: 7,  charFactor: 0.52 },
+  { size: 6,  charFactor: 0.52 },
+];
+
+/**
+ * Set text on a PDF form field, auto-scaling font size to fit.
+ * If even the smallest tier can't fit, the text is truncated with "…".
+ */
+function setTextFit(field, fieldName, value) {
+  const text = String(value);
+  if (!text) return;
+
+  const widthPts = FIELD_WIDTHS[fieldName] || DEFAULT_FIELD_WIDTH;
+
+  for (const tier of FONT_TIERS) {
+    const maxChars = Math.floor(widthPts / (tier.charFactor * tier.size));
+    if (text.length <= maxChars) {
+      field.setFontSize(tier.size);
+      field.setText(text);
+      return;
+    }
+  }
+
+  // Even smallest font can't fit — truncate to fit at smallest tier
+  const smallest = FONT_TIERS[FONT_TIERS.length - 1];
+  const maxChars = Math.floor(widthPts / (smallest.charFactor * smallest.size));
+  field.setFontSize(smallest.size);
+  field.setText(text.substring(0, Math.max(maxChars - 1, 1)) + '…');
+}
+
 // ─── HELPERS ───
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -64,21 +164,21 @@ function mapFormDataToPDFFields(data) {
   fields['app_height_ft'] = get('height_ft');
   fields['app_height_in'] = get('height_in');
   fields['app_weight_lbs'] = get('weight');
-  fields['app_county_birth'] = get('county');
+  // SSN
+  fields['app_ssn'] = get('ssn');
 
-  // Parse place of birth
-  const place = get('place_of_birth');
-  if (place.includes(',')) {
-    const parts = place.split(',').map(s => s.trim());
-    fields['app_city_birth'] = parts[0];
-    if (parts[1]) fields['app_state_birth'] = parts[1];
-  } else {
-    fields['app_city_birth'] = place;
-  }
+  // Place of birth (new separate fields)
+  fields['app_city_birth'] = get('city_of_birth') || get('place_of_birth', '').split(',')[0];
+  fields['app_county_birth'] = get('county_of_birth') || get('county');
+  fields['app_state_birth'] = get('state_of_birth');
 
   // Dependents
-  fields['app_dependents_total'] = get('num_dependents', '0');
-  if (get('children') === 'No') fields['app_dependents_minor'] = '0';
+  fields['app_dependents_total'] = get('num_dependents_total', '0');
+  fields['app_dependents_minor'] = get('num_dependents_minor', '0');
+  if (get('children') === 'No') {
+    fields['app_dependents_total'] = '0';
+    fields['app_dependents_minor'] = '0';
+  }
 
   // Gender
   const gender = get('gender');
@@ -128,9 +228,31 @@ function mapFormDataToPDFFields(data) {
 
   // ── School ──
   fields['school_name'] = get('high_school');
+  if (get('hs_street_address')) fields['school_address'] = get('hs_street_address');
   fields['school_city'] = get('hs_city');
   fields['school_state'] = get('hs_state');
   fields['school_zip'] = get('hs_zip');
+  if (get('hs_grade_level')) fields['school_grade_level'] = get('hs_grade_level');
+
+  // ── Beneficiaries ──
+  if (get('beneficiary_1_name')) {
+    fields['beneficiary_1_name'] = get('beneficiary_1_name');
+    if (get('beneficiary_1_address')) fields['beneficiary_1_address'] = get('beneficiary_1_address');
+    if (get('beneficiary_1_relationship')) fields['beneficiary_1_relationship'] = get('beneficiary_1_relationship');
+    if (get('beneficiary_1_percentage')) fields['beneficiary_1_percentage'] = get('beneficiary_1_percentage');
+  }
+  if (get('beneficiary_2_name')) {
+    fields['beneficiary_2_name'] = get('beneficiary_2_name');
+    if (get('beneficiary_2_address')) fields['beneficiary_2_address'] = get('beneficiary_2_address');
+    if (get('beneficiary_2_relationship')) fields['beneficiary_2_relationship'] = get('beneficiary_2_relationship');
+    if (get('beneficiary_2_percentage')) fields['beneficiary_2_percentage'] = get('beneficiary_2_percentage');
+  }
+  if (get('contingent_beneficiary_name')) {
+    fields['contingent_name'] = get('contingent_beneficiary_name');
+    if (get('contingent_beneficiary_address')) fields['contingent_address'] = get('contingent_beneficiary_address');
+    if (get('contingent_beneficiary_relationship')) fields['contingent_relationship'] = get('contingent_beneficiary_relationship');
+    if (get('contingent_beneficiary_percentage')) fields['contingent_percentage'] = get('contingent_beneficiary_percentage');
+  }
 
   // ── Tattoos ──
   const hasTattoos = get('has_tattoos');
@@ -153,9 +275,16 @@ function mapFormDataToPDFFields(data) {
 
   // ── Spouse ──
   if (get('spouse_name')) fields['spouse_name'] = get('spouse_name');
+  if (get('spouse_ssn')) fields['spouse_ssn'] = get('spouse_ssn');
   if (get('spouse_dob')) fields['spouse_dob'] = formatDate(get('spouse_dob'));
   if (get('spouse_marriage_date')) fields['spouse_marriage_date'] = formatDate(get('spouse_marriage_date'));
-  if (get('spouse_address')) fields['spouse_address'] = get('spouse_address');
+  if (get('spouse_address')) {
+    let spouseAddr = get('spouse_address');
+    if (get('spouse_city')) spouseAddr += ', ' + get('spouse_city');
+    if (get('spouse_state')) spouseAddr += ', ' + get('spouse_state');
+    if (get('spouse_zip')) spouseAddr += ' ' + get('spouse_zip');
+    fields['spouse_address'] = spouseAddr;
+  }
 
   // ── Emergency Contact ──
   if (get('emergency_contact_name')) fields['emergency_name'] = get('emergency_contact_name');
@@ -221,12 +350,12 @@ async function generateFilledPDF(data) {
 
   let filled = 0;
 
-  // Fill text fields
+  // Fill text fields (auto-scaling font size to prevent overflow)
   for (const [name, value] of Object.entries(fields)) {
     if (!value) continue;
     try {
       const field = form.getTextField(name);
-      field.setText(String(value));
+      setTextFit(field, name, value);
       filled++;
     } catch (e) {
       // Field not found — skip silently
@@ -259,9 +388,10 @@ function buildDetailedEmailBody(data) {
   lines.push('');
   lines.push('--- BASIC INFORMATION ---');
   lines.push(`Name: ${get('last_name')}, ${get('first_name')} ${get('middle_name')} ${get('suffix')}`);
+  lines.push(`SSN: ${get('ssn')}`);
   lines.push(`Gender: ${get('gender')}`);
   lines.push(`DOB: ${get('date_of_birth')}  |  Age: ${get('age')}`);
-  lines.push(`Place of Birth: ${get('place_of_birth')}`);
+  lines.push(`City of Birth: ${get('city_of_birth')}  |  County: ${get('county_of_birth')}  |  State: ${get('state_of_birth')}  |  Country: ${get('country_of_birth', 'USA')}`);
   lines.push('');
   lines.push('--- CONTACT ---');
   lines.push(`Phone: ${get('primary_phone')}${get('secondary_phone') ? '  |  Alt: ' + get('secondary_phone') : ''}`);
@@ -278,9 +408,16 @@ function buildDetailedEmailBody(data) {
   lines.push('');
   lines.push('--- PERSONAL / FAMILY ---');
   lines.push(`Marital Status: ${get('marital_status')}${get('spouse_name') ? '  Spouse: ' + get('spouse_name') : ''}`);
+  if (get('spouse_ssn')) lines.push(`Spouse SSN: ${get('spouse_ssn')}`);
   if (get('spouse_dob')) lines.push(`Spouse DOB: ${get('spouse_dob')}${get('spouse_marriage_date') ? '  Marriage Date: ' + get('spouse_marriage_date') : ''}`);
-  if (get('spouse_address')) lines.push(`Spouse Address: ${get('spouse_address')}`);
-  lines.push(`Children: ${get('children')}${get('num_dependents') ? '  Dependents: ' + get('num_dependents') : ''}${get('children_ages') ? '  Ages: ' + get('children_ages') : ''}`);
+  if (get('spouse_address')) {
+    let spAddr = get('spouse_address');
+    if (get('spouse_city')) spAddr += ', ' + get('spouse_city');
+    if (get('spouse_state')) spAddr += ', ' + get('spouse_state');
+    if (get('spouse_zip')) spAddr += ' ' + get('spouse_zip');
+    lines.push(`Spouse Address: ${spAddr}`);
+  }
+  lines.push(`# Dependents (Total): ${get('num_dependents_total', '0')}  |  # Dependents (Minor): ${get('num_dependents_minor', '0')}${get('children_ages') ? '  |  Ages: ' + get('children_ages') : ''}`);
   lines.push(`Registered Voter: ${get('registered_voter')}`);
   if (get('last_menstrual_cycle')) lines.push(`Last Menstrual Cycle: ${get('last_menstrual_cycle')}`);
   if (get('aliases')) lines.push(`Aliases: ${get('aliases')}`);
@@ -296,6 +433,20 @@ function buildDetailedEmailBody(data) {
     if (get('parent_guardian_phone')) lines.push(`Phone: ${get('parent_guardian_phone')}`);
   }
   lines.push('');
+  lines.push('--- BENEFICIARY INFORMATION ---');
+  if (get('beneficiary_1_name')) {
+    lines.push(`Primary Beneficiary 1: ${get('beneficiary_1_name')}  |  Relationship: ${get('beneficiary_1_relationship')}  |  %: ${get('beneficiary_1_percentage')}`);
+    if (get('beneficiary_1_address')) lines.push(`  Address: ${get('beneficiary_1_address')}`);
+  }
+  if (get('beneficiary_2_name')) {
+    lines.push(`Primary Beneficiary 2: ${get('beneficiary_2_name')}  |  Relationship: ${get('beneficiary_2_relationship')}  |  %: ${get('beneficiary_2_percentage')}`);
+    if (get('beneficiary_2_address')) lines.push(`  Address: ${get('beneficiary_2_address')}`);
+  }
+  if (get('contingent_beneficiary_name')) {
+    lines.push(`Contingent Beneficiary: ${get('contingent_beneficiary_name')}  |  Relationship: ${get('contingent_beneficiary_relationship')}  |  %: ${get('contingent_beneficiary_percentage')}`);
+    if (get('contingent_beneficiary_address')) lines.push(`  Address: ${get('contingent_beneficiary_address')}`);
+  }
+  lines.push('');
   lines.push('--- MEDICAL & TATTOOS ---');
   if (get('medical_insurer_name')) lines.push(`Insurer: ${get('medical_insurer_name')}${get('medical_insurer_address') ? '  Address: ' + get('medical_insurer_address') : ''}`);
   if (get('medical_provider_name')) lines.push(`Provider: ${get('medical_provider_name')}${get('medical_provider_address') ? '  Address: ' + get('medical_provider_address') : ''}`);
@@ -305,7 +456,8 @@ function buildDetailedEmailBody(data) {
   }
   lines.push('');
   lines.push('--- EDUCATION & PRIOR SERVICE ---');
-  lines.push(`High School: ${get('high_school')}  Grad: ${get('hs_grad_date')}`);
+  lines.push(`High School: ${get('high_school')}  Grad: ${get('hs_grad_date')}${get('hs_grade_level') ? '  Current Grade: ' + get('hs_grade_level') : ''}`);
+  if (get('hs_street_address')) lines.push(`HS Address: ${get('hs_street_address')}`);
   if (get('hs_city') || get('hs_state') || get('hs_zip')) {
     lines.push(`HS Location: ${get('hs_city')}, ${get('hs_state')} ${get('hs_zip')}`);
   }
