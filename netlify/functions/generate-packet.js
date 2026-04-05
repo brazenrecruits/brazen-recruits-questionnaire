@@ -376,11 +376,22 @@ async function forwardToWeb3Forms(data, emailBody) {
   }
   const applicantName = `${data.first_name || ''} ${data.last_name || ''}`.trim();
 
+  // Use a shorter summary for Web3Forms to avoid payload size issues
+  const shortMessage = [
+    `Name: ${data.last_name || ''}, ${data.first_name || ''} ${data.middle_name || ''}`,
+    `Gender: ${data.gender || ''}  |  DOB: ${data.date_of_birth || ''}  |  Age: ${data.age || ''}`,
+    `Phone: ${data.primary_phone || ''}  |  Email: ${data.email || ''}`,
+    `Address: ${data.street_address || ''}, ${data.city || ''}, ${data.state || ''} ${data.zip_code || ''}`,
+    `Prior Service: ${data.prior_service || 'No'}`,
+    '',
+    'Full MEPS packet was auto-generated and emailed separately.',
+  ].join('\n');
+
   const payload = {
     access_key: accessKey,
     subject: `Screening Form: ${applicantName} — Schedule Appointment`,
     from_name: 'Brazen Recruits Screening Form',
-    message: emailBody,
+    message: shortMessage,
     'Applicant Name': applicantName,
     'Phone': data.primary_phone || '',
     'Email': data.email || '',
@@ -394,7 +405,15 @@ async function forwardToWeb3Forms(data, emailBody) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return await response.json();
+    const text = await response.text();
+    try {
+      const result = JSON.parse(text);
+      console.log('Web3Forms result:', JSON.stringify(result));
+      return result;
+    } catch (parseErr) {
+      console.error('Web3Forms returned non-JSON:', text.substring(0, 200));
+      return { success: false, error: 'Non-JSON response from Web3Forms' };
+    }
   } catch (e) {
     console.error('Web3Forms forwarding failed:', e.message);
     return { success: false };
