@@ -1211,6 +1211,10 @@
   document.getElementById('screeningForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn.disabled) return; // already submitting
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'SUBMITTING...';
     const formData = new FormData(form);
 
     // Build structured data from form
@@ -1305,7 +1309,7 @@
     .catch(() => {
       // Network error — fall back to Web3Forms so the submission isn't lost
       console.warn('Packet function unreachable, falling back to Web3Forms');
-      fallbackToWeb3Forms(data, lines, applicantName);
+      fallbackToWeb3Forms(data, lines, applicantName, submitBtn);
     });
   });
 
@@ -1322,7 +1326,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function fallbackToWeb3Forms(data, lines, applicantName) {
+  function fallbackToWeb3Forms(data, lines, applicantName, submitBtn) {
     const payload = {
       access_key: '5447d3e3-6d06-470c-b71e-5de21e2284c6',
       subject: 'Screening Form: ' + applicantName + ' — Schedule Appointment',
@@ -1342,9 +1346,13 @@
     .then(res => res.json())
     .then(result => {
       if (result.success) showSuccess();
-      else alert('Something went wrong. Please try again or contact SGT Andrews directly at 903-372-0877.');
+      else {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'SUBMIT & SCHEDULE'; }
+          alert('Something went wrong. Please try again or contact SGT Andrews directly at 903-372-0877.');
+        }
     })
     .catch(() => {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'SUBMIT & SCHEDULE'; }
       alert('Something went wrong. Please try again or contact SGT Andrews directly at 903-372-0877.');
     });
   }
