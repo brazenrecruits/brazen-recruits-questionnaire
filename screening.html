@@ -474,7 +474,7 @@
   <div class="progress-container">
     <div class="progress-info">
       <span class="progress-label">Your Information</span>
-      <span class="progress-step" id="progressStep">1 of 7</span>
+      <span class="progress-step" id="progressStep">1 of 8</span>
     </div>
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill" style="width:20%"></div>
@@ -489,7 +489,7 @@
 
     <!-- ========== SECTION 1: BASIC INFO ========== -->
     <div class="form-section active" id="step1">
-      <div class="section-header">Step 1 of 7</div>
+      <div class="section-header">Step 1 of 8</div>
       <div class="section-title">Basic Information</div>
 
       <div class="input-row">
@@ -540,14 +540,36 @@
         <input type="date" class="form-input" name="date_of_birth" required>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">Social Security Number <span class="req">*</span></label>
+        <input type="text" class="form-input" name="ssn" placeholder="000-00-0000" maxlength="11" required autocomplete="off">
+        <p class="helper-text">Your SSN is required for the MEPS enlistment packet. This form is encrypted and your information is kept confidential.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Age <span class="req">*</span></label>
+        <input type="number" class="form-input" name="age" min="17" max="42" placeholder="17-42" required>
+      </div>
+
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">Age <span class="req">*</span></label>
-          <input type="number" class="form-input" name="age" min="17" max="42" placeholder="17-42" required>
+          <label class="form-label">City of Birth <span class="req">*</span></label>
+          <input type="text" class="form-input" name="city_of_birth" placeholder="City" required>
         </div>
         <div class="form-group">
-          <label class="form-label">Place of Birth</label>
-          <input type="text" class="form-input" name="place_of_birth" placeholder="City, State">
+          <label class="form-label">County of Birth</label>
+          <input type="text" class="form-input" name="county_of_birth" placeholder="County">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">State of Birth <span class="req">*</span></label>
+          <input type="text" class="form-input" name="state_of_birth" placeholder="State" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country of Birth</label>
+          <input type="text" class="form-input" name="country_of_birth" value="USA">
         </div>
       </div>
 
@@ -558,7 +580,7 @@
 
     <!-- ========== SECTION 2: CONTACT & ADDRESS ========== -->
     <div class="form-section" id="step2">
-      <div class="section-header">Step 2 of 7</div>
+      <div class="section-header">Step 2 of 8</div>
       <div class="section-title">Contact & Address</div>
 
       <div class="form-group">
@@ -611,7 +633,7 @@
 
     <!-- ========== SECTION 3: PHYSICAL & ID ========== -->
     <div class="form-section" id="step3">
-      <div class="section-header">Step 3 of 7</div>
+      <div class="section-header">Step 3 of 8</div>
       <div class="section-title">Physical & Identification</div>
 
       <div class="input-row">
@@ -742,7 +764,7 @@
 
     <!-- ========== SECTION 4: PERSONAL / FAMILY ========== -->
     <div class="form-section" id="step4">
-      <div class="section-header">Step 4 of 7</div>
+      <div class="section-header">Step 4 of 8</div>
       <div class="section-title">Personal & Family</div>
 
       <div class="form-group">
@@ -773,6 +795,10 @@
       </div>
 
       <div class="conditional" id="spouseDetailsGroup">
+        <div class="form-group">
+          <label class="form-label">Spouse SSN</label>
+          <input type="text" class="form-input" name="spouse_ssn" placeholder="000-00-0000" maxlength="11" autocomplete="off">
+        </div>
         <div class="input-row">
           <div class="form-group">
             <label class="form-label">Spouse Date of Birth</label>
@@ -784,8 +810,22 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Spouse Address <span class="note">(if different from yours)</span></label>
+          <label class="form-label">Spouse Street Address <span class="note">(if different from yours)</span></label>
           <input type="text" class="form-input" name="spouse_address" placeholder="Leave blank if same address">
+        </div>
+        <div class="input-row" id="spouseAddrDetailsGroup" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Spouse City</label>
+            <input type="text" class="form-input" name="spouse_city">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spouse State</label>
+            <input type="text" class="form-input" name="spouse_state">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spouse ZIP</label>
+            <input type="text" class="form-input" name="spouse_zip" maxlength="10">
+          </div>
         </div>
       </div>
 
@@ -806,13 +846,17 @@
       <div class="form-group conditional" id="childrenDetailsGroup">
         <div class="input-row">
           <div class="form-group">
-            <label class="form-label">Number of Dependents</label>
-            <input type="number" class="form-input" name="num_dependents" min="0">
+            <label class="form-label"># Dependents (Total)</label>
+            <input type="number" class="form-input" name="num_dependents_total" min="0">
           </div>
           <div class="form-group">
-            <label class="form-label">Ages</label>
-            <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 12">
+            <label class="form-label"># Dependents (Minor)</label>
+            <input type="number" class="form-input" name="num_dependents_minor" min="0">
           </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ages of Children</label>
+          <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 12">
         </div>
       </div>
 
@@ -848,7 +892,7 @@
 
     <!-- ========== SECTION 5: EMERGENCY CONTACT & PARENT/GUARDIAN ========== -->
     <div class="form-section" id="step5">
-      <div class="section-header">Step 5 of 7</div>
+      <div class="section-header">Step 5 of 8</div>
       <div class="section-title">Emergency Contact</div>
 
       <div class="form-group">
@@ -905,9 +949,88 @@
       </div>
     </div>
 
-    <!-- ========== SECTION 6: MEDICAL & TATTOOS ========== -->
+    <!-- ========== SECTION 6: BENEFICIARY INFORMATION ========== -->
     <div class="form-section" id="step6">
-      <div class="section-header">Step 6 of 7</div>
+      <div class="section-header">Step 6 of 8</div>
+      <div class="section-title">Beneficiary Information</div>
+      <p class="helper-text" style="margin-bottom:20px;">Servicemembers' Group Life Insurance (SGLI) requires you to name beneficiaries. These are the people who would receive your life insurance benefit.</p>
+
+      <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+        <div class="section-title" style="font-size:1rem;margin-bottom:12px;color:var(--gold);">Primary Beneficiary 1</div>
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="note">(First, Middle, Last, Suffix)</span></label>
+          <input type="text" class="form-input" name="beneficiary_1_name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-input" name="beneficiary_1_address" placeholder="Full address">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="beneficiary_1_relationship" placeholder="e.g. Spouse, Parent, Child">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Percentage</label>
+            <input type="text" class="form-input" name="beneficiary_1_percentage" placeholder="e.g. 100%">
+          </div>
+        </div>
+      </div>
+
+      <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+        <div class="section-title" style="font-size:1rem;margin-bottom:12px;color:var(--gold);">Primary Beneficiary 2 <span class="note" style="font-family:'Barlow',sans-serif;font-size:12px;text-transform:none;letter-spacing:0;">(if splitting)</span></div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" name="beneficiary_2_name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-input" name="beneficiary_2_address" placeholder="Full address">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="beneficiary_2_relationship">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Percentage</label>
+            <input type="text" class="form-input" name="beneficiary_2_percentage" placeholder="e.g. 50%">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title" style="font-size:1rem;margin-bottom:12px;color:var(--gold);">Contingent Beneficiary <span class="note" style="font-family:'Barlow',sans-serif;font-size:12px;text-transform:none;letter-spacing:0;">(backup)</span></div>
+        <p class="helper-text" style="margin-bottom:12px;">This person receives the benefit only if your primary beneficiaries cannot.</p>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" name="contingent_beneficiary_name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-input" name="contingent_beneficiary_address" placeholder="Full address">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="contingent_beneficiary_relationship">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Percentage</label>
+            <input type="text" class="form-input" name="contingent_beneficiary_percentage" placeholder="e.g. 100%">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(7)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== SECTION 7: MEDICAL & TATTOOS ========== -->
+    <div class="form-section" id="step7">
+      <div class="section-header">Step 7 of 8</div>
       <div class="section-title">Medical & Tattoos</div>
 
       <div class="form-group">
@@ -974,19 +1097,24 @@
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(7)">CONTINUE</button>
+        <button type="button" class="btn-back" onclick="goTo(6)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(8)">CONTINUE</button>
       </div>
     </div>
 
-    <!-- ========== SECTION 7: EDUCATION & PRIOR SERVICE ========== -->
-    <div class="form-section" id="step7">
-      <div class="section-header">Step 7 of 7</div>
+    <!-- ========== SECTION 8: EDUCATION & PRIOR SERVICE ========== -->
+    <div class="form-section" id="step8">
+      <div class="section-header">Step 8 of 8</div>
       <div class="section-title">Education & Prior Service</div>
 
       <div class="form-group">
         <label class="form-label">High School Name</label>
         <input type="text" class="form-input" name="high_school">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">School Street Address</label>
+        <input type="text" class="form-input" name="hs_street_address" placeholder="Street address of school">
       </div>
 
       <div class="input-row">
@@ -1004,9 +1132,21 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">High School Grad Date</label>
-        <input type="text" class="form-input" name="hs_grad_date" placeholder="MM/YYYY or expected">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Current Grade Level <span class="note">(if still in HS)</span></label>
+          <select class="form-select" name="hs_grade_level">
+            <option value="">N/A — Graduated</option>
+            <option value="9th">9th Grade</option>
+            <option value="10th">10th Grade</option>
+            <option value="11th">11th Grade</option>
+            <option value="12th">12th Grade</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Grad Date</label>
+          <input type="text" class="form-input" name="hs_grad_date" placeholder="MM/YYYY or expected">
+        </div>
       </div>
 
       <div class="form-group">
@@ -1083,7 +1223,7 @@
       <p class="helper-text" style="text-align:center;margin-top:12px;">SGT Andrews will personally review your information and reach out to schedule a meeting.</p>
 
       <div class="btn-row" style="justify-content:flex-start;">
-        <button type="button" class="btn-back" onclick="goTo(6)">BACK</button>
+        <button type="button" class="btn-back" onclick="goTo(7)">BACK</button>
       </div>
     </div>
 
@@ -1118,7 +1258,7 @@
 
 <script>
   let currentStep = 1;
-  const totalSteps = 7;
+  const totalSteps = 8;
 
   function goTo(step) {
     // Hide all
@@ -1142,6 +1282,17 @@
     document.getElementById('progressFill').style.width = ((currentStep / totalSteps) * 100) + '%';
   }
 
+  // Auto-format SSN fields (XXX-XX-XXXX)
+  document.querySelectorAll('input[name="ssn"], input[name="spouse_ssn"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+      let val = this.value.replace(/\D/g, '');
+      if (val.length > 9) val = val.slice(0, 9);
+      if (val.length > 5) val = val.slice(0,3) + '-' + val.slice(3,5) + '-' + val.slice(5);
+      else if (val.length > 3) val = val.slice(0,3) + '-' + val.slice(3);
+      this.value = val;
+    });
+  });
+
   // Conditional: show alien number for immigrant
   document.querySelectorAll('input[name="citizenship"]').forEach(r => {
     r.addEventListener('change', function() {
@@ -1157,6 +1308,14 @@
       document.getElementById('spouseDetailsGroup').classList.toggle('visible', isMarried);
     });
   });
+
+  // Conditional: show spouse city/state/zip when spouse address is being filled
+  const spouseAddrInput = document.querySelector('input[name="spouse_address"]');
+  if (spouseAddrInput) {
+    spouseAddrInput.addEventListener('input', function() {
+      document.getElementById('spouseAddrDetailsGroup').style.display = this.value.trim() ? 'flex' : 'none';
+    });
+  }
 
   // Conditional: show children details
   document.querySelectorAll('input[name="children"]').forEach(r => {
@@ -1227,9 +1386,10 @@
     lines.push('');
     lines.push('--- BASIC INFORMATION ---');
     lines.push('Name: ' + (data.last_name || '') + ', ' + (data.first_name || '') + ' ' + (data.middle_name || '') + ' ' + (data.suffix || ''));
+    lines.push('SSN: ' + (data.ssn || ''));
     lines.push('Gender: ' + (data.gender || ''));
     lines.push('DOB: ' + (data.date_of_birth || '') + '  |  Age: ' + (data.age || ''));
-    lines.push('Place of Birth: ' + (data.place_of_birth || ''));
+    lines.push('City of Birth: ' + (data.city_of_birth || '') + '  |  County: ' + (data.county_of_birth || '') + '  |  State: ' + (data.state_of_birth || '') + '  |  Country: ' + (data.country_of_birth || 'USA'));
     lines.push('');
     lines.push('--- CONTACT ---');
     lines.push('Phone: ' + (data.primary_phone || '') + (data.secondary_phone ? '  |  Alt: ' + data.secondary_phone : ''));
@@ -1246,9 +1406,10 @@
     lines.push('');
     lines.push('--- PERSONAL / FAMILY ---');
     lines.push('Marital Status: ' + (data.marital_status || '') + (data.spouse_name ? '  Spouse: ' + data.spouse_name : ''));
+    if (data.spouse_ssn) lines.push('Spouse SSN: ' + data.spouse_ssn);
     if (data.spouse_dob) lines.push('Spouse DOB: ' + data.spouse_dob + (data.spouse_marriage_date ? '  Marriage Date: ' + data.spouse_marriage_date : ''));
-    if (data.spouse_address) lines.push('Spouse Address: ' + data.spouse_address);
-    lines.push('Children: ' + (data.children || '') + (data.num_dependents ? '  Dependents: ' + data.num_dependents : '') + (data.children_ages ? '  Ages: ' + data.children_ages : ''));
+    if (data.spouse_address) lines.push('Spouse Address: ' + data.spouse_address + (data.spouse_city ? ', ' + data.spouse_city : '') + (data.spouse_state ? ', ' + data.spouse_state : '') + (data.spouse_zip ? ' ' + data.spouse_zip : ''));
+    lines.push('# Dependents (Total): ' + (data.num_dependents_total || '0') + '  |  # Dependents (Minor): ' + (data.num_dependents_minor || '0') + (data.children_ages ? '  |  Ages: ' + data.children_ages : ''));
     lines.push('Registered Voter: ' + (data.registered_voter || ''));
     if (data.last_menstrual_cycle) lines.push('Last Menstrual Cycle: ' + data.last_menstrual_cycle);
     if (data.aliases) lines.push('Aliases: ' + data.aliases);
@@ -1264,6 +1425,20 @@
       if (data.parent_guardian_phone) lines.push('Phone: ' + data.parent_guardian_phone);
     }
     lines.push('');
+    lines.push('--- BENEFICIARY INFORMATION ---');
+    if (data.beneficiary_1_name) {
+      lines.push('Primary Beneficiary 1: ' + data.beneficiary_1_name + '  |  Relationship: ' + (data.beneficiary_1_relationship || '') + '  |  %: ' + (data.beneficiary_1_percentage || ''));
+      if (data.beneficiary_1_address) lines.push('  Address: ' + data.beneficiary_1_address);
+    }
+    if (data.beneficiary_2_name) {
+      lines.push('Primary Beneficiary 2: ' + data.beneficiary_2_name + '  |  Relationship: ' + (data.beneficiary_2_relationship || '') + '  |  %: ' + (data.beneficiary_2_percentage || ''));
+      if (data.beneficiary_2_address) lines.push('  Address: ' + data.beneficiary_2_address);
+    }
+    if (data.contingent_beneficiary_name) {
+      lines.push('Contingent Beneficiary: ' + data.contingent_beneficiary_name + '  |  Relationship: ' + (data.contingent_beneficiary_relationship || '') + '  |  %: ' + (data.contingent_beneficiary_percentage || ''));
+      if (data.contingent_beneficiary_address) lines.push('  Address: ' + data.contingent_beneficiary_address);
+    }
+    lines.push('');
     lines.push('--- MEDICAL & TATTOOS ---');
     if (data.medical_insurer_name) lines.push('Insurer: ' + data.medical_insurer_name + (data.medical_insurer_address ? '  Address: ' + data.medical_insurer_address : ''));
     if (data.medical_provider_name) lines.push('Provider: ' + data.medical_provider_name + (data.medical_provider_address ? '  Address: ' + data.medical_provider_address : ''));
@@ -1273,7 +1448,8 @@
     }
     lines.push('');
     lines.push('--- EDUCATION & PRIOR SERVICE ---');
-    lines.push('High School: ' + (data.high_school || '') + '  Grad: ' + (data.hs_grad_date || ''));
+    lines.push('High School: ' + (data.high_school || '') + '  Grad: ' + (data.hs_grad_date || '') + (data.hs_grade_level ? '  Current Grade: ' + data.hs_grade_level : ''));
+    if (data.hs_street_address) lines.push('HS Address: ' + data.hs_street_address);
     if (data.hs_city || data.hs_state || data.hs_zip) lines.push('HS Location: ' + (data.hs_city || '') + ', ' + (data.hs_state || '') + ' ' + (data.hs_zip || ''));
     if (data.college) lines.push('College: ' + data.college + '  Hours: ' + (data.credit_hours || '') + '  Degree: ' + (data.degree || ''));
     lines.push('Prior Service: ' + (data.prior_service || 'No'));
