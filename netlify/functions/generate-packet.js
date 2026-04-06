@@ -4,8 +4,15 @@
  * When the screening form is submitted, this function:
  *   1. Receives the form data as JSON
  *   2. Generates a pre-filled MEPS Flash Packet PDF using pdf-lib
+ *      — BrazenRecruits custom pages (cover, applicant info, checklists)
+ *      — Real government forms: APPLICATION.pdf, SF 507 Ear Wax, etc.
  *   3. Emails the filled PDF to Kara as an attachment via Resend
  *   4. Also forwards the data to Web3Forms (so she still gets the text email)
+ *
+ * Architecture:
+ *   Three separate PDF templates are loaded, filled independently, then
+ *   merged into one output. Government forms use the ORIGINAL documents
+ *   so they look exactly like the real thing.
  *
  * Required environment variables (set in Netlify dashboard):
  *   RESEND_API_KEY       — from resend.com (free tier: 100 emails/day)
@@ -13,13 +20,19 @@
  *   WEB3FORMS_ACCESS_KEY — from web3forms.com (public form key)
  */
 
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
 
-// ─── PDF TEMPLATE (embedded as base64) ───
-// The blank MEPS Flash Packet is embedded directly so it works
-// regardless of how Netlify bundles the function (esbuild, nft, etc.)
-const PDF_TEMPLATE_B64 = require('./meps-template-b64.js');
-const PDF_TEMPLATE = Buffer.from(PDF_TEMPLATE_B64, 'base64');
+// ─── PDF TEMPLATES (embedded as base64) ───
+// BrazenRecruits custom pages (cover, applicant info, checklists, remaining govt forms)
+const BRAZEN_TEMPLATE_B64 = require('./meps-template-b64.js');
+const BRAZEN_TEMPLATE = Buffer.from(BRAZEN_TEMPLATE_B64, 'base64');
+
+// Real government forms — original PDFs so they look authentic
+const APP_TEMPLATE_B64 = require('./application-template-b64.js');
+const APP_TEMPLATE = Buffer.from(APP_TEMPLATE_B64, 'base64');
+
+const EARWAX_TEMPLATE_B64 = require('./earwax-template-b64.js');
+const EARWAX_TEMPLATE = Buffer.from(EARWAX_TEMPLATE_B64, 'base64');
 
 // ─── FIELD WIDTH TABLE (measured from PDF template, in points) ───
 // Used by setTextFit() to auto-scale font size so text never overflows.
@@ -130,7 +143,90 @@ function formatDate(dateStr) {
   return dateStr.trim();
 }
 
-// ─── FIELD MAPPING ───
+// ─── APPLICATION.pdf FIELD MAPPING ───
+// Maps screening form data to the real government APPLICATION form fields.
+// The APPLICATION has 1092 fillable fields (573 text + 519 checkboxes).
+// Medical questions (Q1-164) use: YES = Check Box(45+q*2), NO = Check Box(46+q*2)
+function mapFormDataToApplicationFields(data) {
+  const get = (key, fallback = '') => (data[key] || fallback || '').trim();
+  const fields = {};
+  const checks = [];
+
+  // ── Beneficiaries (page 1 of APPLICATION) ──
+  if (get('beneficiary_1_name')) {
+    // Split "First Last" into parts for the APPLICATION's separate fields
+    const parts1 = get('beneficiary_1_name').split(' ');
+    fields['Primary Beneficiary First'] = parts1[0] || '';
+    fields['Last_3'] = parts1[parts1.length - 1] || '';
+    if (parts1.length > 2) fields['Middle_3'] = parts1.slice(1, -1).join(' ');
+  }
+  if (get('beneficiary_1_address')) {
+    // The APPLICATION doesn't have a dedicated beneficiary address text field,
+    // but the phone number field maps
+  }
+  fields['Primary Phone Number'] = get('primary_phone');
+
+  if (get('beneficiary_2_name')) {
+    const parts2 = get('beneficiary_2_name').split(' ');
+    fields['Secondary Beneficiary First'] = parts2[0] || '';
+    fields['Last_4'] = parts2[parts2.length - 1] || '';
+    if (parts2.length > 2) fields['Middle_4'] = parts2.slice(1, -1).join(' ');
+  }
+  fields['Secondary Phone Number_2'] = get('secondary_phone');
+
+  // ── Foreign Languages (page 1) ──
+  // These aren't collected in the screening form currently, but if added:
+  if (get('foreign_language')) {
+    fields['a If so which Languages'] = get('foreign_language');
+    checks.push('Check Box37'); // YES for foreign language
+  }
+
+  // ── Spouse (page 14 of APPLICATION) ──
+  if (get('spouse_name')) {
+    const spouseParts = get('spouse_name').split(' ');
+    fields['Current Spouse Name First'] = spouseParts[0] || '';
+    // Social Security Number_2 is the spouse SSN
+    if (get('spouse_ssn')) fields['Social Security Number_2'] = get('spouse_ssn');
+  }
+
+  // ── School (page 12 of APPLICATION) ──
+  if (get('high_school')) {
+    fields['School Name'] = get('high_school');
+    if (get('hs_street_address')) fields['School Address Street'] = get('hs_street_address');
+  }
+  if (get('college')) {
+    fields['School Name_2'] = get('college');
+  }
+
+  // ── Mother's Maiden Name ──
+  if (get('mothers_maiden_name')) {
+    fields['Mothers Maiden Name'] = get('mothers_maiden_name');
+  }
+
+  // ── Email ──
+  if (get('email')) fields['Email'] = get('email');
+
+  // ── Current Address (page 8 — Residences) ──
+  if (get('street_address')) {
+    fields['Current Address'] = get('street_address');
+    if (get('city')) fields['City_14'] = get('city');
+    if (get('state')) fields['State_16'] = get('state');
+    if (get('zip_code')) fields['Zip_2'] = get('zip_code');
+    if (get('county')) fields['County_15'] = get('county');
+  }
+
+  // ── Place of Birth ──
+  if (get('city_of_birth')) {
+    fields['Place of Birth  City'] = get('city_of_birth');
+  }
+  if (get('country_of_birth')) {
+    fields['Country of Birth'] = get('country_of_birth');
+  }
+
+  return { fields, checks };
+}
+
+// ─── BRAZEN RECRUITS TEMPLATE FIELD MAPPING ───
 function mapFormDataToPDFFields(data) {
   const get = (key, fallback = '') => (data[key] || fallback || '').trim();
 
@@ -340,14 +436,8 @@ function mapFormDataToPDFFields(data) {
   return { fields, checks };
 }
 
-// ─── PDF GENERATION ───
-async function generateFilledPDF(data) {
-  if (!PDF_TEMPLATE) throw new Error('PDF template not loaded');
-
-  const pdfDoc = await PDFDocument.load(PDF_TEMPLATE);
-  const form = pdfDoc.getForm();
-  const { fields, checks } = mapFormDataToPDFFields(data);
-
+// ─── HELPER: fill fields on a pdf-lib form ───
+function fillFormFields(form, fields, checks) {
   let filled = 0;
 
   // Fill text fields (auto-scaling font size to prevent overflow)
@@ -373,9 +463,104 @@ async function generateFilledPDF(data) {
     }
   }
 
-  console.log(`Filled ${filled} fields for ${data.first_name} ${data.last_name}`);
+  return filled;
+}
 
-  const pdfBytes = await pdfDoc.save();
+// ─── PDF GENERATION (multi-template merge) ───
+async function generateFilledPDF(data) {
+  if (!BRAZEN_TEMPLATE) throw new Error('BrazenRecruits template not loaded');
+  if (!APP_TEMPLATE) throw new Error('APPLICATION template not loaded');
+  if (!EARWAX_TEMPLATE) throw new Error('Ear Wax template not loaded');
+
+  const get = (key, fallback = '') => (data[key] || fallback || '').trim();
+  let totalFilled = 0;
+
+  // ── 1. Fill BrazenRecruits template (custom pages + remaining govt forms) ──
+  const brazenDoc = await PDFDocument.load(BRAZEN_TEMPLATE);
+  const brazenForm = brazenDoc.getForm();
+  const { fields: brazenFields, checks: brazenChecks } = mapFormDataToPDFFields(data);
+  totalFilled += fillFormFields(brazenForm, brazenFields, brazenChecks);
+  brazenForm.flatten(); // Bake values into page content for merge
+  const brazenBytes = await brazenDoc.save();
+
+  // ── 2. Fill APPLICATION.pdf (real government form with fillable fields) ──
+  const appDoc = await PDFDocument.load(APP_TEMPLATE);
+  const appForm = appDoc.getForm();
+  const { fields: appFields, checks: appChecks } = mapFormDataToApplicationFields(data);
+  totalFilled += fillFormFields(appForm, appFields, appChecks);
+  appForm.flatten();
+  const appBytes = await appDoc.save();
+
+  // ── 3. Fill Ear Wax SF 507 (flat PDF — draw text at coordinates) ──
+  const earWaxDoc = await PDFDocument.load(EARWAX_TEMPLATE);
+  const helvetica = await earWaxDoc.embedFont(StandardFonts.Helvetica);
+  const fullName = `${get('last_name')}, ${get('first_name')} ${get('middle_name', '').charAt(0)}`.replace(/ $/, '');
+  const dob = formatDate(get('date_of_birth'));
+
+  // Page 1: Applicant's Name (line above DOB) + DOB near the bottom
+  const earPage1 = earWaxDoc.getPage(0);
+  earPage1.drawText(fullName, { x: 155, y: 78, size: 10, font: helvetica, color: rgb(0, 0, 0) });
+  earPage1.drawText(dob, { x: 140, y: 50, size: 10, font: helvetica, color: rgb(0, 0, 0) });
+
+  // Page 2: Applicant name in consent line ("I DO consent to and agree ___")
+  if (earWaxDoc.getPageCount() > 1) {
+    const earPage2 = earWaxDoc.getPage(1);
+    earPage2.drawText(fullName, { x: 325, y: 726, size: 10, font: helvetica, color: rgb(0, 0, 0) });
+  }
+  totalFilled += 3; // 3 text draws
+  const earWaxBytes = await earWaxDoc.save();
+
+  // ── 4. Merge all PDFs into one output ──
+  const output = await PDFDocument.create();
+
+  // Load the saved (flattened) PDFs for page copying
+  const brazenFinal = await PDFDocument.load(brazenBytes);
+  const appFinal = await PDFDocument.load(appBytes);
+  const earWaxFinal = await PDFDocument.load(earWaxBytes);
+
+  // BrazenRecruits pages 1-9 (indices 0-8)
+  const brazenPageCount = brazenFinal.getPageCount();
+  const brazenCustomEnd = Math.min(9, brazenPageCount);
+  const brazenCustomPages = await output.copyPages(
+    brazenFinal,
+    Array.from({ length: brazenCustomEnd }, (_, i) => i)
+  );
+  brazenCustomPages.forEach(p => output.addPage(p));
+
+  // APPLICATION.pdf — all pages (real government form)
+  const appPageCount = appFinal.getPageCount();
+  const applicationPages = await output.copyPages(
+    appFinal,
+    Array.from({ length: appPageCount }, (_, i) => i)
+  );
+  applicationPages.forEach(p => output.addPage(p));
+
+  // Ear Wax SF 507 — all pages (real government form)
+  const earWaxPageCount = earWaxFinal.getPageCount();
+  const earWaxPages = await output.copyPages(
+    earWaxFinal,
+    Array.from({ length: earWaxPageCount }, (_, i) => i)
+  );
+  earWaxPages.forEach(p => output.addPage(p));
+
+  // Remaining govt forms from BrazenRecruits template (pages 10+, skip old cerumen pages 17-18)
+  if (brazenPageCount > 9) {
+    const remainingIndices = [];
+    for (let i = 9; i < brazenPageCount; i++) {
+      // Skip old cerumen pages (indices 16, 17 in the 19-page template)
+      if (i === 16 || i === 17) continue;
+      remainingIndices.push(i);
+    }
+    if (remainingIndices.length > 0) {
+      const remainingPages = await output.copyPages(brazenFinal, remainingIndices);
+      remainingPages.forEach(p => output.addPage(p));
+    }
+  }
+
+  console.log(`Filled ${totalFilled} fields for ${data.first_name} ${data.last_name}`);
+  console.log(`Output: ${output.getPageCount()} pages`);
+
+  const pdfBytes = await output.save();
   return Buffer.from(pdfBytes);
 }
 
