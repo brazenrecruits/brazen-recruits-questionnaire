@@ -1197,6 +1197,30 @@ Address: 123 Main St, Arlington, TX 76010 (Tarrant Co.)
                 setTextField('hrr900_school_zip', parsedData.high_school_zip);
                 setTextField('hrr907_applicant', parsedData.applicant_name);
 
+                // ── RRNCO Information (static — SGT Kara Andrews) ──
+                setTextField('rrnco_first_name', 'KARA');
+                setTextField('rrnco_mi', 'R');
+                setTextField('rrnco_last_name', 'ANDREWS');
+                setTextField('rrnco_rrb_state', 'TEXAS');
+                setTextField('rrnco_rsid', 'TXD');
+                setTextField('rrnco_rrb_team', 'D');
+                setTextField('rrnco_phone', '903-372-0877');
+                setTextField('rrnco_rank_grade', 'SGT / E-5');
+                setTextField('rrnco_street', '5001 MAIN ST');
+                setTextField('rrnco_city', 'THE COLONY');
+                setTextField('rrnco_state', 'TX');
+                setTextField('rrnco_zip', '75056');
+                setTextField('rrnco_email', 'KARA.R.ANDREWS.MIL@ARMY.MIL');
+
+                // ── MEPS Information (static — Dallas MEPS) ──
+                setTextField('meps_name', 'DALLAS MEPS C38');
+                setTextField('meps_address', '207 S HOUSTON ST');
+                setTextField('meps_med_records_release', 'DALLAS MEPS C38');
+
+                // ── RSP Unit Information (static) ──
+                setTextField('rsp_street', '1775 CALIFORNIA CROSSING RD');
+                setTextField('rsp_city_state_zip', 'DALLAS, TX, 75220');
+
                 // Flatten BrazenRecruits form (bake values into pages for merge)
                 form.flatten();
                 const brazenFilledBytes = await brazenDoc.save();

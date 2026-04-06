@@ -433,6 +433,30 @@ function mapFormDataToPDFFields(data) {
   // ── HRR 907 ──
   fields['hrr907_applicant'] = fullName;
 
+  // ── RRNCO Information (static — SGT Kara Andrews) ──
+  fields['rrnco_first_name'] = 'KARA';
+  fields['rrnco_mi'] = 'R';
+  fields['rrnco_last_name'] = 'ANDREWS';
+  fields['rrnco_rrb_state'] = 'TEXAS';
+  fields['rrnco_rsid'] = 'TXD';
+  fields['rrnco_rrb_team'] = 'D';
+  fields['rrnco_phone'] = '903-372-0877';
+  fields['rrnco_rank_grade'] = 'SGT / E-5';
+  fields['rrnco_street'] = '5001 MAIN ST';
+  fields['rrnco_city'] = 'THE COLONY';
+  fields['rrnco_state'] = 'TX';
+  fields['rrnco_zip'] = '75056';
+  fields['rrnco_email'] = 'KARA.R.ANDREWS.MIL@ARMY.MIL';
+
+  // ── MEPS Information (static — Dallas MEPS) ──
+  fields['meps_name'] = 'DALLAS MEPS C38';
+  fields['meps_address'] = '207 S HOUSTON ST';
+  fields['meps_med_records_release'] = 'DALLAS MEPS C38';
+
+  // ── RSP Unit Information (static) ──
+  fields['rsp_street'] = '1775 CALIFORNIA CROSSING RD';
+  fields['rsp_city_state_zip'] = 'DALLAS, TX, 75220';
+
   return { fields, checks };
 }
 
