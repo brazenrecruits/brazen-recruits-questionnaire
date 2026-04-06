@@ -42,5 +42,12 @@
   force = true
   conditions = {Host = ["3things.brazenrecruits.com"]}
 
+[[redirects]]
+  from = "/*"
+  to = "/packet.html"
+  status = 200
+  force = true
+  conditions = {Host = ["packet.brazenrecruits.com"]}
+
 # eligibility.brazenrecruits.com serves index.html (the default),
 # so no redirect rule is needed — it just works.
