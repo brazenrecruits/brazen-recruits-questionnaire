@@ -118,7 +118,7 @@ function setTextFit(field, fieldName, value) {
   const smallest = FONT_TIERS[FONT_TIERS.length - 1];
   const maxChars = Math.floor(widthPts / (smallest.charFactor * smallest.size));
   field.setFontSize(smallest.size);
-  field.setText(text.substring(0, Math.max(maxChars - 1, 1)) + '…');
+  field.setText(text.substring(0, Math.max(maxChars - 1, 1)) + '\u2026');
 }
 
 // ─── HELPERS ───
@@ -478,7 +478,7 @@ function buildPacketEmailBody(data) {
   const get = (key, fallback = '') => (data[key] || fallback || '').trim();
   const lines = [];
 
-  lines.push(`NEW SCREENING FORM — ${get('first_name')} ${get('last_name')}`);
+  lines.push(`NEW SCREENING FORM \u2014 ${get('first_name')} ${get('last_name')}`);
   lines.push('');
   lines.push(`Name: ${get('last_name')}, ${get('first_name')} ${get('middle_name')} ${get('suffix')}`);
   lines.push(`Gender: ${get('gender')}  |  DOB: ${get('date_of_birth')}  |  Age: ${get('age')}`);
@@ -488,7 +488,7 @@ function buildPacketEmailBody(data) {
   lines.push('The pre-filled MEPS Flash Packet is attached to this email.');
   lines.push('Open it in Adobe Reader, fill in any remaining fields (bank info, beneficiaries, MEPS details), and print.');
   lines.push('');
-  lines.push('— Brazen Recruits Auto-Packet System');
+  lines.push('\u2014 Brazen Recruits Auto-Packet System');
 
   return lines.join('\n');
 }
@@ -550,7 +550,7 @@ async function forwardToWeb3Forms(data, emailBody) {
 
   const payload = {
     access_key: accessKey,
-    subject: `Screening Form: ${applicantName} — Schedule Appointment`,
+    subject: `Screening Form: ${applicantName} \u2014 Schedule Appointment`,
     from_name: 'Brazen Recruits Screening Form',
     message: shortMessage,
     'Applicant Name': applicantName,
