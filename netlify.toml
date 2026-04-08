@@ -51,3 +51,10 @@
 
 # eligibility.brazenrecruits.com serves index.html (the default),
 # so no redirect rule is needed — it just works.
+
+# Disable caching on HTML files to ensure fresh deploys are served immediately
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
