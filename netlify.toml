@@ -13,10 +13,18 @@
   force = true
   conditions = {Host = ["form.brazenrecruits.com"]}
 
-# Old screening form — will be moved to application.brazenrecruits.com in Phase 2
+# Admin dashboard — recruit tracker for Kara (password-protected)
 [[redirects]]
   from = "/*"
-  to = "/screening.html"
+  to = "/admin.html"
+  status = 200
+  force = true
+  conditions = {Host = ["admin.brazenrecruits.com"]}
+
+# Application form — collects spouse, emergency, beneficiary, medical, education details
+[[redirects]]
+  from = "/*"
+  to = "/application.html"
   status = 200
   force = true
   conditions = {Host = ["application.brazenrecruits.com"]}

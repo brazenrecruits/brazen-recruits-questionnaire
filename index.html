@@ -11,7 +11,7 @@
             var host = window.location.hostname;
             var routes = {
                 'form.brazenrecruits.com': '/appointment.html',
-                'application.brazenrecruits.com': '/screening.html',
+                'application.brazenrecruits.com': '/application.html',
                 'faq.brazenrecruits.com': '/faq.html',
                 '3things.brazenrecruits.com': '/faq.html',
                 'parttime.brazenrecruits.com': '/part-time.html',
@@ -1931,6 +1931,27 @@
         async function submitAndShowResult() {
             const data = collectAllData();
             const result = hardStop ? 'RED' : 'GREEN';
+
+            // Save to Supabase (non-blocking)
+            try {
+              const fullName = data['Full Name'] || '';
+              const nameParts = fullName.trim().split(' ');
+              const firstName = nameParts[0] || '';
+              const lastName = nameParts.slice(1).join(' ') || firstName;
+              fetch('/.netlify/functions/save-to-supabase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  form_type: 'eligibility',
+                  first_name: firstName,
+                  last_name: lastName,
+                  email: data['Email'] || '',
+                  eligibility_result: result,
+                  eligibility_flags: flags,
+                  ...data
+                })
+              }).catch(() => {});
+            } catch(e) {}
 
             // Send email and SMS in background
             sendToWeb3Forms(data, result, flags);

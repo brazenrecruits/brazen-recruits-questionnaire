@@ -1095,6 +1095,13 @@
     const applicantName = (data.first_name || '') + ' ' + (data.last_name || '');
     data._applicant_name = applicantName;
 
+    // Save to Supabase (non-blocking — don't wait for response)
+    fetch('/.netlify/functions/save-to-supabase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(() => {});
+
     // ── PRIMARY: Submit to Netlify function (generates clean Q&A PDF + emails) ──
     fetch('/.netlify/functions/generate-appointment-pdf', {
       method: 'POST',
