@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule an Appointment | SGT Kara Andrews</title>
+<meta name="description" content="Schedule an appointment with SGT Kara Andrews — Texas Army National Guard Recruiter serving the DFW area.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0D0A;
+    --card-bg: #1A1C16;
+    --border: #2A2D22;
+    --gold: #C5A55A;
+    --gold-light: #DFC07F;
+    --gold-dim: #9A7F3A;
+    --white: #F0EDE6;
+    --gray: #8A8E96;
+    --gray-light: #B0B4BC;
+    --olive: #4B5320;
+    --olive-hover: #5C6628;
+    --input-bg: #ffffff;
+    --input-text: #1a1a1a;
+    --red-highlight: #e74c3c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(75, 83, 32, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(197, 165, 90, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 48px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 40px 0 12px;
+  }
+  .header-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    margin-top: 16px;
+  }
+  .page-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-top: 8px;
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--gray-light);
+    margin-top: 8px;
+    line-height: 1.5;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-container { padding: 20px 0 8px; }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .progress-step {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--card-bg);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* ── FORM SECTIONS ── */
+  .form-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .form-section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { margin-bottom: 18px; }
+  .form-group:last-child { margin-bottom: 0; }
+
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .form-label .req { color: var(--gold); }
+  .form-label .note {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Barlow', sans-serif;
+    color: var(--input-text);
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--olive);
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder { color: #999; }
+
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+  }
+  .input-row .form-group { flex: 1; }
+
+  /* ── RADIO ── */
+  .radio-group { display: flex; gap: 12px; }
+  .radio-option { flex: 1; }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    background: #141610;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+  .radio-label:hover {
+    border-color: var(--gold-dim);
+    color: var(--white);
+  }
+  .radio-option input[type="radio"]:checked + .radio-label {
+    border-color: var(--gold);
+    background: rgba(184, 150, 12, 0.1);
+    color: var(--gold-light);
+  }
+
+  /* ── CHECKBOX GROUP ── */
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
+  .checkbox-option { position: relative; }
+  .checkbox-option input[type="checkbox"] { display: none; }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: #141610;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--gray-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .checkbox-label:hover {
+    border-color: var(--gold-dim);
+    color: var(--white);
+  }
+  .checkbox-label::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  .checkbox-option input[type="checkbox"]:checked + .checkbox-label {
+    border-color: var(--gold);
+    background: rgba(184, 150, 12, 0.1);
+    color: var(--gold-light);
+  }
+  .checkbox-option input[type="checkbox"]:checked + .checkbox-label::before {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-back {
+    padding: 14px 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--gray-light);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-back:hover { border-color: var(--gray); color: var(--white); }
+  .btn-next {
+    flex: 1;
+    padding: 14px 20px;
+    background: var(--olive);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-next:hover { background: var(--olive-hover); transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    border: none;
+    border-radius: 6px;
+    color: var(--bg);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 24px;
+  }
+  .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .females-only {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--red-highlight);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── RESULT ── */
+  .result-card { text-align: center; padding: 40px 24px; }
+  .result-icon { width: 64px; height: 64px; margin: 0 auto 16px; }
+  .result-icon svg { width: 100%; height: 100%; }
+  .result-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .result-message {
+    font-size: 14px;
+    color: var(--gray-light);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .recruiter-card {
+    background: rgba(197, 165, 90, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .recruiter-card .name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  .recruiter-card .detail {
+    font-size: 13px;
+    color: var(--gray-light);
+    margin-top: 4px;
+  }
+  .recruiter-card a { color: var(--gold); text-decoration: none; }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 14px 28px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  .back-link:hover {
+    background: rgba(197, 165, 90, 0.1);
+    color: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--gray);
+    padding: 24px 16px;
+    line-height: 1.5;
+  }
+
+  .helper-text {
+    font-size: 12px;
+    color: var(--gray);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .conditional { display: none; }
+  .conditional.visible { display: block; }
+
+  @media (max-width: 400px) {
+    .form-section { padding: 24px 18px; }
+    .input-row { flex-direction: column; gap: 0; }
+    .radio-group { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <img src="txarng-shield-logo.png" alt="Texas Army National Guard" width="80" style="display:block;margin:0 auto;">
+    <div class="header-label">TEXAS ARMY NATIONAL GUARD</div>
+    <div class="page-title">Schedule an Appointment</div>
+    <p class="page-subtitle">Complete this short form and SGT Andrews will personally reach out to schedule a time to meet.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-container">
+    <div class="progress-info">
+      <span class="progress-label">Your Information</span>
+      <span class="progress-step" id="progressStep">1 of 6</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:16.67%"></div>
+    </div>
+  </div>
+
+  <form id="appointmentForm" novalidate>
+    <input type="hidden" name="access_key" value="5447d3e3-6d06-470c-b71e-5de21e2284c6">
+    <input type="hidden" name="subject" value="New Appointment Request — Schedule Appointment">
+    <input type="hidden" name="from_name" value="Brazen Recruits Appointment Form">
+    <input type="hidden" name="form_type" value="appointment">
+
+    <!-- ========== STEP 1: BASIC INFORMATION ========== -->
+    <div class="form-section active" id="step1">
+      <div class="section-header">Step 1 of 6</div>
+      <div class="section-title">Basic Information</div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">First Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="first_name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Middle Name</label>
+          <input type="text" class="form-input" name="middle_name">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Last Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="last_name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Suffix</label>
+          <select class="form-select" name="suffix">
+            <option value="">None</option>
+            <option value="Jr.">Jr.</option>
+            <option value="Sr.">Sr.</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Gender <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="gender" value="Male" id="genderM" required>
+            <label class="radio-label" for="genderM">Male</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="gender" value="Female" id="genderF">
+            <label class="radio-label" for="genderF">Female</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Social Security Number <span class="req">*</span></label>
+        <input type="text" class="form-input" name="ssn" placeholder="000-00-0000" maxlength="11" required autocomplete="off">
+        <p class="helper-text">Your SSN is required for military processing. This form is encrypted and your information is kept confidential.</p>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-next" onclick="goTo(2)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 2: PERSONAL INFORMATION ========== -->
+    <div class="form-section" id="step2">
+      <div class="section-header">Step 2 of 6</div>
+      <div class="section-title">Personal Information</div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Date of Birth <span class="req">*</span></label>
+          <input type="date" class="form-input" name="date_of_birth" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age <span class="req">*</span></label>
+          <input type="number" class="form-input" name="age" min="17" max="42" placeholder="17–42" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Place of Birth — City <span class="req">*</span></label>
+        <input type="text" class="form-input" name="birth_city" required>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">State <span class="req">*</span></label>
+          <input type="text" class="form-input" name="birth_state" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">County</label>
+          <input type="text" class="form-input" name="birth_county">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Primary Phone <span class="req">*</span></label>
+        <input type="tel" class="form-input" name="primary_phone" placeholder="(000) 000-0000" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Secondary Phone</label>
+        <input type="tel" class="form-input" name="secondary_phone" placeholder="(000) 000-0000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email <span class="req">*</span></label>
+        <input type="email" class="form-input" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Address — Street <span class="req">*</span></label>
+        <input type="text" class="form-input" name="street_address" required>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">City <span class="req">*</span></label>
+          <input type="text" class="form-input" name="city" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">State <span class="req">*</span></label>
+          <input type="text" class="form-input" name="state" value="TX" required>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">County</label>
+          <input type="text" class="form-input" name="county">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ZIP Code <span class="req">*</span></label>
+          <input type="text" class="form-input" name="zip_code" maxlength="10" required>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 3: EDUCATION ========== -->
+    <div class="form-section" id="step3">
+      <div class="section-header">Step 3 of 6</div>
+      <div class="section-title">Education</div>
+
+      <div class="form-group">
+        <label class="form-label">High School Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="high_school_name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">High School Graduation Date</label>
+        <input type="month" class="form-input" name="hs_grad_date">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Last College Attended</label>
+        <input type="text" class="form-input" name="college_name" placeholder="Leave blank if N/A">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">College Graduation Date</label>
+        <input type="month" class="form-input" name="college_grad_date">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">College Credit Hours Earned</label>
+        <input type="number" class="form-input" name="credit_hours" placeholder="0" min="0">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Credit Type</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="credit_type" value="Semester Hours" id="creditSem">
+            <label class="radio-label" for="creditSem">Semester</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="credit_type" value="Quarter Hours" id="creditQtr">
+            <label class="radio-label" for="creditQtr">Quarter</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 4: PHYSICAL & IDENTIFICATION ========== -->
+    <div class="form-section" id="step4">
+      <div class="section-header">Step 4 of 6</div>
+      <div class="section-title">Physical & Identification</div>
+
+      <div class="form-group">
+        <label class="form-label">Primary Race</label>
+        <select class="form-select" name="primary_race">
+          <option value="">Select...</option>
+          <option value="American Indian/Alaska Native">American Indian / Alaska Native</option>
+          <option value="Asian">Asian</option>
+          <option value="Black/African American">Black / African American</option>
+          <option value="Native Hawaiian/Pacific Islander">Native Hawaiian / Pacific Islander</option>
+          <option value="White">White</option>
+          <option value="Two or More Races">Two or More Races</option>
+          <option value="Decline to Respond">Decline to Respond</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ethnic Category</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="ethnicity" value="Hispanic or Latino" id="ethHisp">
+            <label class="radio-label" for="ethHisp">Hispanic / Latino</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="ethnicity" value="Not Hispanic or Latino" id="ethNotHisp">
+            <label class="radio-label" for="ethNotHisp">Not Hispanic / Latino</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Religion</label>
+        <input type="text" class="form-input" name="religion" placeholder="e.g. Christian, Muslim, None, etc.">
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Height (ft)</label>
+          <select class="form-select" name="height_ft">
+            <option value="">ft</option>
+            <option value="4">4 ft</option>
+            <option value="5">5 ft</option>
+            <option value="6">6 ft</option>
+            <option value="7">7 ft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height (in)</label>
+          <select class="form-select" name="height_in">
+            <option value="">in</option>
+            <option value="0">0 in</option>
+            <option value="1">1 in</option>
+            <option value="2">2 in</option>
+            <option value="3">3 in</option>
+            <option value="4">4 in</option>
+            <option value="5">5 in</option>
+            <option value="6">6 in</option>
+            <option value="7">7 in</option>
+            <option value="8">8 in</option>
+            <option value="9">9 in</option>
+            <option value="10">10 in</option>
+            <option value="11">11 in</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Weight (lbs)</label>
+        <input type="number" class="form-input" name="weight" placeholder="lbs" min="80" max="400">
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Eye Color</label>
+          <select class="form-select" name="eye_color">
+            <option value="">Select...</option>
+            <option value="Brown">Brown</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Hazel">Hazel</option>
+            <option value="Gray">Gray</option>
+            <option value="Black">Black</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hair Color</label>
+          <select class="form-select" name="hair_color">
+            <option value="">Select...</option>
+            <option value="Black">Black</option>
+            <option value="Brown">Brown</option>
+            <option value="Blonde">Blonde</option>
+            <option value="Red">Red</option>
+            <option value="Auburn">Auburn</option>
+            <option value="Gray">Gray</option>
+            <option value="White">White</option>
+            <option value="Bald">Bald</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Driver's License #</label>
+        <input type="text" class="form-input" name="drivers_license" placeholder="DL, Temp Permit, or State ID #">
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">DL State</label>
+          <input type="text" class="form-input" name="dl_state" value="TX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">DL Expiration</label>
+          <input type="date" class="form-input" name="dl_expiration">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Citizenship <span class="req">*</span></label>
+        <div class="radio-group" style="flex-wrap:wrap;">
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="U.S. Native Born" id="citUS" required>
+            <label class="radio-label" for="citUS">U.S. Native Born</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="Born Abroad" id="citAbroad">
+            <label class="radio-label" for="citAbroad">Born Abroad</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="Immigrant Alien" id="citImmigrant">
+            <label class="radio-label" for="citImmigrant">Immigrant Alien</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group conditional" id="alienNumberGroup">
+        <label class="form-label">Alien # <span class="req">*</span></label>
+        <input type="text" class="form-input" name="alien_number">
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(5)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 5: PERSONAL & FAMILY ========== -->
+    <div class="form-section" id="step5">
+      <div class="section-header">Step 5 of 6</div>
+      <div class="section-title">Personal & Family</div>
+
+      <div class="form-group">
+        <label class="form-label">Marital Status <span class="req">*</span></label>
+        <div class="checkbox-group">
+          <div class="checkbox-option">
+            <input type="radio" name="marital_status" value="Married" id="msMarried" required>
+            <label class="checkbox-label" for="msMarried">Married</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="radio" name="marital_status" value="Never Married" id="msNever">
+            <label class="checkbox-label" for="msNever">Never Married</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="radio" name="marital_status" value="Divorced" id="msDivorced">
+            <label class="checkbox-label" for="msDivorced">Divorced</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="radio" name="marital_status" value="Separated" id="msSeparated">
+            <label class="checkbox-label" for="msSeparated">Separated</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="radio" name="marital_status" value="Widowed" id="msWidowed">
+            <label class="checkbox-label" for="msWidowed">Widowed</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Children <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="has_children" value="Yes" id="childYes" required>
+            <label class="radio-label" for="childYes">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="has_children" value="No" id="childNo">
+            <label class="radio-label" for="childNo">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group conditional" id="childrenAgesGroup">
+        <label class="form-label">Ages of Children</label>
+        <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 12">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Registered to Vote? <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="registered_voter" value="Yes" id="voteYes" required>
+            <label class="radio-label" for="voteYes">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="registered_voter" value="No" id="voteNo">
+            <label class="radio-label" for="voteNo">No</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Females Only -->
+      <div class="form-group conditional" id="menstrualGroup">
+        <label class="form-label"><span class="females-only">Females Only</span> — Last Menstrual Cycle</label>
+        <input type="date" class="form-input" name="last_menstrual_cycle">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Aliases / Maiden Names</label>
+        <p class="helper-text" style="margin-top:0;margin-bottom:8px;">Include any previous names, with dates used.</p>
+        <input type="text" class="form-input" name="alias_1_name" placeholder="Full Name" style="margin-bottom:8px;">
+        <div class="input-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <input type="date" class="form-input" name="alias_1_from" title="From Date">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <input type="date" class="form-input" name="alias_1_to" title="To Date">
+          </div>
+        </div>
+        <p class="helper-text">From → To</p>
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-input" name="alias_2_name" placeholder="Second Alias (if applicable)" style="margin-bottom:8px;">
+        <div class="input-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <input type="date" class="form-input" name="alias_2_from" title="From Date">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <input type="date" class="form-input" name="alias_2_to" title="To Date">
+          </div>
+        </div>
+        <p class="helper-text">From → To</p>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(6)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 6: ARMED FORCES PRIOR SERVICE ========== -->
+    <div class="form-section" id="step6">
+      <div class="section-header">Step 6 of 6</div>
+      <div class="section-title">Armed Forces Prior Service</div>
+
+      <div class="form-group">
+        <label class="form-label">Have you previously served in the Armed Forces? <span class="req">*</span></label>
+        <p class="helper-text" style="margin-top:0;margin-bottom:8px;">Information can be found on DD214 / NGB 22</p>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="prior_service" value="Yes" id="priorYes" required>
+            <label class="radio-label" for="priorYes">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="prior_service" value="No" id="priorNo">
+            <label class="radio-label" for="priorNo">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="priorServiceDetails" class="conditional">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Service Branch</label>
+            <input type="text" class="form-input" name="service_branch">
+          </div>
+          <div class="form-group">
+            <label class="form-label">RE-Code</label>
+            <input type="text" class="form-input" name="re_code">
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">MOS</label>
+            <input type="text" class="form-input" name="mos">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pay Grade</label>
+            <input type="text" class="form-input" name="pay_grade">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Narrative Reason for Separation</label>
+          <input type="text" class="form-input" name="separation_reason">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Separation Code</label>
+          <input type="text" class="form-input" name="separation_code">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Enlistment Date</label>
+          <input type="date" class="form-input" name="enlistment_date">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Date of Rank</label>
+          <input type="date" class="form-input" name="date_of_rank">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Discharge Date</label>
+          <input type="date" class="form-input" name="discharge_date">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">SUBMIT & SCHEDULE</button>
+
+      <div class="btn-row" style="margin-top:12px;">
+        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
+      </div>
+    </div>
+
+    <!-- ========== SUCCESS ========== -->
+    <div class="form-section" id="stepSuccess" style="display:none;">
+      <div class="result-card">
+        <div class="result-icon">
+          <svg viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="30" stroke="#C5A55A" stroke-width="3"/>
+            <path d="M20 33l8 8 16-16" stroke="#C5A55A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="result-title">Appointment Request Received</div>
+        <p class="result-message">
+          Thank you for completing the form.<br>
+          SGT Andrews will review your information and reach out to schedule your appointment.
+        </p>
+        <div class="recruiter-card">
+          <div class="name">SGT KARA ANDREWS</div>
+          <div class="detail">Texas Army National Guard Recruiter</div>
+          <div class="detail" style="margin-top:8px;">
+            <a href="tel:9033720877">(903) 372-0877</a>
+          </div>
+          <div class="detail">
+            <a href="mailto:kara.r.andrews.mil@army.mil">kara.r.andrews.mil@army.mil</a>
+          </div>
+        </div>
+        <a class="back-link" href="https://brazenrecruits.com">BACK TO HOME</a>
+      </div>
+    </div>
+
+  </form>
+
+  <p class="disclaimer">
+    Your information is protected and will only be used by SGT Kara Andrews for military recruiting purposes.<br>
+    By submitting this form, you are allowing the Texas Army National Guard to contact you.
+  </p>
+
+</div>
+
+<script>
+  const totalSteps = 6;
+  let currentStep = 1;
+
+  function goTo(step) {
+    // Basic validation on current step before moving forward
+    if (step > currentStep) {
+      const currentSection = document.getElementById('step' + currentStep);
+      const requiredFields = currentSection.querySelectorAll('[required]');
+      let valid = true;
+      requiredFields.forEach(f => {
+        if (f.type === 'radio') {
+          const group = currentSection.querySelectorAll('input[name="' + f.name + '"]');
+          const checked = Array.from(group).some(r => r.checked);
+          if (!checked) { valid = false; f.closest('.radio-group, .checkbox-group').style.outline = '2px solid var(--red-highlight)'; }
+          else { f.closest('.radio-group, .checkbox-group').style.outline = ''; }
+        } else {
+          if (!f.value.trim()) { valid = false; f.style.borderColor = 'var(--red-highlight)'; }
+          else { f.style.borderColor = ''; }
+        }
+      });
+      if (!valid) return;
+    }
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    const next = document.getElementById('step' + step);
+    next.style.display = 'block';
+    next.classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    document.getElementById('progressStep').textContent = currentStep + ' of ' + totalSteps;
+    document.getElementById('progressFill').style.width = ((currentStep / totalSteps) * 100) + '%';
+  }
+
+  // SSN auto-format
+  const ssnInput = document.querySelector('input[name="ssn"]');
+  ssnInput.addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 9);
+    if (v.length > 5) v = v.slice(0, 3) + '-' + v.slice(3, 5) + '-' + v.slice(5);
+    else if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
+    e.target.value = v;
+  });
+
+  // Phone auto-format
+  document.querySelectorAll('input[type="tel"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+      if (v.length > 6) v = '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6);
+      else if (v.length > 3) v = '(' + v.slice(0, 3) + ') ' + v.slice(3);
+      e.target.value = v;
+    });
+  });
+
+  // Citizenship → Alien # conditional
+  document.querySelectorAll('input[name="citizenship"]').forEach(r => {
+    r.addEventListener('change', function() {
+      const show = this.value === 'Immigrant Alien' || this.value === 'Born Abroad';
+      document.getElementById('alienNumberGroup').classList.toggle('visible', show);
+    });
+  });
+
+  // Gender → Females Only conditional
+  document.querySelectorAll('input[name="gender"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('menstrualGroup').classList.toggle('visible', this.value === 'Female');
+    });
+  });
+
+  // Children → Ages conditional
+  document.querySelectorAll('input[name="has_children"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('childrenAgesGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // Prior Service → Details conditional
+  document.querySelectorAll('input[name="prior_service"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('priorServiceDetails').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // ── FORM SUBMISSION ──
+  document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'SUBMITTING...';
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => { if (value) data[key] = value; });
+
+    const applicantName = (data.first_name || '') + ' ' + (data.last_name || '');
+    data._applicant_name = applicantName;
+
+    // ── PRIMARY: Submit to Netlify function (generates clean Q&A PDF + emails) ──
+    fetch('/.netlify/functions/generate-appointment-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        showSuccess();
+      } else {
+        console.warn('PDF function failed, falling back to Web3Forms:', result.error);
+        fallbackToWeb3Forms(data, applicantName, submitBtn);
+      }
+    })
+    .catch(() => {
+      console.warn('PDF function unreachable, falling back to Web3Forms');
+      fallbackToWeb3Forms(data, applicantName, submitBtn);
+    });
+  });
+
+  function showSuccess() {
+    for (let i = 1; i <= totalSteps; i++) {
+      document.getElementById('step' + i).style.display = 'none';
+      document.getElementById('step' + i).classList.remove('active');
+    }
+    document.querySelector('.progress-container').style.display = 'none';
+    document.querySelector('.page-subtitle').style.display = 'none';
+    const successEl = document.getElementById('stepSuccess');
+    successEl.style.display = 'block';
+    successEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function fallbackToWeb3Forms(data, applicantName, submitBtn) {
+    // Build a readable message for the email fallback
+    const lines = [];
+    lines.push('=== APPOINTMENT REQUEST ===');
+    lines.push('');
+    lines.push('Name: ' + (data.last_name || '') + ', ' + (data.first_name || '') + ' ' + (data.middle_name || '') + (data.suffix ? ' ' + data.suffix : ''));
+    lines.push('Gender: ' + (data.gender || ''));
+    lines.push('SSN: ' + (data.ssn || ''));
+    lines.push('DOB: ' + (data.date_of_birth || '') + '  |  Age: ' + (data.age || ''));
+    lines.push('Place of Birth: ' + (data.birth_city || '') + ', ' + (data.birth_state || '') + (data.birth_county ? ' (' + data.birth_county + ' Co.)' : ''));
+    lines.push('');
+    lines.push('Phone: ' + (data.primary_phone || '') + (data.secondary_phone ? '  |  Alt: ' + data.secondary_phone : ''));
+    lines.push('Email: ' + (data.email || ''));
+    lines.push('Address: ' + (data.street_address || '') + ', ' + (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip_code || '') + (data.county ? ' (' + data.county + ' Co.)' : ''));
+    lines.push('');
+    lines.push('High School: ' + (data.high_school_name || '') + (data.hs_grad_date ? '  Grad: ' + data.hs_grad_date : ''));
+    if (data.college_name) lines.push('College: ' + data.college_name + (data.college_grad_date ? '  Grad: ' + data.college_grad_date : ''));
+    if (data.credit_hours) lines.push('Credit Hours: ' + data.credit_hours + ' ' + (data.credit_type || ''));
+    lines.push('');
+    lines.push('Race: ' + (data.primary_race || '') + '  |  Ethnicity: ' + (data.ethnicity || ''));
+    lines.push('Religion: ' + (data.religion || 'N/A'));
+    lines.push('Height: ' + (data.height_ft || '?') + "'" + (data.height_in || '0') + '"  |  Weight: ' + (data.weight || '?') + ' lbs');
+    lines.push('Eyes: ' + (data.eye_color || '') + '  |  Hair: ' + (data.hair_color || ''));
+    lines.push('DL: ' + (data.drivers_license || '') + '  State: ' + (data.dl_state || '') + '  Exp: ' + (data.dl_expiration || ''));
+    lines.push('Citizenship: ' + (data.citizenship || '') + (data.alien_number ? '  Alien #: ' + data.alien_number : ''));
+    lines.push('');
+    lines.push('Marital Status: ' + (data.marital_status || ''));
+    lines.push('Children: ' + (data.has_children || '') + (data.children_ages ? '  Ages: ' + data.children_ages : ''));
+    lines.push('Registered Voter: ' + (data.registered_voter || ''));
+    if (data.last_menstrual_cycle) lines.push('Last Menstrual Cycle: ' + data.last_menstrual_cycle);
+    if (data.alias_1_name) lines.push('Alias 1: ' + data.alias_1_name + (data.alias_1_from ? ' (' + data.alias_1_from + ' to ' + (data.alias_1_to || 'present') + ')' : ''));
+    if (data.alias_2_name) lines.push('Alias 2: ' + data.alias_2_name + (data.alias_2_from ? ' (' + data.alias_2_from + ' to ' + (data.alias_2_to || 'present') + ')' : ''));
+    lines.push('');
+    lines.push('Prior Service: ' + (data.prior_service || 'No'));
+    if (data.prior_service === 'Yes') {
+      lines.push('  Branch: ' + (data.service_branch || '') + '  MOS: ' + (data.mos || '') + '  Grade: ' + (data.pay_grade || ''));
+      lines.push('  RE Code: ' + (data.re_code || '') + '  Sep Code: ' + (data.separation_code || ''));
+      lines.push('  Sep Reason: ' + (data.separation_reason || ''));
+      lines.push('  Enlisted: ' + (data.enlistment_date || '') + '  Discharged: ' + (data.discharge_date || ''));
+    }
+
+    const payload = {
+      access_key: '5447d3e3-6d06-470c-b71e-5de21e2284c6',
+      subject: 'Appointment Request: ' + applicantName,
+      from_name: 'Brazen Recruits Appointment Form',
+      message: lines.join('\n'),
+      'Applicant Name': applicantName,
+      'Phone': data.primary_phone || '',
+      'Email': data.email || '',
+      'Age': data.age || ''
+    };
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) showSuccess();
+      else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SUBMIT & SCHEDULE';
+        alert('Something went wrong. Please try again or contact SGT Andrews directly at 903-372-0877.');
+      }
+    })
+    .catch(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'SUBMIT & SCHEDULE';
+      alert('Something went wrong. Please try again or contact SGT Andrews directly at 903-372-0877.');
+    });
+  }
+</script>
+</body>
+</html>

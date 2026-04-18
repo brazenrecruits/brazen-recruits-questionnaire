@@ -8,10 +8,18 @@
 
 [[redirects]]
   from = "/*"
-  to = "/screening.html"
+  to = "/appointment.html"
   status = 200
   force = true
   conditions = {Host = ["form.brazenrecruits.com"]}
+
+# Old screening form — will be moved to application.brazenrecruits.com in Phase 2
+[[redirects]]
+  from = "/*"
+  to = "/screening.html"
+  status = 200
+  force = true
+  conditions = {Host = ["application.brazenrecruits.com"]}
 
 [[redirects]]
   from = "/*"
