@@ -134,7 +134,6 @@
         <tr>
           <th>RECRUIT</th>
           <th style="text-align:center;">LEAD</th>
-          <th style="text-align:center;">LEAD</th>
           <th style="text-align:center;">APPOINTMENT</th>
           <th style="text-align:center;">ELIGIBILITY</th>
           <th style="text-align:center;">APPLICATION</th>
@@ -192,7 +191,7 @@
 
   function updateStats(recruits) {
     const total = recruits.length;
-    const complete = recruits.filter(r => r.lead_capture_complete && r.lead_capture_complete && r.appointment_complete && r.eligibility_complete && r.application_complete).length;
+    const complete = recruits.filter(r => r.lead_capture_complete && r.appointment_complete && r.eligibility_complete && r.application_complete).length;
     const inProgress = total - complete;
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statComplete').textContent = complete;
@@ -211,7 +210,6 @@
     document.getElementById('emptyState').style.display = 'none';
 
     tbody.innerHTML = recruits.map(r => {
-      const lead = r.lead_capture_complete;
       const lead = r.lead_capture_complete;
       const appt = r.appointment_complete;
       const elig = r.eligibility_complete;
@@ -239,7 +237,6 @@
           <div class="recruit-name">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
           <div class="recruit-email">${escHtml(r.email || '')}</div>
         </td>
-        <td style="text-align:center;">${checkMark(lead)}</td>
         <td style="text-align:center;">${checkMark(lead)}</td>
         <td style="text-align:center;">${checkMark(appt)}</td>
         <td style="text-align:center;">${eligBadge}</td>
