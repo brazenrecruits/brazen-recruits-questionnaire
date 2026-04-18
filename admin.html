@@ -35,7 +35,7 @@
   .login-btn:hover { background: #5C6628; }
   .login-error { color: var(--red); font-size: 13px; margin-top: 12px; display: none; }
 
-  .dashboard { display: none; max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+  .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
   .dashboard.visible { display: block; }
 
   .dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
@@ -56,16 +56,17 @@
     text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); white-space: nowrap;
   }
   .recruit-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
-  .recruit-table tr:hover td { background: rgba(197, 165, 90, 0.04); }
+  .recruit-table tr.recruit-row { cursor: pointer; }
+  .recruit-table tr.recruit-row:hover td { background: rgba(197, 165, 90, 0.04); }
 
   .recruit-name { font-weight: 600; color: var(--white); }
+  .recruit-name-link { font-weight: 600; color: var(--gold-light); text-decoration: underline; text-decoration-color: var(--gold-dim); text-underline-offset: 2px; }
   .recruit-email { font-size: 12px; color: var(--gray); }
   .recruit-date { font-size: 12px; color: var(--gray-light); }
 
   .check { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-size: 16px; }
   .check.done { background: rgba(76, 175, 80, 0.15); color: var(--green); }
   .check.pending { background: rgba(138, 142, 150, 0.1); color: var(--gray); }
-  .check.na { background: transparent; color: var(--border); }
 
   .status-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
   .status-badge.complete { background: rgba(76, 175, 80, 0.15); color: var(--green); }
@@ -77,12 +78,54 @@
   .eligibility-result.yellow { background: rgba(243, 156, 18, 0.15); color: var(--yellow); }
   .eligibility-result.red { background: rgba(231, 76, 60, 0.15); color: var(--red); }
 
+  /* Pipeline status select */
+  .pipeline-select {
+    background: var(--card-bg); color: var(--white); border: 1px solid var(--border);
+    border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Barlow';
+    cursor: pointer; outline: none;
+  }
+  .pipeline-select:focus { border-color: var(--gold-dim); }
+
   .empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
   .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.3; }
   .loading { text-align: center; padding: 40px; color: var(--gray); }
 
   .table-wrapper { overflow-x: auto; }
 
+  /* Detail panel */
+  .detail-row { display: none; }
+  .detail-row.open { display: table-row; }
+  .detail-row td { padding: 0; border-bottom: 2px solid var(--gold-dim); }
+  .detail-panel { background: #12140F; padding: 20px 24px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .detail-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .detail-section-title {
+    font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .detail-section-empty { color: var(--gray); font-size: 13px; font-style: italic; }
+  .detail-field { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(42, 45, 34, 0.5); }
+  .detail-field:last-child { border-bottom: none; }
+  .detail-label { color: var(--gray); flex-shrink: 0; margin-right: 12px; }
+  .detail-value { color: var(--white); text-align: right; word-break: break-word; }
+
+  /* Notes section in detail panel */
+  .notes-section { grid-column: 1 / -1; }
+  .notes-textarea {
+    width: 100%; min-height: 80px; padding: 10px 12px; background: #12140F; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--white); font-family: 'Barlow'; font-size: 13px; resize: vertical;
+  }
+  .notes-textarea:focus { outline: none; border-color: var(--gold-dim); }
+  .notes-save-btn {
+    margin-top: 8px; padding: 6px 16px; background: var(--olive); border: none; border-radius: 4px;
+    color: #fff; font-family: 'Barlow'; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 1px;
+  }
+  .notes-save-btn:hover { background: #5C6628; }
+  .notes-saved { color: var(--green); font-size: 12px; margin-left: 8px; display: none; }
+
+  @media (max-width: 900px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 700px) {
     .recruit-table th, .recruit-table td { padding: 8px 6px; font-size: 12px; }
     .check { width: 24px; height: 24px; font-size: 14px; }
@@ -126,7 +169,7 @@
     </div>
   </div>
 
-  <input type="text" class="search-bar" id="searchInput" placeholder="Search by name or email..." oninput="filterRecruits()">
+  <input type="text" class="search-bar" id="searchInput" placeholder="Search by name, email, or status..." oninput="filterRecruits()">
 
   <div class="table-wrapper">
     <table class="recruit-table">
@@ -134,15 +177,16 @@
         <tr>
           <th>RECRUIT</th>
           <th style="text-align:center;">LEAD</th>
-          <th style="text-align:center;">APPOINTMENT</th>
-          <th style="text-align:center;">ELIGIBILITY</th>
-          <th style="text-align:center;">APPLICATION</th>
-          <th>STATUS</th>
+          <th style="text-align:center;">APPT</th>
+          <th style="text-align:center;">ELIG</th>
+          <th style="text-align:center;">APP</th>
+          <th>PIPELINE</th>
+          <th>FORMS</th>
           <th>LAST ACTIVITY</th>
         </tr>
       </thead>
       <tbody id="recruitsBody">
-        <tr><td colspan="7" class="loading">Loading recruits...</td></tr>
+        <tr><td colspan="8" class="loading">Loading recruits...</td></tr>
       </tbody>
     </table>
   </div>
@@ -156,13 +200,26 @@
 <script>
   let allRecruits = [];
   let adminPassword = '';
+  let openDetailEmail = null;
+
+  const PIPELINE_STAGES = [
+    'New Lead',
+    'Contacted',
+    'Appointment Set',
+    'Appointment Complete',
+    'MEPS Scheduled',
+    'MEPS Complete',
+    'Contract Signed',
+    'Shipped',
+    'Disqualified',
+    'Lost'
+  ];
 
   function doLogin() {
     const pw = document.getElementById('passwordInput').value.trim();
     if (!pw) return;
     adminPassword = pw;
 
-    // Test the password by making the API call
     fetch('/.netlify/functions/get-recruits', {
       headers: { 'X-Admin-Password': pw }
     })
@@ -172,7 +229,6 @@
         document.getElementById('loginError').style.display = 'block';
         return;
       }
-      // Success — show dashboard
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').classList.add('visible');
       allRecruits = data.recruits || [];
@@ -184,7 +240,6 @@
     });
   }
 
-  // Allow Enter key on password field
   document.getElementById('passwordInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') doLogin();
   });
@@ -209,42 +264,192 @@
 
     document.getElementById('emptyState').style.display = 'none';
 
-    tbody.innerHTML = recruits.map(r => {
+    tbody.innerHTML = recruits.map((r, idx) => {
       const lead = r.lead_capture_complete;
       const appt = r.appointment_complete;
       const elig = r.eligibility_complete;
       const app = r.application_complete;
 
       const formsComplete = [lead, appt, elig, app].filter(Boolean).length;
-      let statusClass = 'new';
-      let statusText = 'New';
-      if (formsComplete === 4) { statusClass = 'complete'; statusText = 'Complete'; }
-      else if (formsComplete > 0) { statusClass = 'in-progress'; statusText = formsComplete + '/4'; }
+      let formsClass = 'new';
+      let formsText = 'New';
+      if (formsComplete === 4) { formsClass = 'complete'; formsText = 'Complete'; }
+      else if (formsComplete > 0) { formsClass = 'in-progress'; formsText = formsComplete + '/4'; }
 
       // Eligibility result badge
       let eligBadge = checkMark(elig);
       if (elig && r.eligibility_data) {
         const result = r.eligibility_data.eligibility_result || '';
-        if (result === 'GREEN') eligBadge = '<span class="eligibility-result green">QUALIFIED</span>';
-        else if (result === 'RED') eligBadge = '<span class="eligibility-result red">NOT ELIGIBLE</span>';
-        else eligBadge = '<span class="eligibility-result yellow">CONDITIONAL</span>';
+        if (result === 'GREEN') eligBadge = '<span class="eligibility-result green">QUAL</span>';
+        else if (result === 'RED') eligBadge = '<span class="eligibility-result red">NO</span>';
+        else eligBadge = '<span class="eligibility-result yellow">COND</span>';
       }
 
-      const lastDate = r.updated_at ? new Date(r.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+      const lastDate = r.updated_at ? new Date(r.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
 
-      return `<tr>
+      const pipelineStatus = r.recruit_status || 'New Lead';
+      const pipelineOptions = PIPELINE_STAGES.map(s =>
+        `<option value="${s}" ${s === pipelineStatus ? 'selected' : ''}>${s}</option>`
+      ).join('');
+
+      const isOpen = openDetailEmail === (r.email || '').toLowerCase();
+
+      // Main row
+      let html = `<tr class="recruit-row" onclick="toggleDetail('${escAttr(r.email)}')">
         <td>
-          <div class="recruit-name">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
+          <div class="recruit-name-link">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
           <div class="recruit-email">${escHtml(r.email || '')}</div>
         </td>
         <td style="text-align:center;">${checkMark(lead)}</td>
         <td style="text-align:center;">${checkMark(appt)}</td>
         <td style="text-align:center;">${eligBadge}</td>
         <td style="text-align:center;">${checkMark(app)}</td>
-        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+        <td onclick="event.stopPropagation()">
+          <select class="pipeline-select" onchange="updatePipeline('${escAttr(r.email)}', this.value)">
+            ${pipelineOptions}
+          </select>
+        </td>
+        <td><span class="status-badge ${formsClass}">${formsText}</span></td>
         <td class="recruit-date">${lastDate}</td>
       </tr>`;
+
+      // Detail row
+      html += `<tr class="detail-row ${isOpen ? 'open' : ''}" id="detail-${idx}">
+        <td colspan="8">
+          <div class="detail-panel">
+            <div class="detail-grid">
+              ${buildDetailSection('Lead Capture', r.lead_capture_data, r.lead_capture_completed_at)}
+              ${buildDetailSection('Appointment', r.appointment_data, r.appointment_completed_at)}
+              ${buildDetailSection('Eligibility', r.eligibility_data, r.eligibility_completed_at)}
+              ${buildDetailSection('Application', r.application_data, r.application_completed_at)}
+              <div class="detail-section notes-section">
+                <div class="detail-section-title">NOTES</div>
+                <textarea class="notes-textarea" id="notes-${idx}" placeholder="Add notes about this recruit...">${escHtml(r.notes || '')}</textarea>
+                <button class="notes-save-btn" onclick="saveNotes('${escAttr(r.email)}', ${idx})">SAVE NOTES</button>
+                <span class="notes-saved" id="saved-${idx}">Saved!</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+
+      return html;
     }).join('');
+  }
+
+  function buildDetailSection(title, data, completedAt) {
+    if (!data) {
+      return `<div class="detail-section">
+        <div class="detail-section-title">${title}</div>
+        <div class="detail-section-empty">Not yet submitted</div>
+      </div>`;
+    }
+
+    // Skip internal/meta fields
+    const skip = ['form_type', 'first_name', 'last_name', 'email', 'access_key', 'subject', 'from_name',
+      'replyto', 'botcheck', 'form-name', 'bot-field', 'redirect', 'phone', 'zip_code', 'dob',
+      'height_ft', 'height_in', 'weight', 'education', 'eligibility_result'];
+
+    const fields = [];
+
+    // Show completed date first
+    if (completedAt) {
+      fields.push({ label: 'Submitted', value: new Date(completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) });
+    }
+
+    // For lead capture, show the specific fields nicely
+    if (title === 'Lead Capture') {
+      if (data.phone) fields.push({ label: 'Phone', value: data.phone });
+      if (data.zip_code) fields.push({ label: 'Zip Code', value: data.zip_code });
+      if (data.dob) fields.push({ label: 'Date of Birth', value: data.dob });
+      if (data.height_ft || data.height_in) fields.push({ label: 'Height', value: `${data.height_ft || '?'}' ${data.height_in || '0'}"` });
+      if (data.weight) fields.push({ label: 'Weight', value: data.weight + ' lbs' });
+      if (data.education) fields.push({ label: 'Education', value: data.education });
+    } else {
+      // For other forms, show all non-skip fields
+      Object.entries(data).forEach(([key, value]) => {
+        if (skip.includes(key)) return;
+        if (value === '' || value === null || value === undefined || value === false) return;
+        if (typeof value === 'object') return; // Skip nested objects
+
+        // Clean up the key for display
+        const label = key
+          .replace(/_/g, ' ')
+          .replace(/([a-z])([A-Z])/g, '$1 $2')
+          .replace(/\b\w/g, c => c.toUpperCase());
+
+        let displayValue = String(value);
+        if (value === true) displayValue = 'Yes';
+
+        fields.push({ label, value: displayValue });
+      });
+    }
+
+    const fieldsHtml = fields.length > 0
+      ? fields.map(f => `<div class="detail-field"><span class="detail-label">${escHtml(f.label)}</span><span class="detail-value">${escHtml(f.value)}</span></div>`).join('')
+      : '<div class="detail-section-empty">No data recorded</div>';
+
+    return `<div class="detail-section">
+      <div class="detail-section-title">${title}</div>
+      ${fieldsHtml}
+    </div>`;
+  }
+
+  function toggleDetail(email) {
+    const emailLower = email.toLowerCase();
+    if (openDetailEmail === emailLower) {
+      openDetailEmail = null;
+    } else {
+      openDetailEmail = emailLower;
+    }
+    renderRecruits(getCurrentFilteredRecruits());
+  }
+
+  function getCurrentFilteredRecruits() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (!q) return allRecruits;
+    return allRecruits.filter(r =>
+      (r.first_name || '').toLowerCase().includes(q) ||
+      (r.last_name || '').toLowerCase().includes(q) ||
+      (r.email || '').toLowerCase().includes(q) ||
+      (r.recruit_status || '').toLowerCase().includes(q) ||
+      (r.notes || '').toLowerCase().includes(q)
+    );
+  }
+
+  function updatePipeline(email, status) {
+    fetch('/.netlify/functions/update-recruit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminPassword },
+      body: JSON.stringify({ email, recruit_status: status })
+    })
+    .then(r => r.json())
+    .then(() => {
+      // Update local data
+      const recruit = allRecruits.find(r => (r.email || '').toLowerCase() === email.toLowerCase());
+      if (recruit) recruit.recruit_status = status;
+    })
+    .catch(err => console.error('Failed to update pipeline:', err));
+  }
+
+  function saveNotes(email, idx) {
+    const notes = document.getElementById('notes-' + idx).value;
+    fetch('/.netlify/functions/update-recruit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminPassword },
+      body: JSON.stringify({ email, notes })
+    })
+    .then(r => r.json())
+    .then(() => {
+      // Update local data
+      const recruit = allRecruits.find(r => (r.email || '').toLowerCase() === email.toLowerCase());
+      if (recruit) recruit.notes = notes;
+      // Show saved indicator
+      const savedEl = document.getElementById('saved-' + idx);
+      savedEl.style.display = 'inline';
+      setTimeout(() => { savedEl.style.display = 'none'; }, 2000);
+    })
+    .catch(err => console.error('Failed to save notes:', err));
   }
 
   function checkMark(done) {
@@ -258,15 +463,12 @@
     return div.innerHTML;
   }
 
+  function escAttr(str) {
+    return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+
   function filterRecruits() {
-    const q = document.getElementById('searchInput').value.toLowerCase().trim();
-    if (!q) { renderRecruits(allRecruits); return; }
-    const filtered = allRecruits.filter(r =>
-      (r.first_name || '').toLowerCase().includes(q) ||
-      (r.last_name || '').toLowerCase().includes(q) ||
-      (r.email || '').toLowerCase().includes(q)
-    );
-    renderRecruits(filtered);
+    renderRecruits(getCurrentFilteredRecruits());
   }
 </script>
 </body>
