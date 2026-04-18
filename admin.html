@@ -133,6 +133,7 @@
       <thead>
         <tr>
           <th>RECRUIT</th>
+          <th style="text-align:center;">LEAD</th>
           <th style="text-align:center;">APPOINTMENT</th>
           <th style="text-align:center;">ELIGIBILITY</th>
           <th style="text-align:center;">APPLICATION</th>
@@ -141,7 +142,7 @@
         </tr>
       </thead>
       <tbody id="recruitsBody">
-        <tr><td colspan="6" class="loading">Loading recruits...</td></tr>
+        <tr><td colspan="7" class="loading">Loading recruits...</td></tr>
       </tbody>
     </table>
   </div>
@@ -190,7 +191,7 @@
 
   function updateStats(recruits) {
     const total = recruits.length;
-    const complete = recruits.filter(r => r.appointment_complete && r.eligibility_complete && r.application_complete).length;
+    const complete = recruits.filter(r => r.lead_capture_complete && r.appointment_complete && r.eligibility_complete && r.application_complete).length;
     const inProgress = total - complete;
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statComplete').textContent = complete;
@@ -209,15 +210,16 @@
     document.getElementById('emptyState').style.display = 'none';
 
     tbody.innerHTML = recruits.map(r => {
+      const lead = r.lead_capture_complete;
       const appt = r.appointment_complete;
       const elig = r.eligibility_complete;
       const app = r.application_complete;
 
-      const formsComplete = [appt, elig, app].filter(Boolean).length;
+      const formsComplete = [lead, appt, elig, app].filter(Boolean).length;
       let statusClass = 'new';
       let statusText = 'New';
-      if (formsComplete === 3) { statusClass = 'complete'; statusText = 'Complete'; }
-      else if (formsComplete > 0) { statusClass = 'in-progress'; statusText = formsComplete + '/3'; }
+      if (formsComplete === 4) { statusClass = 'complete'; statusText = 'Complete'; }
+      else if (formsComplete > 0) { statusClass = 'in-progress'; statusText = formsComplete + '/4'; }
 
       // Eligibility result badge
       let eligBadge = checkMark(elig);
@@ -235,6 +237,7 @@
           <div class="recruit-name">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
           <div class="recruit-email">${escHtml(r.email || '')}</div>
         </td>
+        <td style="text-align:center;">${checkMark(lead)}</td>
         <td style="text-align:center;">${checkMark(appt)}</td>
         <td style="text-align:center;">${eligBadge}</td>
         <td style="text-align:center;">${checkMark(app)}</td>
