@@ -146,10 +146,10 @@
   <div class="progress-container">
     <div class="progress-info">
       <span class="progress-label">Short App</span>
-      <span class="progress-step" id="progressStep">1 of 3</span>
+      <span class="progress-step" id="progressStep">1 of 4</span>
     </div>
     <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:33.3%"></div>
+      <div class="progress-fill" id="progressFill" style="width:25%"></div>
     </div>
   </div>
 
@@ -161,7 +161,7 @@
 
     <!-- ========== STEP 1: PRE-SCREENING INFORMATION ========== -->
     <div class="form-section active" id="step1">
-      <div class="section-header">Step 1 of 3</div>
+      <div class="section-header">Step 1 of 4</div>
       <div class="section-title">Pre-Screening Information</div>
 
       <!-- Name -->
@@ -447,7 +447,7 @@
 
     <!-- ========== STEP 2: CHARACTER REFERENCES ========== -->
     <div class="form-section" id="step2">
-      <div class="section-header">Step 2 of 3</div>
+      <div class="section-header">Step 2 of 4</div>
       <div class="section-title">Character References</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Provide 3 people who can speak well about you — friends, teachers, coworkers, neighbors, etc. <strong style="color:var(--gold-light);">Anyone EXCEPT family.</strong> At least one must have known you for 7+ years.</p>
 
@@ -543,7 +543,7 @@
 
     <!-- ========== STEP 3: RESIDENCES (LAST 10 YEARS) ========== -->
     <div class="form-section" id="step3">
-      <div class="section-header">Step 3 of 3</div>
+      <div class="section-header">Step 3 of 4</div>
       <div class="section-title">Residences</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List everywhere you've lived in the past 10 years. For each address, provide someone who can verify you lived there — <strong style="color:var(--gold-light);">not family, and different from your character references</strong>.</p>
 
@@ -649,10 +649,122 @@
       ">+ ADD ANOTHER FORMER ADDRESS</button>
       <p class="helper-text" style="margin-top:8px;">Keep adding until your addresses cover the full 10 years. Leave former address sections blank if you don't need them.</p>
 
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 4: EDUCATION & EMPLOYMENT ========== -->
+    <div class="form-section" id="step4">
+      <div class="section-header">Step 4 of 4</div>
+      <div class="section-title">Education & Employment</div>
+
+      <div class="sub-section-title">EDUCATION</div>
+
+      <div class="form-group">
+        <label class="form-label">Highest Level of Education <span class="req">*</span></label>
+        <select class="form-select" name="education_level" required>
+          <option value="">Select</option>
+          <option value="Some High School">Some High School</option>
+          <option value="High School Diploma / GED">High School Diploma / GED</option>
+          <option value="Some College">Some College</option>
+          <option value="Associate's Degree">Associate's Degree</option>
+          <option value="Bachelor's Degree">Bachelor's Degree</option>
+          <option value="Master's Degree or Higher">Master's Degree or Higher</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">High School Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="high_school_name" required>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">HS City</label>
+          <input type="text" class="form-input" name="hs_city">
+        </div>
+        <div class="form-group">
+          <label class="form-label">HS State</label>
+          <input type="text" class="form-input" name="hs_state" value="TX">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Graduation Date <span class="note">(or expected)</span></label>
+          <input type="month" class="form-input" name="hs_grad_date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Grade <span class="note">(if still in HS)</span></label>
+          <select class="form-select" name="hs_current_grade">
+            <option value="">N/A — Graduated</option>
+            <option value="9th">9th Grade</option>
+            <option value="10th">10th Grade</option>
+            <option value="11th">11th Grade</option>
+            <option value="12th">12th Grade</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">College Name <span class="note">(leave blank if N/A)</span></label>
+        <input type="text" class="form-input" name="college_name" placeholder="Leave blank if N/A">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Degree Earned or Pursuing</label>
+        <input type="text" class="form-input" name="degree" placeholder="e.g. Associate's in Business, Bachelor's in Nursing">
+      </div>
+
+      <!-- Employment -->
+      <div class="section-divider">
+        <div class="sub-section-title">EMPLOYMENT HISTORY</div>
+        <p class="helper-text" style="margin-top:-8px;margin-bottom:14px;">List your current or most recent employer, plus any previous employers you'd like to include.</p>
+
+        <div class="sub-section-title" style="font-size:14px;">CURRENT / MOST RECENT EMPLOYER</div>
+
+        <div class="form-group">
+          <label class="form-label">Employer Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="employer_1_name" placeholder="Company or business name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Job Title</label>
+          <input type="text" class="form-input" name="employer_1_title" placeholder="Your role / position">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Employer Address</label>
+          <input type="text" class="form-input" name="employer_1_address" placeholder="City, State or full address">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="month" class="form-input" name="employer_1_start">
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Date <span class="note">(blank if current)</span></label>
+            <input type="month" class="form-input" name="employer_1_end">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Supervisor Name & Phone <span class="note">(optional)</span></label>
+          <input type="text" class="form-input" name="employer_1_supervisor" placeholder="Name — (000) 000-0000">
+        </div>
+      </div>
+
+      <div id="employerList"></div>
+
+      <button type="button" id="addEmployerBtn" onclick="addEmployer()" style="
+        width:100%; padding:14px; margin-top:16px; background:transparent; border:1px dashed var(--gold-dim);
+        border-radius:8px; color:var(--gold); font-family:'Bebas Neue',cursive; font-size:14px; letter-spacing:3px;
+        cursor:pointer; transition:all 0.2s ease;
+      ">+ ADD ANOTHER EMPLOYER</button>
+
       <button type="submit" class="btn-submit">SUBMIT SHORT APPLICATION</button>
 
       <div class="btn-row" style="margin-top:12px;">
-        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+        <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
       </div>
     </div>
 
@@ -694,7 +806,7 @@
 </div>
 
 <script>
-  const totalSteps = 3;
+  const totalSteps = 4;
   let currentStep = 1;
   let formerAddressCount = 2;
 
@@ -811,6 +923,47 @@
     list.appendChild(entry);
   }
 
+  // Add employer
+  let employerCount = 1;
+  function addEmployer() {
+    employerCount++;
+    const n = employerCount;
+    const list = document.getElementById('employerList');
+    const entry = document.createElement('div');
+    entry.className = 'employer-entry';
+    entry.style.cssText = 'border-top:1px solid var(--border);padding-top:20px;margin-top:20px;';
+    entry.innerHTML = `
+      <div class="sub-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>PREVIOUS EMPLOYER #${n - 1}</span>
+        <button type="button" onclick="this.closest('.employer-entry').remove()" style="
+          background:none;border:1px solid var(--border);border-radius:4px;color:var(--gray);
+          font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Barlow',sans-serif;
+        ">REMOVE</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Employer Name</label>
+        <input type="text" class="form-input" name="employer_${n}_name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Job Title</label>
+        <input type="text" class="form-input" name="employer_${n}_title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Employer Address</label>
+        <input type="text" class="form-input" name="employer_${n}_address" placeholder="City, State or full address">
+      </div>
+      <div class="input-row">
+        <div class="form-group"><label class="form-label">Start Date</label><input type="month" class="form-input" name="employer_${n}_start"></div>
+        <div class="form-group"><label class="form-label">End Date</label><input type="month" class="form-input" name="employer_${n}_end"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Supervisor Name & Phone</label>
+        <input type="text" class="form-input" name="employer_${n}_supervisor" placeholder="Name — (000) 000-0000">
+      </div>
+    `;
+    list.appendChild(entry);
+  }
+
   // ── FORM SUBMISSION ──
   document.getElementById('shortAppForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -880,6 +1033,26 @@
         lines.push('Former #' + i + ': ' + data['res_former_' + i + '_address']);
         lines.push('  Move-In: ' + (data['res_former_' + i + '_move_in'] || '') + '  Move-Out: ' + (data['res_former_' + i + '_move_out'] || ''));
         lines.push('  Ref: ' + (data['res_former_' + i + '_ref_name'] || '') + '  Phone: ' + (data['res_former_' + i + '_ref_phone'] || '') + '  Rel: ' + (data['res_former_' + i + '_ref_relationship'] || ''));
+      }
+    }
+    lines.push('');
+
+    lines.push('--- EDUCATION ---');
+    lines.push('Highest Level: ' + (data.education_level || ''));
+    lines.push('High School: ' + (data.high_school_name || '') + '  City: ' + (data.hs_city || '') + '  State: ' + (data.hs_state || ''));
+    lines.push('HS Grad Date: ' + (data.hs_grad_date || '') + (data.hs_current_grade ? '  Current Grade: ' + data.hs_current_grade : ''));
+    if (data.college_name) lines.push('College: ' + data.college_name);
+    if (data.degree) lines.push('Degree: ' + data.degree);
+    lines.push('');
+
+    lines.push('--- EMPLOYMENT HISTORY ---');
+    for (let i = 1; i <= 10; i++) {
+      if (data['employer_' + i + '_name']) {
+        lines.push('Employer ' + i + ': ' + data['employer_' + i + '_name']);
+        if (data['employer_' + i + '_title']) lines.push('  Title: ' + data['employer_' + i + '_title']);
+        if (data['employer_' + i + '_address']) lines.push('  Address: ' + data['employer_' + i + '_address']);
+        lines.push('  Start: ' + (data['employer_' + i + '_start'] || '') + '  End: ' + (data['employer_' + i + '_end'] || 'Present'));
+        if (data['employer_' + i + '_supervisor']) lines.push('  Supervisor: ' + data['employer_' + i + '_supervisor']);
       }
     }
 
