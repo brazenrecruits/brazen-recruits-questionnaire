@@ -159,7 +159,7 @@
 
     <!-- ========== STEP 1: VERIFY IDENTITY + SPOUSE ========== -->
     <div class="form-section active" id="step1">
-      <div class="section-header">Step 1 of 6</div>
+      <div class="section-header">Step 1 of 5</div>
       <div class="section-title">Verify Your Identity</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Enter your name and email so we can link this with your appointment information.</p>
 
@@ -227,22 +227,6 @@
         </div>
       </div>
 
-      <!-- Dependents detail -->
-      <div class="section-divider">
-        <div class="sub-section-title">DEPENDENTS</div>
-
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label"># Dependents (Total)</label>
-            <input type="number" class="form-input" name="num_dependents_total" min="0" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label class="form-label"># Dependents (Minor)</label>
-            <input type="number" class="form-input" name="num_dependents_minor" min="0" placeholder="0">
-          </div>
-        </div>
-      </div>
-
       <div class="btn-row">
         <button type="button" class="btn-next" onclick="goTo(2)">CONTINUE</button>
       </div>
@@ -250,7 +234,7 @@
 
     <!-- ========== STEP 2: RESIDENCE HISTORY ========== -->
     <div class="form-section" id="step2">
-      <div class="section-header">Step 2 of 6</div>
+      <div class="section-header">Step 2 of 5</div>
       <div class="section-title">Residence History</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List every address you've lived at for the last 10 years — starting with the most recent. Your current address was already captured on the appointment form, so start with your <strong style="color:var(--gold-light);">previous</strong> address.</p>
 
@@ -307,54 +291,90 @@
       </div>
     </div>
 
-    <!-- ========== STEP 3: EMERGENCY CONTACT ========== -->
+    <!-- ========== STEP 3: BENEFICIARY INFORMATION ========== -->
     <div class="form-section" id="step3">
-      <div class="section-header">Step 3 of 6</div>
-      <div class="section-title">Emergency Contact</div>
+      <div class="section-header">Step 3 of 5</div>
+      <div class="section-title">Additional Information</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">A few more things SGT Andrews needs to get your packet started.</p>
 
-      <div class="form-group">
-        <label class="form-label">Emergency Contact Full Name <span class="req">*</span></label>
-        <input type="text" class="form-input" name="emergency_contact_name" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Relationship to You</label>
-        <input type="text" class="form-input" name="emergency_contact_relationship" placeholder="e.g. Mother, Father, Spouse">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Emergency Contact Phone <span class="req">*</span></label>
-        <input type="tel" class="form-input" name="emergency_contact_phone" placeholder="(000) 000-0000" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Emergency Contact Email</label>
-        <input type="email" class="form-input" name="emergency_contact_email">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Emergency Contact Address</label>
-        <input type="text" class="form-input" name="emergency_contact_address" placeholder="Full address">
-      </div>
-
-      <!-- Parent/Guardian — for minors -->
+      <!-- Beneficiary — simplified -->
       <div class="section-divider">
-        <div class="sub-section-title">PARENT / GUARDIAN</div>
-        <p class="helper-text" style="margin-top:-8px;margin-bottom:14px;">Only required if you are under 18.</p>
-
+        <div class="sub-section-title">LIFE INSURANCE BENEFICIARY</div>
         <div class="form-group">
-          <label class="form-label">Parent/Guardian Full Name</label>
-          <input type="text" class="form-input" name="parent_guardian_name" placeholder="Leave blank if 18+">
+          <label class="form-label">In the event something were to happen to you, who would you want your life insurance to go to?</label>
+          <textarea class="form-input" name="beneficiary_wishes" rows="3" placeholder="e.g. My wife Jane Doe, or split between my mom and my brother, etc."></textarea>
+        </div>
+      </div>
+
+      <!-- Selective Service -->
+      <div class="section-divider">
+        <div class="sub-section-title">SELECTIVE SERVICE</div>
+        <div class="form-group">
+          <label class="form-label">Are you registered with the Selective Service?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="selective_service" value="Yes" id="ssY">
+              <label class="radio-label" for="ssY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="selective_service" value="No" id="ssN">
+              <label class="radio-label" for="ssN">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="selective_service" value="N/A" id="ssNA">
+              <label class="radio-label" for="ssNA">N/A (under 18 or female)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foreign Travel -->
+      <div class="section-divider">
+        <div class="sub-section-title">FOREIGN TRAVEL</div>
+        <div class="form-group">
+          <label class="form-label">Have you traveled outside the United States in the last 7 years?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="has_foreign_travel" value="Yes" id="travelY" onchange="document.getElementById('foreignTravelGroup').style.display='block'">
+              <label class="radio-label" for="travelY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="has_foreign_travel" value="No" id="travelN" onchange="document.getElementById('foreignTravelGroup').style.display='none'">
+              <label class="radio-label" for="travelN">No</label>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Relationship</label>
-          <input type="text" class="form-input" name="parent_guardian_relationship" placeholder="e.g. Mother, Father, Legal Guardian">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Parent/Guardian Phone</label>
-          <input type="tel" class="form-input" name="parent_guardian_phone" placeholder="(000) 000-0000">
+        <div class="conditional" id="foreignTravelGroup" style="display:none;">
+          <p class="helper-text" style="margin-bottom:12px;">List each trip outside the U.S.</p>
+          <div id="travelList">
+            <div class="travel-entry" data-index="1">
+              <div class="sub-section-title" style="font-size:12px;margin-bottom:8px;">TRIP 1</div>
+              <div class="form-group">
+                <label class="form-label">Country / Location</label>
+                <input type="text" class="form-input" name="travel_1_location" placeholder="e.g. Mexico, Canada, Germany">
+              </div>
+              <div class="input-row">
+                <div class="form-group">
+                  <label class="form-label">From</label>
+                  <input type="date" class="form-input" name="travel_1_from">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">To</label>
+                  <input type="date" class="form-input" name="travel_1_to">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Reason for Travel</label>
+                <input type="text" class="form-input" name="travel_1_reason" placeholder="e.g. Vacation, Family visit, Work">
+              </div>
+            </div>
+          </div>
+          <button type="button" onclick="addTrip()" style="
+            background:none;border:1px dashed var(--border);border-radius:6px;color:var(--gold);
+            font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;letter-spacing:1.5px;
+            padding:10px 20px;cursor:pointer;width:100%;margin-top:10px;transition:border-color .2s,color .2s;
+          ">+ ADD ANOTHER TRIP</button>
         </div>
       </div>
 
@@ -364,80 +384,49 @@
       </div>
     </div>
 
-    <!-- ========== STEP 4: BENEFICIARY INFORMATION ========== -->
+    <!-- ========== STEP 4: TATTOOS ========== -->
     <div class="form-section" id="step4">
-      <div class="section-header">Step 4 of 6</div>
-      <div class="section-title">Beneficiary Information</div>
-      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Servicemembers' Group Life Insurance (SGLI) requires you to name beneficiaries — the people who would receive your life insurance benefit.</p>
+      <div class="section-header">Step 4 of 5</div>
+      <div class="section-title">Tattoos</div>
 
-      <!-- Primary Beneficiary 1 -->
-      <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
-        <div class="sub-section-title">PRIMARY BENEFICIARY 1</div>
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" name="beneficiary_1_name" placeholder="First, Middle, Last, Suffix">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Address</label>
-          <input type="text" class="form-input" name="beneficiary_1_address" placeholder="Full address">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <input type="text" class="form-input" name="beneficiary_1_relationship" placeholder="e.g. Spouse, Parent">
+      <div class="form-group">
+        <label class="form-label">Do you have any tattoos or brandings?</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="has_tattoos" value="Yes" id="tattooY" onchange="document.getElementById('tattooDetailsGroup').style.display='block'">
+            <label class="radio-label" for="tattooY">Yes</label>
           </div>
-          <div class="form-group">
-            <label class="form-label">Percentage</label>
-            <input type="text" class="form-input" name="beneficiary_1_percentage" placeholder="e.g. 100%">
+          <div class="radio-option">
+            <input type="radio" name="has_tattoos" value="No" id="tattooN" onchange="document.getElementById('tattooDetailsGroup').style.display='none'">
+            <label class="radio-label" for="tattooN">No</label>
           </div>
         </div>
       </div>
 
-      <!-- Primary Beneficiary 2 -->
-      <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
-        <div class="sub-section-title">PRIMARY BENEFICIARY 2 <span class="note" style="font-family:'Barlow',sans-serif;font-size:12px;text-transform:none;letter-spacing:0;">(if splitting)</span></div>
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" name="beneficiary_2_name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Address</label>
-          <input type="text" class="form-input" name="beneficiary_2_address" placeholder="Full address">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <input type="text" class="form-input" name="beneficiary_2_relationship">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Percentage</label>
-            <input type="text" class="form-input" name="beneficiary_2_percentage" placeholder="e.g. 50%">
+      <div class="conditional" id="tattooDetailsGroup" style="display:none;">
+        <p class="helper-text" style="margin-bottom:12px;">List each tattoo. The Army needs to document them all.</p>
+        <div id="tattooList">
+          <div class="tattoo-entry" data-index="1" style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px;">
+            <div class="sub-section-title" style="font-size:12px;margin-bottom:8px;">TATTOO 1</div>
+            <div class="form-group">
+              <label class="form-label">Location on Body</label>
+              <input type="text" class="form-input" name="tattoo_1_location" placeholder="e.g. Left forearm, Right shoulder, Back">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-input" name="tattoo_1_description" placeholder="What does it look like?">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Meaning / Significance</label>
+              <input type="text" class="form-input" name="tattoo_1_meaning" placeholder="What does it mean to you?">
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Contingent Beneficiary -->
-      <div>
-        <div class="sub-section-title">CONTINGENT BENEFICIARY <span class="note" style="font-family:'Barlow',sans-serif;font-size:12px;text-transform:none;letter-spacing:0;">(backup)</span></div>
-        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">This person receives the benefit only if your primary beneficiaries cannot.</p>
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" name="contingent_beneficiary_name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Address</label>
-          <input type="text" class="form-input" name="contingent_beneficiary_address" placeholder="Full address">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <input type="text" class="form-input" name="contingent_beneficiary_relationship">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Percentage</label>
-            <input type="text" class="form-input" name="contingent_beneficiary_percentage" placeholder="e.g. 100%">
-          </div>
-        </div>
+        <button type="button" onclick="addTattoo()" style="
+          background:none;border:1px dashed var(--border);border-radius:6px;color:var(--gold);
+          font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;letter-spacing:1.5px;
+          padding:10px 20px;cursor:pointer;width:100%;margin-top:10px;transition:border-color .2s,color .2s;
+        ">+ ADD ANOTHER TATTOO</button>
       </div>
 
       <div class="btn-row">
@@ -446,120 +435,20 @@
       </div>
     </div>
 
-    <!-- ========== STEP 5: MEDICAL & TATTOOS ========== -->
+    <!-- ========== STEP 5: EDUCATION DETAILS ========== -->
     <div class="form-section" id="step5">
-      <div class="section-header">Step 5 of 6</div>
-      <div class="section-title">Medical & Tattoos</div>
-
-      <div class="form-group">
-        <label class="form-label">Medical Insurance Provider</label>
-        <input type="text" class="form-input" name="medical_insurer_name" placeholder="e.g. Blue Cross Blue Shield, Tricare">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Insurance Provider Address</label>
-        <input type="text" class="form-input" name="medical_insurer_address" placeholder="Full address of insurance company">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Primary Care Doctor / Clinic Name</label>
-        <input type="text" class="form-input" name="medical_provider_name" placeholder="Name of doctor or clinic">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Doctor / Clinic Address</label>
-        <input type="text" class="form-input" name="medical_provider_address" placeholder="Full address">
-      </div>
-
-      <div class="section-divider">
-        <div class="sub-section-title">TATTOOS</div>
-
-        <div class="form-group">
-          <label class="form-label">Do you have any tattoos or brandings?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" name="has_tattoos" value="Yes" id="tattooY">
-              <label class="radio-label" for="tattooY">Yes</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" name="has_tattoos" value="No" id="tattooN">
-              <label class="radio-label" for="tattooN">No</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="conditional" id="tattooDetailsGroup">
-          <p class="helper-text" style="margin-bottom:12px;">List each tattoo — description, where on your body, and what it means.</p>
-
-          <div class="form-group">
-            <label class="form-label">Tattoo 1</label>
-            <input type="text" class="form-input" name="tattoo_1" placeholder="Description; Location; Meaning">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tattoo 2</label>
-            <input type="text" class="form-input" name="tattoo_2" placeholder="Description; Location; Meaning">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tattoo 3</label>
-            <input type="text" class="form-input" name="tattoo_3" placeholder="Description; Location; Meaning">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tattoo 4</label>
-            <input type="text" class="form-input" name="tattoo_4" placeholder="Description; Location; Meaning">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tattoo 5</label>
-            <input type="text" class="form-input" name="tattoo_5" placeholder="Description; Location; Meaning">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tattoo 6</label>
-            <input type="text" class="form-input" name="tattoo_6" placeholder="Description; Location; Meaning">
-          </div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(6)">CONTINUE</button>
-      </div>
-    </div>
-
-    <!-- ========== STEP 6: EDUCATION DETAILS ========== -->
-    <div class="form-section" id="step6">
-      <div class="section-header">Step 6 of 6</div>
+      <div class="section-header">Step 5 of 5</div>
       <div class="section-title">Education Details</div>
-      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">We have your school names from the appointment form. We just need a few more details here.</p>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">We have your school names from the appointment form. Just a couple more details here.</p>
 
-      <div class="sub-section-title">HIGH SCHOOL ADDRESS</div>
-
-      <div class="form-group">
-        <label class="form-label">High School Street Address</label>
-        <input type="text" class="form-input" name="hs_street_address" placeholder="Street address of school">
-      </div>
-
-      <div class="input-row">
-        <div class="form-group">
-          <label class="form-label">City</label>
-          <input type="text" class="form-input" name="hs_city">
-        </div>
-        <div class="form-group">
-          <label class="form-label">State</label>
-          <input type="text" class="form-input" name="hs_state" value="TX">
-        </div>
-        <div class="form-group">
-          <label class="form-label">ZIP</label>
-          <input type="text" class="form-input" name="hs_zip" maxlength="10">
-        </div>
-      </div>
+      <div class="sub-section-title">HIGH SCHOOL</div>
 
       <div class="form-group">
         <label class="form-label">Current Grade Level <span class="note">(if still in HS)</span></label>
         <select class="form-select" name="hs_grade_level">
           <option value="">N/A — Graduated</option>
-          <option value="9th">9th Grade</option>
-          <option value="10th">10th Grade</option>
-          <option value="11th">11th Grade</option>
-          <option value="12th">12th Grade</option>
+          <option value="Junior">Junior (11th Grade)</option>
+          <option value="Senior">Senior (12th Grade)</option>
         </select>
       </div>
 
@@ -574,7 +463,7 @@
       <button type="submit" class="btn-submit">SUBMIT APPLICATION</button>
 
       <div class="btn-row" style="margin-top:12px;">
-        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
+        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
       </div>
     </div>
 
@@ -616,7 +505,7 @@
 </div>
 
 <script>
-  const totalSteps = 6;
+  const totalSteps = 5;
   let currentStep = 1;
   let residenceCount = 1;
 
@@ -734,12 +623,83 @@
     });
   });
 
-  // Tattoos → Details
-  document.querySelectorAll('input[name="has_tattoos"]').forEach(r => {
-    r.addEventListener('change', function() {
-      document.getElementById('tattooDetailsGroup').classList.toggle('visible', this.value === 'Yes');
-    });
-  });
+  // ── DYNAMIC ADD FUNCTIONS ──
+  let tripCount = 1;
+  function addTrip() {
+    tripCount++;
+    const list = document.getElementById('travelList');
+    const entry = document.createElement('div');
+    entry.className = 'travel-entry';
+    entry.dataset.index = tripCount;
+    entry.style.borderTop = '1px solid var(--border)';
+    entry.style.paddingTop = '14px';
+    entry.style.marginTop = '14px';
+    entry.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="sub-section-title" style="font-size:12px;margin-bottom:0;">TRIP ${tripCount}</div>
+        <button type="button" onclick="this.closest('.travel-entry').remove()" style="
+          background:none;border:1px solid var(--border);border-radius:4px;color:var(--gray);
+          font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Barlow',sans-serif;
+        ">REMOVE</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Country / Location</label>
+        <input type="text" class="form-input" name="travel_${tripCount}_location" placeholder="e.g. Mexico, Canada, Germany">
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">From</label>
+          <input type="date" class="form-input" name="travel_${tripCount}_from">
+        </div>
+        <div class="form-group">
+          <label class="form-label">To</label>
+          <input type="date" class="form-input" name="travel_${tripCount}_to">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason for Travel</label>
+        <input type="text" class="form-input" name="travel_${tripCount}_reason" placeholder="e.g. Vacation, Family visit, Work">
+      </div>
+    `;
+    list.appendChild(entry);
+  }
+
+  let tattooCount = 1;
+  function addTattoo() {
+    tattooCount++;
+    const list = document.getElementById('tattooList');
+    const entry = document.createElement('div');
+    entry.className = 'tattoo-entry';
+    entry.dataset.index = tattooCount;
+    entry.style.borderTop = '1px solid var(--border)';
+    entry.style.paddingTop = '14px';
+    entry.style.marginTop = '14px';
+    entry.style.borderBottom = '1px solid var(--border)';
+    entry.style.paddingBottom = '14px';
+    entry.style.marginBottom = '14px';
+    entry.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="sub-section-title" style="font-size:12px;margin-bottom:0;">TATTOO ${tattooCount}</div>
+        <button type="button" onclick="this.closest('.tattoo-entry').remove()" style="
+          background:none;border:1px solid var(--border);border-radius:4px;color:var(--gray);
+          font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Barlow',sans-serif;
+        ">REMOVE</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location on Body</label>
+        <input type="text" class="form-input" name="tattoo_${tattooCount}_location" placeholder="e.g. Left forearm, Right shoulder, Back">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-input" name="tattoo_${tattooCount}_description" placeholder="What does it look like?">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Meaning / Significance</label>
+        <input type="text" class="form-input" name="tattoo_${tattooCount}_meaning" placeholder="What does it mean to you?">
+      </div>
+    `;
+    list.appendChild(entry);
+  }
 
   // ── FORM SUBMISSION ──
   document.getElementById('applicationForm').addEventListener('submit', function(e) {
