@@ -21,11 +21,19 @@
   force = true
   conditions = {Host = ["admin.brazenrecruits.com"]}
 
-# Application form — collects spouse, emergency, beneficiary, medical, education details
+# Master application — full standalone form capturing everything Kara needs
 [[redirects]]
   from = "/*"
-  to = "/application.html"
+  to = "/apply.html"
   status = 200
+  force = true
+  conditions = {Host = ["apply.brazenrecruits.com"]}
+
+# Legacy application URL redirects to the new master form
+[[redirects]]
+  from = "/*"
+  to = "https://apply.brazenrecruits.com"
+  status = 301
   force = true
   conditions = {Host = ["application.brazenrecruits.com"]}
 

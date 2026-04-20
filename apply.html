@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Application — SGT Kara Andrews | Texas Army National Guard</title>
+<meta name="description" content="Complete the full enlistment application for SGT Kara Andrews — Texas Army National Guard Recruiter.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0C0D0A;
+    --card-bg: #1A1C16;
+    --border: #2A2D22;
+    --gold: #C5A55A;
+    --gold-light: #DFC07F;
+    --gold-dim: #9A7F3A;
+    --white: #F0EDE6;
+    --gray: #8A8E96;
+    --gray-light: #B0B4BC;
+    --olive: #4B5320;
+    --olive-hover: #5C6628;
+    --red-highlight: #8B2500;
+    --input-bg: #ffffff;
+    --input-text: #1a1a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg-dark);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(75, 83, 32, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(197, 165, 90, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
+
+  .header { text-align: center; padding: 40px 0 12px; }
+  .header-label { font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 5px; color: var(--gold); margin-top: 16px; }
+  .page-title { font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 2px; color: var(--white); margin-top: 8px; line-height: 1.2; }
+  .page-subtitle { font-size: 14px; color: var(--gray-light); margin-top: 8px; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+  .progress-container { padding: 20px 0 8px; }
+  .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); }
+  .progress-step { font-size: 12px; color: var(--gold); font-weight: 600; }
+  .progress-bar { width: 100%; height: 4px; background: var(--card-bg); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-light)); border-radius: 2px; transition: width 0.5s ease; }
+
+  .form-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin-bottom: 16px; display: none; animation: fadeIn 0.4s ease; }
+  .form-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header { font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+  .section-title { font-family: 'Bebas Neue', cursive; font-size: 24px; letter-spacing: 1px; color: var(--white); margin-bottom: 20px; line-height: 1.2; }
+  .sub-section-title { font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 1px; color: var(--gold); margin-bottom: 12px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label { display: block; font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+  .form-label .req { color: var(--gold); }
+  .form-label .note { font-weight: 400; font-size: 12px; color: var(--gray); }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 15px; font-family: 'Barlow', sans-serif; color: var(--input-text);
+    transition: border-color 0.2s ease; -webkit-appearance: none; appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--olive); }
+  .form-input::placeholder, .form-textarea::placeholder { color: #999; }
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer;
+  }
+
+  .input-row { display: flex; gap: 12px; }
+  .input-row .form-group { flex: 1; }
+
+  .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+  .radio-option { flex: 1; min-width: 100px; }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-label {
+    display: flex; align-items: center; justify-content: center; padding: 14px 16px;
+    background: #141610; border: 2px solid var(--border); border-radius: 8px;
+    font-size: 15px; font-weight: 600; color: var(--gray-light); cursor: pointer; transition: all 0.2s ease; text-align: center;
+  }
+  .radio-label:hover { border-color: var(--gold-dim); color: var(--white); }
+  .radio-option input[type="radio"]:checked + .radio-label { border-color: var(--gold); background: rgba(184, 150, 12, 0.1); color: var(--gold-light); }
+
+  .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-back { padding: 14px 20px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--gray-light); font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s ease; }
+  .btn-back:hover { border-color: var(--gray); color: var(--white); }
+  .btn-next { flex: 1; padding: 14px 20px; background: var(--olive); border: none; border-radius: 6px; color: #fff; font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s ease; }
+  .btn-next:hover { background: var(--olive-hover); transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-submit { width: 100%; padding: 16px; background: var(--olive); border: none; border-radius: 6px; color: #fff; font-family: 'Bebas Neue', cursive; font-size: 20px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s ease; margin-top: 24px; }
+  .btn-submit:hover { background: var(--olive-hover); transform: translateY(-1px); }
+
+  .btn-add {
+    width: 100%; padding: 14px; margin-top: 12px; background: transparent; border: 1px dashed var(--gold-dim);
+    border-radius: 8px; color: var(--gold); font-family: 'Bebas Neue', cursive; font-size: 14px; letter-spacing: 3px;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-add:hover { border-color: var(--gold); background: rgba(197, 165, 90, 0.05); }
+  .btn-remove {
+    background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--gray);
+    font-size: 11px; padding: 4px 10px; cursor: pointer; font-family: 'Barlow', sans-serif;
+  }
+  .btn-remove:hover { border-color: var(--red-highlight); color: var(--red-highlight); }
+
+  .result-card { text-align: center; padding: 40px 24px; }
+  .result-icon { width: 64px; height: 64px; margin: 0 auto 16px; }
+  .result-icon svg { width: 100%; height: 100%; }
+  .result-title { font-family: 'Bebas Neue', cursive; font-size: 26px; letter-spacing: 2px; color: var(--gold); margin-bottom: 12px; }
+  .result-message { font-size: 14px; color: var(--gray-light); line-height: 1.7; margin-bottom: 20px; }
+  .recruiter-card { background: rgba(197, 165, 90, 0.06); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-top: 20px; }
+  .recruiter-card .name { font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 1px; color: var(--white); }
+  .recruiter-card .detail { font-size: 13px; color: var(--gray-light); margin-top: 4px; }
+  .recruiter-card a { color: var(--gold); text-decoration: none; }
+  .back-link { display: inline-block; margin-top: 24px; padding: 14px 28px; border: 1px solid var(--gold); color: var(--gold); font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px; text-decoration: none; border-radius: 6px; transition: all 0.3s ease; }
+  .back-link:hover { background: rgba(197, 165, 90, 0.1); color: var(--gold-light); border-color: var(--gold-light); transform: translateY(-1px); }
+
+  .disclaimer { text-align: center; font-size: 11px; color: var(--gray); padding: 24px 16px; line-height: 1.5; }
+  .helper-text { font-size: 13px; color: var(--gray-light); margin-top: 6px; line-height: 1.4; }
+  .conditional { display: none; }
+  .conditional.visible { display: block; }
+  .section-divider { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px; }
+
+  .dynamic-entry { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px; }
+  .dynamic-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+
+  @media (max-width: 480px) {
+    .form-section { padding: 24px 18px; }
+    .input-row { flex-direction: column; gap: 0; }
+    .radio-group { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-label">TEXAS ARMY NATIONAL GUARD</div>
+    <div class="page-title">Full Application</div>
+    <p class="page-subtitle">Complete everything in one place — SGT Andrews will have your full packet.</p>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-info">
+      <span class="progress-label">Application</span>
+      <span class="progress-step" id="progressStep">Step 1 of 8</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:12.5%"></div>
+    </div>
+  </div>
+
+  <form id="applyForm" novalidate>
+    <input type="hidden" name="access_key" value="5447d3e3-6d06-470c-b71e-5de21e2284c6">
+    <input type="hidden" name="subject" value="Full Application Submission — Enlistment Packet">
+    <input type="hidden" name="from_name" value="Brazen Recruits Full Application">
+    <input type="hidden" name="form_type" value="apply">
+
+    <!-- ========== STEP 1: PERSONAL INFORMATION ========== -->
+    <div class="form-section active" id="step1">
+      <div class="section-header">Step 1 of 8</div>
+      <div class="section-title">Personal Information</div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">First Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="first_name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Middle Name</label>
+          <input type="text" class="form-input" name="middle_name">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Last Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="last_name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Suffix</label>
+          <select class="form-select" name="suffix">
+            <option value=""></option>
+            <option value="Jr.">Jr.</option>
+            <option value="Sr.">Sr.</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Gender <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="gender" value="Male" id="genderM" required>
+            <label class="radio-label" for="genderM">Male</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="gender" value="Female" id="genderF">
+            <label class="radio-label" for="genderF">Female</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Date of Birth <span class="req">*</span></label>
+          <input type="date" class="form-input" name="dob" id="dobInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Age <span class="req">*</span></label>
+          <input type="number" class="form-input" name="age" id="ageInput" min="17" max="42" required readonly>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Social Security Number <span class="req">*</span></label>
+        <input type="text" class="form-input ssn-field" name="ssn" placeholder="000-00-0000" maxlength="11" required autocomplete="off">
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Primary Phone <span class="req">*</span></label>
+          <input type="tel" class="form-input" name="phone" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Secondary Phone</label>
+          <input type="tel" class="form-input" name="phone_secondary">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email <span class="req">*</span></label>
+        <input type="email" class="form-input" name="email" required>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">CURRENT ADDRESS</div>
+
+        <div class="form-group">
+          <label class="form-label">Street Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="address_street" required>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">City <span class="req">*</span></label>
+            <input type="text" class="form-input" name="address_city" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">State <span class="req">*</span></label>
+            <input type="text" class="form-input" name="address_state" value="TX" required>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">ZIP <span class="req">*</span></label>
+            <input type="text" class="form-input" name="address_zip" maxlength="10" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">County</label>
+            <input type="text" class="form-input" name="address_county">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-next" onclick="goTo(2)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 2: PHYSICAL & DEMOGRAPHICS ========== -->
+    <div class="form-section" id="step2">
+      <div class="section-header">Step 2 of 8</div>
+      <div class="section-title">Physical & Demographics</div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Height — Feet</label>
+          <select class="form-select" name="height_feet">
+            <option value="">--</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height — Inches</label>
+          <select class="form-select" name="height_inches">
+            <option value="">--</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight</label>
+          <input type="number" class="form-input" name="weight" placeholder="lbs">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Eye Color</label>
+          <select class="form-select" name="eye_color">
+            <option value="">--</option>
+            <option value="Brown">Brown</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Hazel">Hazel</option>
+            <option value="Gray">Gray</option>
+            <option value="Black">Black</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hair Color</label>
+          <select class="form-select" name="hair_color">
+            <option value="">--</option>
+            <option value="Black">Black</option>
+            <option value="Brown">Brown</option>
+            <option value="Blonde">Blonde</option>
+            <option value="Red">Red</option>
+            <option value="Gray">Gray</option>
+            <option value="White">White</option>
+            <option value="Bald">Bald</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Race</label>
+        <select class="form-select" name="race">
+          <option value="">--</option>
+          <option value="American Indian/Alaska Native">American Indian/Alaska Native</option>
+          <option value="Asian">Asian</option>
+          <option value="Black/African American">Black/African American</option>
+          <option value="Native Hawaiian/Pacific Islander">Native Hawaiian/Pacific Islander</option>
+          <option value="White">White</option>
+          <option value="Two or More">Two or More</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ethnicity <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="ethnicity" value="Hispanic or Latino" id="ethH" required>
+            <label class="radio-label" for="ethH">Hispanic or Latino</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="ethnicity" value="Not Hispanic or Latino" id="ethNH">
+            <label class="radio-label" for="ethNH">Not Hispanic or Latino</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Religion</label>
+        <input type="text" class="form-input" name="religion" placeholder="Optional">
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">DRIVER'S LICENSE / STATE ID</div>
+
+        <div class="form-group">
+          <label class="form-label">DL / State ID Number</label>
+          <input type="text" class="form-input" name="dl_number" placeholder="DL, Temp Permit, or State ID #">
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">DL State</label>
+            <input type="text" class="form-input" name="dl_state" value="TX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">DL Expiration</label>
+            <input type="date" class="form-input" name="dl_expiration">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">ALIASES</div>
+        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">List any other names you have gone by (maiden name, nickname used legally, etc.)</p>
+
+        <div class="form-group">
+          <label class="form-label">Alias 1 — Name</label>
+          <input type="text" class="form-input" name="alias_1_name">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <input type="date" class="form-input" name="alias_1_from">
+          </div>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <input type="date" class="form-input" name="alias_1_to">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+          <label class="form-label">Alias 2 — Name</label>
+          <input type="text" class="form-input" name="alias_2_name">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <input type="date" class="form-input" name="alias_2_from">
+          </div>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <input type="date" class="form-input" name="alias_2_to">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 3: CITIZENSHIP & TRAVEL ========== -->
+    <div class="form-section" id="step3">
+      <div class="section-header">Step 3 of 8</div>
+      <div class="section-title">Citizenship & Travel</div>
+
+      <div class="form-group">
+        <label class="form-label">Citizenship <span class="req">*</span></label>
+        <div class="radio-group" style="flex-direction:column;">
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="U.S. Native Born" id="citNB" required>
+            <label class="radio-label" for="citNB">U.S. Native Born</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="Born Abroad" id="citBA">
+            <label class="radio-label" for="citBA">Born Abroad</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="Permanent Resident" id="citPR">
+            <label class="radio-label" for="citPR">Permanent Resident</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="citizenship" value="Immigrant Alien" id="citIA">
+            <label class="radio-label" for="citIA">Immigrant Alien</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="conditional" id="alienGroup">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Alien Registration #</label>
+            <input type="text" class="form-input" name="alien_registration">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-input" name="alien_country">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Place of Birth <span class="req">*</span></label>
+        <input type="text" class="form-input" name="place_of_birth" placeholder="City, State ZIP" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dual Citizenship</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="dual_citizenship" value="Yes" id="dualY">
+            <label class="radio-label" for="dualY">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="dual_citizenship" value="No" id="dualN">
+            <label class="radio-label" for="dualN">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">U.S. PASSPORT</div>
+        <div class="form-group">
+          <label class="form-label">Passport Number</label>
+          <input type="text" class="form-input" name="passport_number">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Issued</label>
+            <input type="date" class="form-input" name="passport_issued">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expires</label>
+            <input type="date" class="form-input" name="passport_expires">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="form-group">
+          <label class="form-label">Registered Voter <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="registered_voter" value="Yes" id="voterY" required>
+              <label class="radio-label" for="voterY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="registered_voter" value="No" id="voterN">
+              <label class="radio-label" for="voterN">No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Selective Service</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="selective_service" value="Yes" id="ssY">
+            <label class="radio-label" for="ssY">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="selective_service" value="No" id="ssN">
+            <label class="radio-label" for="ssN">No</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="selective_service" value="N/A" id="ssNA">
+            <label class="radio-label" for="ssNA">N/A</label>
+          </div>
+        </div>
+        <p class="helper-text">Select N/A if under 18 or female.</p>
+      </div>
+
+      <div class="conditional" id="menstrualGroup">
+        <div class="form-group">
+          <label class="form-label">Last Menstrual Cycle</label>
+          <input type="date" class="form-input" name="last_menstrual_cycle">
+          <p class="helper-text">Required for females only.</p>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">FOREIGN TRAVEL</div>
+        <div class="form-group">
+          <label class="form-label">Have you traveled outside the U.S. in the last 7 years?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="has_foreign_travel" value="Yes" id="travelY">
+              <label class="radio-label" for="travelY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="has_foreign_travel" value="No" id="travelN">
+              <label class="radio-label" for="travelN">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="foreignTravelGroup">
+          <p class="helper-text" style="margin-bottom:12px;">List each trip outside the U.S.</p>
+          <div id="travelList">
+            <div class="travel-entry" data-index="1">
+              <div class="sub-section-title" style="font-size:12px;margin-bottom:8px;">TRIP 1</div>
+              <div class="form-group">
+                <label class="form-label">Country / Location</label>
+                <input type="text" class="form-input" name="travel_1_location" placeholder="e.g. Mexico, Canada, Germany">
+              </div>
+              <div class="input-row">
+                <div class="form-group">
+                  <label class="form-label">From</label>
+                  <input type="date" class="form-input" name="travel_1_from">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">To</label>
+                  <input type="date" class="form-input" name="travel_1_to">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Reason for Travel</label>
+                <input type="text" class="form-input" name="travel_1_reason" placeholder="e.g. Vacation, Family visit, Work">
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-add" onclick="addTrip()">+ ADD ANOTHER TRIP</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 4: FAMILY & EMERGENCY ========== -->
+    <div class="form-section" id="step4">
+      <div class="section-header">Step 4 of 8</div>
+      <div class="section-title">Family & Emergency</div>
+
+      <div class="form-group">
+        <label class="form-label">Marital Status <span class="req">*</span></label>
+        <div class="radio-group" style="flex-direction:column;">
+          <div class="radio-option">
+            <input type="radio" name="marital_status" value="Never Married" id="msNM" required>
+            <label class="radio-label" for="msNM">Never Married</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="marital_status" value="Married" id="msM">
+            <label class="radio-label" for="msM">Married</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="marital_status" value="Divorced" id="msD">
+            <label class="radio-label" for="msD">Divorced</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="marital_status" value="Separated" id="msS">
+            <label class="radio-label" for="msS">Separated</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="marital_status" value="Widowed" id="msW">
+            <label class="radio-label" for="msW">Widowed</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="conditional" id="spouseGroup">
+        <div class="section-divider">
+          <div class="sub-section-title">SPOUSE INFORMATION</div>
+          <div class="form-group">
+            <label class="form-label">Spouse Full Name</label>
+            <input type="text" class="form-input" name="spouse_name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spouse SSN</label>
+            <input type="text" class="form-input ssn-field" name="spouse_ssn" placeholder="000-00-0000" maxlength="11" autocomplete="off">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Spouse Date of Birth</label>
+              <input type="date" class="form-input" name="spouse_dob">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Marriage Date</label>
+              <input type="date" class="form-input" name="marriage_date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spouse Address <span class="note">(if different from yours)</span></label>
+            <input type="text" class="form-input" name="spouse_address" placeholder="Leave blank if same">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Spouse City</label>
+              <input type="text" class="form-input" name="spouse_city">
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" class="form-input" name="spouse_state">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ZIP</label>
+              <input type="text" class="form-input" name="spouse_zip" maxlength="10">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">CHILDREN</div>
+        <div class="form-group">
+          <label class="form-label">Do you have children?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="has_children" value="Yes" id="childY">
+              <label class="radio-label" for="childY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="has_children" value="No" id="childN">
+              <label class="radio-label" for="childN">No</label>
+            </div>
+          </div>
+        </div>
+        <div class="conditional" id="childrenGroup">
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label"># Dependents Total</label>
+              <input type="number" class="form-input" name="num_dependents_total" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label"># Dependents Minor</label>
+              <input type="number" class="form-input" name="num_dependents_minor" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Children Ages</label>
+            <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 14">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">EMERGENCY CONTACT</div>
+        <div class="form-group">
+          <label class="form-label">Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="emergency_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="emergency_relationship">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="emergency_phone" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" name="emergency_email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-input" name="emergency_address">
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">PARENT / GUARDIAN</div>
+        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">Only required if you are under 18.</p>
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" name="parent_name">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="parent_relationship">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" name="parent_phone">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">LIFE INSURANCE BENEFICIARY</div>
+        <div class="form-group">
+          <label class="form-label">In the event something were to happen to you, who would you want your life insurance to go to?</label>
+          <textarea class="form-input form-textarea" name="beneficiary_wishes" rows="3" placeholder="e.g. My wife Jane Doe, or split between my mom and my brother, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(5)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 5: RESIDENCE HISTORY ========== -->
+    <div class="form-section" id="step5">
+      <div class="section-header">Step 5 of 8</div>
+      <div class="section-title">Residence History</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List every address you've lived at for the last 10 years. Start with your most recent previous address — your current address was captured in Step 1.</p>
+
+      <div class="sub-section-title">CURRENT ADDRESS VERIFICATION</div>
+      <div class="form-group">
+        <label class="form-label">Reference Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="current_ref_name" required>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Reference Phone <span class="req">*</span></label>
+          <input type="tel" class="form-input" name="current_ref_phone" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Relationship</label>
+          <input type="text" class="form-input" name="current_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+        </div>
+      </div>
+
+      <div id="residenceList">
+        <!-- Previous Address #1 -->
+        <div class="residence-entry" data-index="1" style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+          <div class="sub-section-title">PREVIOUS ADDRESS #1</div>
+          <div class="form-group">
+            <label class="form-label">Full Address</label>
+            <input type="text" class="form-input" name="prev_address_1_full" placeholder="Street, City, State ZIP">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Move-In</label>
+              <input type="date" class="form-input" name="prev_address_1_movein">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Move-Out</label>
+              <input type="date" class="form-input" name="prev_address_1_moveout">
+            </div>
+          </div>
+          <p class="helper-text" style="margin-bottom:8px;">Verification Reference:</p>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-input" name="prev_address_1_ref_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" name="prev_address_1_ref_phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="prev_address_1_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+          </div>
+        </div>
+
+        <!-- Previous Address #2 -->
+        <div class="residence-entry" data-index="2" style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+          <div class="sub-section-title">PREVIOUS ADDRESS #2</div>
+          <div class="form-group">
+            <label class="form-label">Full Address</label>
+            <input type="text" class="form-input" name="prev_address_2_full" placeholder="Street, City, State ZIP">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Move-In</label>
+              <input type="date" class="form-input" name="prev_address_2_movein">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Move-Out</label>
+              <input type="date" class="form-input" name="prev_address_2_moveout">
+            </div>
+          </div>
+          <p class="helper-text" style="margin-bottom:8px;">Verification Reference:</p>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-input" name="prev_address_2_ref_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" name="prev_address_2_ref_phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="prev_address_2_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-add" onclick="addFormerAddress()">+ ADD ANOTHER ADDRESS</button>
+      <p class="helper-text" style="margin-top:8px;">Keep adding until your addresses cover the full 10 years.</p>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(6)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 6: CHARACTER REFERENCES ========== -->
+    <div class="form-section" id="step6">
+      <div class="section-header">Step 6 of 8</div>
+      <div class="section-title">Character References</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Three non-family references. At least one must have known you 7+ years.</p>
+
+      <!-- Reference 1 -->
+      <div class="sub-section-title">REFERENCE 1 (LONGEST KNOWN)</div>
+      <div class="form-group">
+        <label class="form-label">Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="ref1_name" required>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Phone <span class="req">*</span></label>
+          <input type="tel" class="form-input" name="ref1_phone" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Relationship <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref1_relationship" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Known Since <span class="req">*</span></label>
+        <input type="date" class="form-input" name="ref1_known_since" required>
+        <p class="helper-text">Must be 7+ years.</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Address <span class="req">*</span></label>
+        <input type="text" class="form-input" name="ref1_address" required>
+      </div>
+
+      <!-- Reference 2 -->
+      <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+        <div class="sub-section-title">REFERENCE 2</div>
+        <div class="form-group">
+          <label class="form-label">Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref2_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="ref2_phone" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ref2_relationship" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Since <span class="req">*</span></label>
+          <input type="date" class="form-input" name="ref2_known_since" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref2_address" required>
+        </div>
+      </div>
+
+      <!-- Reference 3 -->
+      <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+        <div class="sub-section-title">REFERENCE 3</div>
+        <div class="form-group">
+          <label class="form-label">Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref3_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="ref3_phone" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ref3_relationship" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Since <span class="req">*</span></label>
+          <input type="date" class="form-input" name="ref3_known_since" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref3_address" required>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(7)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 7: EDUCATION & EMPLOYMENT ========== -->
+    <div class="form-section" id="step7">
+      <div class="section-header">Step 7 of 8</div>
+      <div class="section-title">Education & Employment</div>
+
+      <div class="sub-section-title">HIGH SCHOOL</div>
+      <div class="form-group">
+        <label class="form-label">High School Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="hs_name" required>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input type="text" class="form-input" name="hs_city">
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input type="text" class="form-input" name="hs_state" value="TX">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Graduation Date</label>
+          <input type="month" class="form-input" name="hs_graduation">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Grade Level</label>
+          <select class="form-select" name="hs_grade_level">
+            <option value="N/A — Graduated">N/A — Graduated</option>
+            <option value="Junior (11th)">Junior (11th)</option>
+            <option value="Senior (12th)">Senior (12th)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">COLLEGE</div>
+        <div class="form-group">
+          <label class="form-label">College Name</label>
+          <input type="text" class="form-input" name="college_name" placeholder="Leave blank if N/A">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Graduation Date</label>
+            <input type="month" class="form-input" name="college_graduation">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Credit Hours</label>
+            <input type="number" class="form-input" name="college_credits">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Degree</label>
+          <input type="text" class="form-input" name="college_degree" placeholder="e.g. Associate's, Bachelor's in Business">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Education Level</label>
+          <select class="form-select" name="education_level">
+            <option value="">--</option>
+            <option value="Some High School">Some High School</option>
+            <option value="High School Diploma / GED">High School Diploma / GED</option>
+            <option value="Some College">Some College</option>
+            <option value="Associate's">Associate's</option>
+            <option value="Bachelor's">Bachelor's</option>
+            <option value="Master's">Master's</option>
+            <option value="Doctorate">Doctorate</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">EMPLOYMENT</div>
+        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">Current or most recent employer. Add previous employers below.</p>
+
+        <div id="employerList">
+          <div class="employer-entry" data-index="1">
+            <div class="form-group">
+              <label class="form-label">Company Name <span class="req">*</span></label>
+              <input type="text" class="form-input" name="employer_1_company" required>
+            </div>
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input type="text" class="form-input" name="employer_1_title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-input" name="employer_1_address">
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input type="month" class="form-input" name="employer_1_start">
+              </div>
+              <div class="form-group">
+                <label class="form-label">End Date</label>
+                <input type="month" class="form-input" name="employer_1_end">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Supervisor</label>
+              <input type="text" class="form-input" name="employer_1_supervisor" placeholder="Name — (000) 000-0000">
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-add" onclick="addEmployer()">+ ADD PREVIOUS EMPLOYER</button>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(6)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(8)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 8: MILITARY, MEDICAL & TATTOOS ========== -->
+    <div class="form-section" id="step8">
+      <div class="section-header">Step 8 of 8</div>
+      <div class="section-title">Military, Medical & Tattoos</div>
+
+      <div class="sub-section-title">PRIOR SERVICE</div>
+      <div class="form-group">
+        <label class="form-label">Have you served in any branch of the military? <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="prior_service" value="Yes" id="priorY" required>
+            <label class="radio-label" for="priorY">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="prior_service" value="No" id="priorN">
+            <label class="radio-label" for="priorN">No</label>
+          </div>
+        </div>
+      </div>
+      <div class="conditional" id="priorServiceGroup">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Branch</label>
+            <input type="text" class="form-input" name="prior_branch">
+          </div>
+          <div class="form-group">
+            <label class="form-label">RE Code</label>
+            <input type="text" class="form-input" name="prior_re_code">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">MOS</label>
+            <input type="text" class="form-input" name="prior_mos">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pay Grade</label>
+            <input type="text" class="form-input" name="prior_pay_grade">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Separation Reason</label>
+            <input type="text" class="form-input" name="prior_separation_reason">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Separation Code</label>
+            <input type="text" class="form-input" name="prior_separation_code">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Enlistment Date</label>
+            <input type="date" class="form-input" name="prior_enlistment_date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date of Rank</label>
+            <input type="date" class="form-input" name="prior_date_of_rank">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Discharge Date</label>
+          <input type="date" class="form-input" name="prior_discharge_date">
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">MEDICAL</div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Insurance Provider</label>
+            <input type="text" class="form-input" name="insurance_provider">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Insurance Address</label>
+            <input type="text" class="form-input" name="insurance_address">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Primary Care Doctor</label>
+            <input type="text" class="form-input" name="doctor_name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Doctor Address</label>
+            <input type="text" class="form-input" name="doctor_address">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">TATTOOS</div>
+        <div class="form-group">
+          <label class="form-label">Do you have any tattoos or brandings?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="has_tattoos" value="Yes" id="tattooY">
+              <label class="radio-label" for="tattooY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="has_tattoos" value="No" id="tattooN">
+              <label class="radio-label" for="tattooN">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="tattooGroup">
+          <p class="helper-text" style="margin-bottom:12px;">List each tattoo. The Army needs to document them all.</p>
+          <div id="tattooList">
+            <div class="tattoo-entry" data-index="1" style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px;">
+              <div class="sub-section-title" style="font-size:12px;margin-bottom:8px;">TATTOO 1</div>
+              <div class="form-group">
+                <label class="form-label">Location on Body</label>
+                <input type="text" class="form-input" name="tattoo_1_location" placeholder="e.g. Left forearm, Right shoulder, Back">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-input" name="tattoo_1_description" placeholder="What does it look like?">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Meaning / Significance</label>
+                <input type="text" class="form-input" name="tattoo_1_meaning" placeholder="What does it mean to you?">
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-add" onclick="addTattoo()">+ ADD ANOTHER TATTOO</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(7)">BACK</button>
+        <button type="submit" class="btn-submit">SUBMIT APPLICATION</button>
+      </div>
+    </div>
+
+    <!-- ========== SUCCESS SCREEN ========== -->
+    <div class="form-section" id="stepSuccess">
+      <div class="result-card">
+        <div class="result-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" stroke="#C5A55A" stroke-width="3"/>
+            <path d="M20 33l8 8 16-16" stroke="#C5A55A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="result-title">Application Complete!</div>
+        <p class="result-message">You've completed the full application. SGT Andrews now has everything she needs to move forward with your enlistment packet. She will be in touch with next steps.</p>
+        <div class="recruiter-card">
+          <div class="name">SGT KARA ANDREWS</div>
+          <div class="detail">Texas Army National Guard Recruiter</div>
+          <div class="detail" style="margin-top:8px;"><a href="tel:9033720877">(903) 372-0877</a></div>
+          <div class="detail"><a href="mailto:kara.r.andrews.mil@army.mil">kara.r.andrews.mil@army.mil</a></div>
+        </div>
+        <a href="https://brazenrecruits.com" class="back-link">BACK TO HOME</a>
+      </div>
+    </div>
+  </form>
+
+  <p class="disclaimer">
+    Your information is protected and will only be used by SGT Kara Andrews for military recruiting purposes.<br>
+    By submitting this form, you are allowing the Texas Army National Guard to contact you.
+  </p>
+</div>
+
+<script>
+  const totalSteps = 8;
+  let currentStep = 1;
+
+  // ── NAVIGATION & VALIDATION ──
+  function goTo(step) {
+    if (step > currentStep) {
+      const sec = document.getElementById('step' + currentStep);
+      const req = sec.querySelectorAll('[required]');
+      let valid = true;
+      req.forEach(function(f) {
+        if (f.type === 'radio') {
+          const grp = sec.querySelectorAll('input[name="' + f.name + '"]');
+          const checked = Array.from(grp).some(function(r) { return r.checked; });
+          if (!checked) {
+            valid = false;
+            var rg = f.closest('.radio-group');
+            if (rg) rg.style.outline = '2px solid var(--red-highlight)';
+          } else {
+            var rg = f.closest('.radio-group');
+            if (rg) rg.style.outline = '';
+          }
+        } else {
+          if (!f.value.trim()) {
+            valid = false;
+            f.style.borderColor = 'var(--red-highlight)';
+          } else {
+            f.style.borderColor = '';
+          }
+        }
+      });
+      if (!valid) return;
+    }
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    var next = document.getElementById('step' + step);
+    next.style.display = 'block';
+    next.classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    document.getElementById('progressStep').textContent = 'Step ' + currentStep + ' of ' + totalSteps;
+    document.getElementById('progressFill').style.width = ((currentStep / totalSteps) * 100) + '%';
+  }
+
+  // ── DOB → AGE AUTO-CALCULATE ──
+  document.getElementById('dobInput').addEventListener('change', function() {
+    var dob = new Date(this.value);
+    if (isNaN(dob.getTime())) { document.getElementById('ageInput').value = ''; return; }
+    var today = new Date();
+    var age = today.getFullYear() - dob.getFullYear();
+    var m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    document.getElementById('ageInput').value = age;
+  });
+
+  // ── SSN AUTO-FORMAT ──
+  document.querySelectorAll('.ssn-field').forEach(function(input) {
+    input.addEventListener('input', function(e) {
+      var v = e.target.value.replace(/\D/g, '').slice(0, 9);
+      if (v.length > 5) v = v.slice(0, 3) + '-' + v.slice(3, 5) + '-' + v.slice(5);
+      else if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
+      e.target.value = v;
+    });
+  });
+
+  // ── PHONE AUTO-FORMAT ──
+  function formatPhoneInput(input) {
+    input.addEventListener('input', function(e) {
+      var v = e.target.value.replace(/\D/g, '').slice(0, 10);
+      if (v.length > 6) v = '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6);
+      else if (v.length > 3) v = '(' + v.slice(0, 3) + ') ' + v.slice(3);
+      e.target.value = v;
+    });
+  }
+  document.querySelectorAll('input[type="tel"]').forEach(formatPhoneInput);
+
+  // ── CONDITIONAL SHOW/HIDE ──
+
+  // Gender → menstrual cycle
+  document.querySelectorAll('input[name="gender"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('menstrualGroup').classList.toggle('visible', this.value === 'Female');
+    });
+  });
+
+  // Citizenship → alien fields
+  document.querySelectorAll('input[name="citizenship"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('alienGroup').classList.toggle('visible', this.value !== 'U.S. Native Born');
+    });
+  });
+
+  // Marital Status → spouse section
+  document.querySelectorAll('input[name="marital_status"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('spouseGroup').classList.toggle('visible', this.value === 'Married');
+    });
+  });
+
+  // Has Children → children details
+  document.querySelectorAll('input[name="has_children"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('childrenGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // Foreign Travel → travel list
+  document.querySelectorAll('input[name="has_foreign_travel"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('foreignTravelGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // Prior Service → military details
+  document.querySelectorAll('input[name="prior_service"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('priorServiceGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // Has Tattoos → tattoo details
+  document.querySelectorAll('input[name="has_tattoos"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('tattooGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // ── DYNAMIC ADD/REMOVE ──
+
+  // Residence History
+  var residenceCount = 2;
+  function addFormerAddress() {
+    residenceCount++;
+    var list = document.getElementById('residenceList');
+    var entry = document.createElement('div');
+    entry.className = 'residence-entry';
+    entry.dataset.index = residenceCount;
+    entry.style.borderTop = '1px solid var(--border)';
+    entry.style.paddingTop = '20px';
+    entry.style.marginTop = '20px';
+    var n = residenceCount;
+    entry.innerHTML =
+      '<div class="dynamic-header">' +
+        '<div class="sub-section-title" style="margin-bottom:0;">PREVIOUS ADDRESS #' + n + '</div>' +
+        '<button type="button" class="btn-remove" onclick="this.closest(\'.residence-entry\').remove()">REMOVE</button>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Full Address</label>' +
+        '<input type="text" class="form-input" name="prev_address_' + n + '_full" placeholder="Street, City, State ZIP">' +
+      '</div>' +
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">Move-In</label><input type="date" class="form-input" name="prev_address_' + n + '_movein"></div>' +
+        '<div class="form-group"><label class="form-label">Move-Out</label><input type="date" class="form-input" name="prev_address_' + n + '_moveout"></div>' +
+      '</div>' +
+      '<p class="helper-text" style="margin-bottom:8px;">Verification Reference:</p>' +
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" name="prev_address_' + n + '_ref_name"></div>' +
+        '<div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" name="prev_address_' + n + '_ref_phone"></div>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Relationship</label><input type="text" class="form-input" name="prev_address_' + n + '_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord"></div>';
+    list.appendChild(entry);
+    entry.querySelectorAll('input[type="tel"]').forEach(formatPhoneInput);
+  }
+
+  // Foreign Travel
+  var tripCount = 1;
+  function addTrip() {
+    tripCount++;
+    var list = document.getElementById('travelList');
+    var entry = document.createElement('div');
+    entry.className = 'travel-entry dynamic-entry';
+    entry.dataset.index = tripCount;
+    var n = tripCount;
+    entry.innerHTML =
+      '<div class="dynamic-header">' +
+        '<div class="sub-section-title" style="font-size:12px;margin-bottom:0;">TRIP ' + n + '</div>' +
+        '<button type="button" class="btn-remove" onclick="this.closest(\'.travel-entry\').remove()">REMOVE</button>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Country / Location</label><input type="text" class="form-input" name="travel_' + n + '_location" placeholder="e.g. Mexico, Canada, Germany"></div>' +
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">From</label><input type="date" class="form-input" name="travel_' + n + '_from"></div>' +
+        '<div class="form-group"><label class="form-label">To</label><input type="date" class="form-input" name="travel_' + n + '_to"></div>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Reason for Travel</label><input type="text" class="form-input" name="travel_' + n + '_reason" placeholder="e.g. Vacation, Family visit, Work"></div>';
+    list.appendChild(entry);
+  }
+
+  // Tattoos
+  var tattooCount = 1;
+  function addTattoo() {
+    tattooCount++;
+    var list = document.getElementById('tattooList');
+    var entry = document.createElement('div');
+    entry.className = 'tattoo-entry';
+    entry.dataset.index = tattooCount;
+    entry.style.borderTop = '1px solid var(--border)';
+    entry.style.paddingTop = '14px';
+    entry.style.marginTop = '14px';
+    entry.style.borderBottom = '1px solid var(--border)';
+    entry.style.paddingBottom = '14px';
+    entry.style.marginBottom = '14px';
+    var n = tattooCount;
+    entry.innerHTML =
+      '<div class="dynamic-header">' +
+        '<div class="sub-section-title" style="font-size:12px;margin-bottom:0;">TATTOO ' + n + '</div>' +
+        '<button type="button" class="btn-remove" onclick="this.closest(\'.tattoo-entry\').remove()">REMOVE</button>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Location on Body</label><input type="text" class="form-input" name="tattoo_' + n + '_location" placeholder="e.g. Left forearm, Right shoulder, Back"></div>' +
+      '<div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" name="tattoo_' + n + '_description" placeholder="What does it look like?"></div>' +
+      '<div class="form-group"><label class="form-label">Meaning / Significance</label><input type="text" class="form-input" name="tattoo_' + n + '_meaning" placeholder="What does it mean to you?"></div>';
+    list.appendChild(entry);
+  }
+
+  // Employers
+  var employerCount = 1;
+  function addEmployer() {
+    employerCount++;
+    var list = document.getElementById('employerList');
+    var entry = document.createElement('div');
+    entry.className = 'employer-entry dynamic-entry';
+    entry.dataset.index = employerCount;
+    var n = employerCount;
+    entry.innerHTML =
+      '<div class="dynamic-header">' +
+        '<div class="sub-section-title" style="margin-bottom:0;">EMPLOYER ' + n + '</div>' +
+        '<button type="button" class="btn-remove" onclick="this.closest(\'.employer-entry\').remove()">REMOVE</button>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Company Name</label><input type="text" class="form-input" name="employer_' + n + '_company"></div>' +
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">Job Title</label><input type="text" class="form-input" name="employer_' + n + '_title"></div>' +
+        '<div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" name="employer_' + n + '_address"></div>' +
+      '</div>' +
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">Start Date</label><input type="month" class="form-input" name="employer_' + n + '_start"></div>' +
+        '<div class="form-group"><label class="form-label">End Date</label><input type="month" class="form-input" name="employer_' + n + '_end"></div>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Supervisor</label><input type="text" class="form-input" name="employer_' + n + '_supervisor" placeholder="Name — (000) 000-0000"></div>';
+    list.appendChild(entry);
+  }
+
+  // ── SUCCESS SCREEN ──
+  function showSuccess() {
+    for (var i = 1; i <= totalSteps; i++) {
+      document.getElementById('step' + i).style.display = 'none';
+      document.getElementById('step' + i).classList.remove('active');
+    }
+    document.querySelector('.progress-container').style.display = 'none';
+    document.querySelector('.page-subtitle').style.display = 'none';
+    var successEl = document.getElementById('stepSuccess');
+    successEl.style.display = 'block';
+    successEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── FORM SUBMISSION ──
+  document.getElementById('applyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = e.target;
+    var submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'SUBMITTING...';
+
+    var formData = new FormData(form);
+    var data = {};
+    formData.forEach(function(value, key) { if (value) data[key] = value; });
+
+    var applicantName = (data.first_name || '') + ' ' + (data.last_name || '');
+    data._applicant_name = applicantName;
+
+    // 1. Save to Supabase (non-blocking)
+    fetch('/.netlify/functions/save-to-supabase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function() {});
+
+    // 2. Primary: Web3Forms email
+    var lines = [];
+    lines.push('========================================');
+    lines.push('  FULL APPLICATION — ENLISTMENT PACKET');
+    lines.push('========================================');
+    lines.push('');
+
+    // Personal Info
+    lines.push('--- PERSONAL INFORMATION ---');
+    lines.push('Name: ' + applicantName + (data.middle_name ? ' (Middle: ' + data.middle_name + ')' : '') + (data.suffix ? ' ' + data.suffix : ''));
+    lines.push('Gender: ' + (data.gender || ''));
+    lines.push('DOB: ' + (data.dob || '') + '  Age: ' + (data.age || ''));
+    lines.push('SSN: ' + (data.ssn || ''));
+    lines.push('Phone: ' + (data.phone || '') + (data.phone_secondary ? '  Secondary: ' + data.phone_secondary : ''));
+    lines.push('Email: ' + (data.email || ''));
+    lines.push('Address: ' + (data.address_street || '') + ', ' + (data.address_city || '') + ', ' + (data.address_state || '') + ' ' + (data.address_zip || '') + (data.address_county ? ' (' + data.address_county + ' County)' : ''));
+    lines.push('');
+
+    // Physical & Demographics
+    lines.push('--- PHYSICAL & DEMOGRAPHICS ---');
+    if (data.height_feet) lines.push('Height: ' + data.height_feet + '\'' + (data.height_inches || '0') + '"');
+    if (data.weight) lines.push('Weight: ' + data.weight + ' lbs');
+    if (data.eye_color) lines.push('Eyes: ' + data.eye_color);
+    if (data.hair_color) lines.push('Hair: ' + data.hair_color);
+    if (data.race) lines.push('Race: ' + data.race);
+    lines.push('Ethnicity: ' + (data.ethnicity || ''));
+    if (data.religion) lines.push('Religion: ' + data.religion);
+    if (data.dl_number) lines.push('DL/ID: ' + data.dl_number + ' (' + (data.dl_state || '') + ') Exp: ' + (data.dl_expiration || ''));
+    if (data.alias_1_name) lines.push('Alias 1: ' + data.alias_1_name + ' (' + (data.alias_1_from || '?') + ' to ' + (data.alias_1_to || '?') + ')');
+    if (data.alias_2_name) lines.push('Alias 2: ' + data.alias_2_name + ' (' + (data.alias_2_from || '?') + ' to ' + (data.alias_2_to || '?') + ')');
+    lines.push('');
+
+    // Citizenship & Travel
+    lines.push('--- CITIZENSHIP & TRAVEL ---');
+    lines.push('Citizenship: ' + (data.citizenship || ''));
+    if (data.alien_registration) lines.push('Alien Reg #: ' + data.alien_registration + '  Country: ' + (data.alien_country || ''));
+    lines.push('Place of Birth: ' + (data.place_of_birth || ''));
+    if (data.dual_citizenship) lines.push('Dual Citizenship: ' + data.dual_citizenship);
+    if (data.passport_number) lines.push('Passport: ' + data.passport_number + ' (Issued: ' + (data.passport_issued || '?') + ', Exp: ' + (data.passport_expires || '?') + ')');
+    lines.push('Registered Voter: ' + (data.registered_voter || ''));
+    lines.push('Selective Service: ' + (data.selective_service || ''));
+    if (data.last_menstrual_cycle) lines.push('Last Menstrual Cycle: ' + data.last_menstrual_cycle);
+    lines.push('Foreign Travel: ' + (data.has_foreign_travel || 'No'));
+    for (var t = 1; t <= 20; t++) {
+      if (data['travel_' + t + '_location']) {
+        lines.push('  Trip ' + t + ': ' + data['travel_' + t + '_location'] + ' (' + (data['travel_' + t + '_from'] || '?') + ' to ' + (data['travel_' + t + '_to'] || '?') + ') — ' + (data['travel_' + t + '_reason'] || ''));
+      }
+    }
+    lines.push('');
+
+    // Family & Emergency
+    lines.push('--- FAMILY & EMERGENCY ---');
+    lines.push('Marital Status: ' + (data.marital_status || ''));
+    if (data.marital_status === 'Married') {
+      lines.push('Spouse: ' + (data.spouse_name || ''));
+      if (data.spouse_ssn) lines.push('Spouse SSN: ' + data.spouse_ssn);
+      if (data.spouse_dob) lines.push('Spouse DOB: ' + data.spouse_dob);
+      if (data.marriage_date) lines.push('Marriage Date: ' + data.marriage_date);
+      if (data.spouse_address) lines.push('Spouse Address: ' + data.spouse_address + (data.spouse_city ? ', ' + data.spouse_city : '') + (data.spouse_state ? ', ' + data.spouse_state : '') + (data.spouse_zip ? ' ' + data.spouse_zip : ''));
+    }
+    lines.push('Has Children: ' + (data.has_children || 'No'));
+    if (data.has_children === 'Yes') {
+      lines.push('Dependents Total: ' + (data.num_dependents_total || '0') + '  Minor: ' + (data.num_dependents_minor || '0'));
+      if (data.children_ages) lines.push('Children Ages: ' + data.children_ages);
+    }
+    lines.push('Emergency Contact: ' + (data.emergency_name || '') + ' (' + (data.emergency_relationship || '') + ')');
+    lines.push('EC Phone: ' + (data.emergency_phone || '') + (data.emergency_email ? '  Email: ' + data.emergency_email : ''));
+    if (data.emergency_address) lines.push('EC Address: ' + data.emergency_address);
+    if (data.parent_name) lines.push('Parent/Guardian: ' + data.parent_name + ' (' + (data.parent_relationship || '') + ') ' + (data.parent_phone || ''));
+    if (data.beneficiary_wishes) lines.push('Beneficiary: ' + data.beneficiary_wishes);
+    lines.push('');
+
+    // Residence History
+    lines.push('--- RESIDENCE HISTORY ---');
+    lines.push('Current Address Ref: ' + (data.current_ref_name || '') + ' (' + (data.current_ref_relationship || '') + ') ' + (data.current_ref_phone || ''));
+    for (var r = 1; r <= 20; r++) {
+      if (data['prev_address_' + r + '_full']) {
+        lines.push('Address #' + r + ': ' + data['prev_address_' + r + '_full'] +
+          ' | Move-In: ' + (data['prev_address_' + r + '_movein'] || '?') +
+          ' Move-Out: ' + (data['prev_address_' + r + '_moveout'] || '?'));
+        if (data['prev_address_' + r + '_ref_name']) {
+          lines.push('  Ref: ' + data['prev_address_' + r + '_ref_name'] + ' (' + (data['prev_address_' + r + '_ref_relationship'] || '') + ') ' + (data['prev_address_' + r + '_ref_phone'] || ''));
+        }
+      }
+    }
+    lines.push('');
+
+    // Character References
+    lines.push('--- CHARACTER REFERENCES ---');
+    for (var c = 1; c <= 3; c++) {
+      if (data['ref' + c + '_name']) {
+        lines.push('Ref ' + c + ': ' + data['ref' + c + '_name'] + ' (' + (data['ref' + c + '_relationship'] || '') + ')');
+        lines.push('  Phone: ' + (data['ref' + c + '_phone'] || '') + '  Known Since: ' + (data['ref' + c + '_known_since'] || ''));
+        lines.push('  Address: ' + (data['ref' + c + '_address'] || ''));
+      }
+    }
+    lines.push('');
+
+    // Education & Employment
+    lines.push('--- EDUCATION ---');
+    lines.push('High School: ' + (data.hs_name || '') + (data.hs_city ? ', ' + data.hs_city : '') + (data.hs_state ? ', ' + data.hs_state : ''));
+    if (data.hs_graduation) lines.push('HS Graduation: ' + data.hs_graduation);
+    if (data.hs_grade_level) lines.push('Grade Level: ' + data.hs_grade_level);
+    if (data.college_name) {
+      lines.push('College: ' + data.college_name);
+      if (data.college_graduation) lines.push('College Graduation: ' + data.college_graduation);
+      if (data.college_credits) lines.push('Credit Hours: ' + data.college_credits);
+      if (data.college_degree) lines.push('Degree: ' + data.college_degree);
+    }
+    if (data.education_level) lines.push('Education Level: ' + data.education_level);
+    lines.push('');
+    lines.push('--- EMPLOYMENT ---');
+    for (var emp = 1; emp <= 20; emp++) {
+      if (data['employer_' + emp + '_company']) {
+        lines.push('Employer ' + emp + ': ' + data['employer_' + emp + '_company'] +
+          (data['employer_' + emp + '_title'] ? ' — ' + data['employer_' + emp + '_title'] : ''));
+        if (data['employer_' + emp + '_address']) lines.push('  Address: ' + data['employer_' + emp + '_address']);
+        lines.push('  Dates: ' + (data['employer_' + emp + '_start'] || '?') + ' to ' + (data['employer_' + emp + '_end'] || 'Present'));
+        if (data['employer_' + emp + '_supervisor']) lines.push('  Supervisor: ' + data['employer_' + emp + '_supervisor']);
+      }
+    }
+    lines.push('');
+
+    // Military, Medical & Tattoos
+    lines.push('--- PRIOR SERVICE ---');
+    lines.push('Prior Service: ' + (data.prior_service || 'No'));
+    if (data.prior_service === 'Yes') {
+      if (data.prior_branch) lines.push('Branch: ' + data.prior_branch);
+      if (data.prior_re_code) lines.push('RE Code: ' + data.prior_re_code);
+      if (data.prior_mos) lines.push('MOS: ' + data.prior_mos);
+      if (data.prior_pay_grade) lines.push('Pay Grade: ' + data.prior_pay_grade);
+      if (data.prior_separation_reason) lines.push('Separation Reason: ' + data.prior_separation_reason);
+      if (data.prior_separation_code) lines.push('Separation Code: ' + data.prior_separation_code);
+      if (data.prior_enlistment_date) lines.push('Enlistment Date: ' + data.prior_enlistment_date);
+      if (data.prior_date_of_rank) lines.push('Date of Rank: ' + data.prior_date_of_rank);
+      if (data.prior_discharge_date) lines.push('Discharge Date: ' + data.prior_discharge_date);
+    }
+    lines.push('');
+    lines.push('--- MEDICAL ---');
+    if (data.insurance_provider) lines.push('Insurance: ' + data.insurance_provider + (data.insurance_address ? ' — ' + data.insurance_address : ''));
+    if (data.doctor_name) lines.push('Doctor: ' + data.doctor_name + (data.doctor_address ? ' — ' + data.doctor_address : ''));
+    lines.push('');
+    lines.push('--- TATTOOS ---');
+    lines.push('Has Tattoos: ' + (data.has_tattoos || 'No'));
+    for (var tt = 1; tt <= 20; tt++) {
+      if (data['tattoo_' + tt + '_location']) {
+        lines.push('  Tattoo ' + tt + ': ' + data['tattoo_' + tt + '_location'] + ' — ' + (data['tattoo_' + tt + '_description'] || '') + ' (' + (data['tattoo_' + tt + '_meaning'] || '') + ')');
+      }
+    }
+
+    var payload = {
+      access_key: data.access_key,
+      subject: data.subject + ' — ' + applicantName,
+      from_name: data.from_name,
+      message: lines.join('\n'),
+      'Applicant Name': applicantName,
+      'Email': data.email || ''
+    };
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(result) {
+      if (result.success) {
+        showSuccess();
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SUBMIT APPLICATION';
+        alert('Something went wrong. Please try again or contact SGT Andrews at (903) 372-0877.');
+      }
+    })
+    .catch(function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'SUBMIT APPLICATION';
+      alert('Something went wrong. Please try again or contact SGT Andrews at (903) 372-0877.');
+    });
+  });
+</script>
+</body>
+</html>
