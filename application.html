@@ -159,7 +159,7 @@
 
     <!-- ========== STEP 1: VERIFY IDENTITY + SPOUSE ========== -->
     <div class="form-section active" id="step1">
-      <div class="section-header">Step 1 of 5</div>
+      <div class="section-header">Step 1 of 6</div>
       <div class="section-title">Verify Your Identity</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Enter your name and email so we can link this with your appointment information.</p>
 
@@ -248,9 +248,68 @@
       </div>
     </div>
 
-    <!-- ========== STEP 2: EMERGENCY CONTACT ========== -->
+    <!-- ========== STEP 2: RESIDENCE HISTORY ========== -->
     <div class="form-section" id="step2">
-      <div class="section-header">Step 2 of 5</div>
+      <div class="section-header">Step 2 of 6</div>
+      <div class="section-title">Residence History</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List every address you've lived at for the last 10 years — starting with the most recent. Your current address was already captured on the appointment form, so start with your <strong style="color:var(--gold-light);">previous</strong> address.</p>
+
+      <div id="residenceList">
+        <!-- Residence #1 (pre-loaded) -->
+        <div class="residence-entry" data-index="1">
+          <div class="sub-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>PREVIOUS ADDRESS #1</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Street Address <span class="req">*</span></label>
+            <input type="text" class="form-input" name="prev_address_1_street" required>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">City <span class="req">*</span></label>
+              <input type="text" class="form-input" name="prev_address_1_city" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State <span class="req">*</span></label>
+              <input type="text" class="form-input" name="prev_address_1_state">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ZIP</label>
+              <input type="text" class="form-input" name="prev_address_1_zip" maxlength="10">
+            </div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">From (Month/Year) <span class="req">*</span></label>
+              <input type="month" class="form-input" name="prev_address_1_from" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To (Month/Year) <span class="req">*</span></label>
+              <input type="month" class="form-input" name="prev_address_1_to" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-add-residence" id="addResidenceBtn" onclick="addResidence()" style="
+        width:100%; padding:14px; margin-top:12px; background:transparent; border:1px dashed var(--gold-dim);
+        border-radius:8px; color:var(--gold); font-family:'Bebas Neue',cursive; font-size:14px; letter-spacing:3px;
+        cursor:pointer; transition:all 0.2s ease;
+      ">+ ADD ANOTHER ADDRESS</button>
+      <p class="helper-text" style="margin-top:8px;">Keep adding until your addresses cover the full 10 years. If you've lived at your current address that whole time, just type "Same as current" and put the date range.</p>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 3: EMERGENCY CONTACT ========== -->
+    <div class="form-section" id="step3">
+      <div class="section-header">Step 3 of 6</div>
       <div class="section-title">Emergency Contact</div>
 
       <div class="form-group">
@@ -300,14 +359,14 @@
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
       </div>
     </div>
 
-    <!-- ========== STEP 3: BENEFICIARY INFORMATION ========== -->
-    <div class="form-section" id="step3">
-      <div class="section-header">Step 3 of 5</div>
+    <!-- ========== STEP 4: BENEFICIARY INFORMATION ========== -->
+    <div class="form-section" id="step4">
+      <div class="section-header">Step 4 of 6</div>
       <div class="section-title">Beneficiary Information</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Servicemembers' Group Life Insurance (SGLI) requires you to name beneficiaries — the people who would receive your life insurance benefit.</p>
 
@@ -382,14 +441,14 @@
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
+        <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(5)">CONTINUE</button>
       </div>
     </div>
 
-    <!-- ========== STEP 4: MEDICAL & TATTOOS ========== -->
-    <div class="form-section" id="step4">
-      <div class="section-header">Step 4 of 5</div>
+    <!-- ========== STEP 5: MEDICAL & TATTOOS ========== -->
+    <div class="form-section" id="step5">
+      <div class="section-header">Step 5 of 6</div>
       <div class="section-title">Medical & Tattoos</div>
 
       <div class="form-group">
@@ -460,14 +519,14 @@
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(5)">CONTINUE</button>
+        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(6)">CONTINUE</button>
       </div>
     </div>
 
-    <!-- ========== STEP 5: EDUCATION DETAILS ========== -->
-    <div class="form-section" id="step5">
-      <div class="section-header">Step 5 of 5</div>
+    <!-- ========== STEP 6: EDUCATION DETAILS ========== -->
+    <div class="form-section" id="step6">
+      <div class="section-header">Step 6 of 6</div>
       <div class="section-title">Education Details</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">We have your school names from the appointment form. We just need a few more details here.</p>
 
@@ -515,7 +574,7 @@
       <button type="submit" class="btn-submit">SUBMIT APPLICATION</button>
 
       <div class="btn-row" style="margin-top:12px;">
-        <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
+        <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
       </div>
     </div>
 
@@ -557,8 +616,62 @@
 </div>
 
 <script>
-  const totalSteps = 5;
+  const totalSteps = 6;
   let currentStep = 1;
+  let residenceCount = 1;
+
+  function addResidence() {
+    residenceCount++;
+    const list = document.getElementById('residenceList');
+    const entry = document.createElement('div');
+    entry.className = 'residence-entry';
+    entry.dataset.index = residenceCount;
+    entry.style.borderTop = '1px solid var(--border)';
+    entry.style.paddingTop = '16px';
+    entry.style.marginTop = '16px';
+    entry.innerHTML = `
+      <div class="sub-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>PREVIOUS ADDRESS #${residenceCount}</span>
+        <button type="button" onclick="removeResidence(this)" style="
+          background:none;border:1px solid var(--border);border-radius:4px;color:var(--gray);
+          font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Barlow',sans-serif;
+        ">REMOVE</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Street Address</label>
+        <input type="text" class="form-input" name="prev_address_${residenceCount}_street">
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input type="text" class="form-input" name="prev_address_${residenceCount}_city">
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input type="text" class="form-input" name="prev_address_${residenceCount}_state">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ZIP</label>
+          <input type="text" class="form-input" name="prev_address_${residenceCount}_zip" maxlength="10">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">From (Month/Year)</label>
+          <input type="month" class="form-input" name="prev_address_${residenceCount}_from">
+        </div>
+        <div class="form-group">
+          <label class="form-label">To (Month/Year)</label>
+          <input type="month" class="form-input" name="prev_address_${residenceCount}_to">
+        </div>
+      </div>
+    `;
+    list.appendChild(entry);
+  }
+
+  function removeResidence(btn) {
+    btn.closest('.residence-entry').remove();
+  }
 
   function goTo(step) {
     if (step > currentStep) {
@@ -700,6 +813,18 @@
     }
     lines.push('Dependents Total: ' + (data.num_dependents_total || '0'));
     lines.push('Dependents Minor: ' + (data.num_dependents_minor || '0'));
+    lines.push('');
+    lines.push('--- RESIDENCE HISTORY (Last 10 Years) ---');
+    for (let r = 1; r <= 10; r++) {
+      if (data['prev_address_' + r + '_street']) {
+        lines.push('Address #' + r + ': ' + data['prev_address_' + r + '_street'] +
+          (data['prev_address_' + r + '_city'] ? ', ' + data['prev_address_' + r + '_city'] : '') +
+          (data['prev_address_' + r + '_state'] ? ', ' + data['prev_address_' + r + '_state'] : '') +
+          (data['prev_address_' + r + '_zip'] ? ' ' + data['prev_address_' + r + '_zip'] : '') +
+          ' | From: ' + (data['prev_address_' + r + '_from'] || '?') +
+          ' To: ' + (data['prev_address_' + r + '_to'] || '?'));
+      }
+    }
     lines.push('');
     lines.push('Emergency Contact: ' + (data.emergency_contact_name || '') + ' (' + (data.emergency_contact_relationship || '') + ')');
     lines.push('EC Phone: ' + (data.emergency_contact_phone || ''));
