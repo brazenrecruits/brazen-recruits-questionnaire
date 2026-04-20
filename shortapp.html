@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Application | SGT Kara Andrews — Texas Army National Guard</title>
+<meta name="description" content="Complete the short pre-screening application for SGT Kara Andrews — Texas Army National Guard.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0D0A;
+    --card-bg: #1A1C16;
+    --border: #2A2D22;
+    --gold: #C5A55A;
+    --gold-light: #DFC07F;
+    --gold-dim: #9A7F3A;
+    --white: #F0EDE6;
+    --gray: #8A8E96;
+    --gray-light: #B0B4BC;
+    --olive: #4B5320;
+    --olive-hover: #5C6628;
+    --input-bg: #ffffff;
+    --input-text: #1a1a1a;
+    --red-highlight: #e74c3c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(75, 83, 32, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(197, 165, 90, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 16px 48px; }
+
+  .header { text-align: center; padding: 40px 0 12px; }
+  .header-label { font-family: 'Bebas Neue', cursive; font-size: 13px; letter-spacing: 5px; color: var(--gold); margin-top: 16px; }
+  .page-title { font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 2px; color: var(--white); margin-top: 8px; line-height: 1.2; }
+  .page-subtitle { font-size: 14px; color: var(--gray-light); margin-top: 8px; line-height: 1.5; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+  .progress-container { padding: 20px 0 8px; }
+  .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); }
+  .progress-step { font-size: 12px; color: var(--gold); font-weight: 600; }
+  .progress-bar { width: 100%; height: 4px; background: var(--card-bg); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-light)); border-radius: 2px; transition: width 0.5s ease; }
+
+  .form-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin-bottom: 16px; display: none; animation: fadeIn 0.4s ease; }
+  .form-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header { font-family: 'Bebas Neue', cursive; font-size: 12px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+  .section-title { font-family: 'Bebas Neue', cursive; font-size: 24px; letter-spacing: 1px; color: var(--white); margin-bottom: 20px; line-height: 1.2; }
+  .sub-section-title { font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 1px; color: var(--gold); margin-bottom: 12px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label { display: block; font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+  .form-label .req { color: var(--gold); }
+  .form-label .note { font-weight: 400; font-size: 12px; color: var(--gray); }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 15px; font-family: 'Barlow', sans-serif; color: var(--input-text);
+    transition: border-color 0.2s ease; -webkit-appearance: none; appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--olive); }
+  .form-input::placeholder, .form-textarea::placeholder { color: #999; }
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer;
+  }
+
+  .input-row { display: flex; gap: 12px; }
+  .input-row .form-group { flex: 1; }
+
+  .radio-group { display: flex; gap: 12px; }
+  .radio-option { flex: 1; }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-label {
+    display: flex; align-items: center; justify-content: center; padding: 14px 16px;
+    background: #141610; border: 2px solid var(--border); border-radius: 8px;
+    font-size: 15px; font-weight: 600; color: var(--gray-light); cursor: pointer; transition: all 0.2s ease; text-align: center;
+  }
+  .radio-label:hover { border-color: var(--gold-dim); color: var(--white); }
+  .radio-option input[type="radio"]:checked + .radio-label { border-color: var(--gold); background: rgba(184, 150, 12, 0.1); color: var(--gold-light); }
+
+  .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-back { padding: 14px 20px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--gray-light); font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s ease; }
+  .btn-back:hover { border-color: var(--gray); color: var(--white); }
+  .btn-next { flex: 1; padding: 14px 20px; background: var(--olive); border: none; border-radius: 6px; color: #fff; font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s ease; }
+  .btn-next:hover { background: var(--olive-hover); transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-submit { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 6px; color: var(--bg); font-family: 'Bebas Neue', cursive; font-size: 20px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s ease; margin-top: 24px; }
+  .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .result-card { text-align: center; padding: 40px 24px; }
+  .result-icon { width: 64px; height: 64px; margin: 0 auto 16px; }
+  .result-icon svg { width: 100%; height: 100%; }
+  .result-title { font-family: 'Bebas Neue', cursive; font-size: 26px; letter-spacing: 2px; color: var(--gold); margin-bottom: 12px; }
+  .result-message { font-size: 14px; color: var(--gray-light); line-height: 1.7; margin-bottom: 20px; }
+  .recruiter-card { background: rgba(197, 165, 90, 0.06); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-top: 20px; }
+  .recruiter-card .name { font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 1px; color: var(--white); }
+  .recruiter-card .detail { font-size: 13px; color: var(--gray-light); margin-top: 4px; }
+  .recruiter-card a { color: var(--gold); text-decoration: none; }
+  .back-link { display: inline-block; margin-top: 24px; padding: 14px 28px; border: 1px solid var(--gold); color: var(--gold); font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px; text-decoration: none; border-radius: 6px; transition: all 0.3s ease; }
+  .back-link:hover { background: rgba(197, 165, 90, 0.1); color: var(--gold-light); border-color: var(--gold-light); transform: translateY(-1px); }
+
+  .disclaimer { text-align: center; font-size: 11px; color: var(--gray); padding: 24px 16px; line-height: 1.5; }
+  .helper-text { font-size: 12px; color: var(--gray); margin-top: 6px; line-height: 1.4; }
+  .conditional { display: none; }
+  .conditional.visible { display: block; }
+  .section-divider { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px; }
+  .ref-block { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px; }
+  .ref-block:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  @media (max-width: 400px) {
+    .form-section { padding: 24px 18px; }
+    .input-row { flex-direction: column; gap: 0; }
+    .radio-group { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="txarng-shield-logo.png" alt="Texas Army National Guard" width="80" style="display:block;margin:0 auto;">
+    <div class="header-label">TEXAS ARMY NATIONAL GUARD</div>
+    <div class="page-title">Short Application</div>
+    <p class="page-subtitle">This form collects the information SGT Andrews needs to officially start your application. It should take about 10 minutes.</p>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-info">
+      <span class="progress-label">Short App</span>
+      <span class="progress-step" id="progressStep">1 of 3</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:33.3%"></div>
+    </div>
+  </div>
+
+  <form id="shortAppForm" novalidate>
+    <input type="hidden" name="access_key" value="5447d3e3-6d06-470c-b71e-5de21e2284c6">
+    <input type="hidden" name="subject" value="Short Application Submission">
+    <input type="hidden" name="from_name" value="Brazen Recruits Short Application">
+    <input type="hidden" name="form_type" value="application">
+
+    <!-- ========== STEP 1: PRE-SCREENING INFORMATION ========== -->
+    <div class="form-section active" id="step1">
+      <div class="section-header">Step 1 of 3</div>
+      <div class="section-title">Pre-Screening Information</div>
+
+      <!-- Name -->
+      <div class="input-row">
+        <div class="form-group" style="flex:2;">
+          <label class="form-label">Last Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="last_name" required>
+        </div>
+        <div class="form-group" style="flex:2;">
+          <label class="form-label">First Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="first_name" required>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Middle</label>
+          <input type="text" class="form-input" name="middle_name">
+        </div>
+      </div>
+
+      <!-- Gender & Age -->
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Gender <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="gender" value="Male" id="genderM" required>
+              <label class="radio-label" for="genderM">Male</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="gender" value="Female" id="genderF">
+              <label class="radio-label" for="genderF">Female</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="flex:0 0 90px;">
+          <label class="form-label">Age <span class="req">*</span></label>
+          <input type="number" class="form-input" name="age" min="17" max="42" required>
+        </div>
+      </div>
+
+      <!-- Phone & Email -->
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Phone <span class="req">*</span></label>
+          <input type="tel" class="form-input" name="primary_phone" placeholder="(000) 000-0000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input type="email" class="form-input" name="email" required>
+        </div>
+      </div>
+
+      <!-- Height, Weight, Race, Ethnicity -->
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Height (inches) <span class="req">*</span></label>
+          <input type="number" class="form-input" name="height_inches" placeholder="e.g. 68" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (lbs) <span class="req">*</span></label>
+          <input type="number" class="form-input" name="weight" placeholder="lbs" required>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Race <span class="req">*</span></label>
+          <select class="form-select" name="race" required>
+            <option value="">Select</option>
+            <option value="White">White</option>
+            <option value="Black or African American">Black or African American</option>
+            <option value="Asian">Asian</option>
+            <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+            <option value="Native Hawaiian or Pacific Islander">Native Hawaiian or Pacific Islander</option>
+            <option value="Two or More">Two or More</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ethnic Category <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="ethnicity" value="Hispanic" id="ethH" required>
+              <label class="radio-label" for="ethH">Hispanic</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="ethnicity" value="Non Hispanic" id="ethNH">
+              <label class="radio-label" for="ethNH">Non Hispanic</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marital Status & Children -->
+      <div class="section-divider">
+        <div class="sub-section-title">PERSONAL STATUS</div>
+
+        <div class="form-group">
+          <label class="form-label">Marital Status <span class="req">*</span></label>
+          <div class="radio-group" style="flex-wrap:wrap;">
+            <div class="radio-option">
+              <input type="radio" name="marital_status" value="Married" id="msM" required>
+              <label class="radio-label" for="msM">Married</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="marital_status" value="Never Married" id="msNM">
+              <label class="radio-label" for="msNM">Never Married</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="marital_status" value="Divorced" id="msD">
+              <label class="radio-label" for="msD">Divorced</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="marriageDateGroup">
+          <div class="form-group">
+            <label class="form-label">Marriage Date</label>
+            <input type="date" class="form-input" name="marriage_date">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Children Under 18 <span class="note">(enter 0 if none)</span></label>
+          <input type="number" class="form-input" name="children_under_18" min="0" placeholder="0">
+        </div>
+      </div>
+
+      <!-- Travel -->
+      <div class="section-divider">
+        <div class="sub-section-title">INTERNATIONAL TRAVEL</div>
+
+        <div class="form-group">
+          <label class="form-label">Traveled outside the U.S. in the past 7 years? <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="intl_travel" value="Yes" id="travelY" required>
+              <label class="radio-label" for="travelY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="intl_travel" value="No" id="travelN">
+              <label class="radio-label" for="travelN">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="travelGroup">
+          <div class="form-group">
+            <label class="form-label">Reason for Travel</label>
+            <input type="text" class="form-input" name="intl_travel_reason" placeholder="e.g. Vacation, Work, Family visit">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-input" name="intl_travel_from">
+            </div>
+            <div class="form-group">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-input" name="intl_travel_to">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOB, SSN, Voter -->
+      <div class="section-divider">
+        <div class="sub-section-title">IDENTIFICATION</div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Date of Birth <span class="req">*</span></label>
+            <input type="date" class="form-input" name="date_of_birth" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">SSN <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ssn" placeholder="000-00-0000" maxlength="11" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Registered Voter? <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="registered_voter" value="Yes" id="voteY" required>
+              <label class="radio-label" for="voteY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="registered_voter" value="No" id="voteN">
+              <label class="radio-label" for="voteN">No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citizenship -->
+      <div class="section-divider">
+        <div class="sub-section-title">CITIZENSHIP</div>
+
+        <div class="form-group">
+          <label class="form-label">Citizenship <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="citizenship" value="U.S. Citizen" id="citUS" required>
+              <label class="radio-label" for="citUS">U.S. Citizen</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="citizenship" value="Permanent Resident" id="citPR">
+              <label class="radio-label" for="citPR">Permanent Resident</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="alienGroup">
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Alien Registration #</label>
+              <input type="text" class="form-input" name="alien_registration">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <input type="text" class="form-input" name="alien_country">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Place of Birth <span class="req">*</span> <span class="note">(City, State, ZIP)</span></label>
+          <input type="text" class="form-input" name="place_of_birth" placeholder="e.g. Dallas, TX 75201" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Dual Citizen? <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="dual_citizen" value="Yes" id="dualY" required>
+              <label class="radio-label" for="dualY">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="dual_citizen" value="No" id="dualN">
+              <label class="radio-label" for="dualN">No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passport & DL -->
+      <div class="section-divider">
+        <div class="sub-section-title">PASSPORT & DRIVER'S LICENSE</div>
+
+        <div class="form-group">
+          <label class="form-label">U.S. Passport # <span class="note">(leave blank if none)</span></label>
+          <input type="text" class="form-input" name="passport_number" placeholder="Passport number">
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Passport Issued</label>
+            <input type="date" class="form-input" name="passport_issued">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Passport Expires</label>
+            <input type="date" class="form-input" name="passport_expires">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Driver's License # <span class="req">*</span></label>
+          <input type="text" class="form-input" name="drivers_license" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">DL State</label>
+            <input type="text" class="form-input" name="dl_state" value="TX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">DL Expires</label>
+            <input type="date" class="form-input" name="dl_expires">
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-next" onclick="goTo(2)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 2: CHARACTER REFERENCES ========== -->
+    <div class="form-section" id="step2">
+      <div class="section-header">Step 2 of 3</div>
+      <div class="section-title">Character References</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Provide 3 people who can speak well about you — friends, teachers, coworkers, neighbors, etc. <strong style="color:var(--gold-light);">Anyone EXCEPT family.</strong> At least one must have known you for 7+ years.</p>
+
+      <!-- Reference 1 — Longest Known -->
+      <div class="ref-block">
+        <div class="sub-section-title">1. LONGEST KNOWN ASSOCIATE <span class="note" style="font-family:'Barlow',sans-serif;font-size:11px;text-transform:none;letter-spacing:0;">(known since at least 7 years ago)</span></div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref1_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="ref1_phone" placeholder="(000) 000-0000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ref1_relationship" placeholder="e.g. Friend, Teacher" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Since <span class="req">*</span></label>
+          <input type="date" class="form-input" name="ref1_known_since" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref1_address" placeholder="Full address" required>
+        </div>
+      </div>
+
+      <!-- Reference 2 -->
+      <div class="ref-block">
+        <div class="sub-section-title">2. SECOND REFERENCE</div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref2_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="ref2_phone" placeholder="(000) 000-0000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ref2_relationship" placeholder="e.g. Coworker, Neighbor" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Since <span class="req">*</span></label>
+          <input type="date" class="form-input" name="ref2_known_since" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref2_address" placeholder="Full address" required>
+        </div>
+      </div>
+
+      <!-- Reference 3 -->
+      <div class="ref-block">
+        <div class="sub-section-title">3. THIRD REFERENCE</div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref3_name" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Phone <span class="req">*</span></label>
+            <input type="tel" class="form-input" name="ref3_phone" placeholder="(000) 000-0000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship <span class="req">*</span></label>
+            <input type="text" class="form-input" name="ref3_relationship" placeholder="e.g. Family friend, Coach" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Known Since <span class="req">*</span></label>
+          <input type="date" class="form-input" name="ref3_known_since" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Address <span class="req">*</span></label>
+          <input type="text" class="form-input" name="ref3_address" placeholder="Full address" required>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
+        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ========== STEP 3: RESIDENCES (LAST 10 YEARS) ========== -->
+    <div class="form-section" id="step3">
+      <div class="section-header">Step 3 of 3</div>
+      <div class="section-title">Residences</div>
+      <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List everywhere you've lived in the past 10 years. For each address, provide someone who can verify you lived there — <strong style="color:var(--gold-light);">not family, and different from your character references</strong>.</p>
+
+      <!-- Current Address -->
+      <div class="sub-section-title">CURRENT ADDRESS</div>
+
+      <div class="form-group">
+        <label class="form-label">Full Address <span class="req">*</span></label>
+        <input type="text" class="form-input" name="res_current_address" placeholder="Street, City, State, ZIP" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Move-In Date <span class="req">*</span></label>
+        <input type="date" class="form-input" name="res_current_move_in" required>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Reference Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="res_current_ref_name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reference Phone <span class="req">*</span></label>
+          <input type="tel" class="form-input" name="res_current_ref_phone" placeholder="(000) 000-0000" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reference Relationship</label>
+        <input type="text" class="form-input" name="res_current_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+      </div>
+
+      <!-- Former Addresses -->
+      <div id="formerAddressList">
+        <!-- Former Address 1 -->
+        <div class="former-address-entry" data-index="1" style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+          <div class="sub-section-title">1ST FORMER ADDRESS</div>
+          <div class="form-group">
+            <label class="form-label">Full Address</label>
+            <input type="text" class="form-input" name="res_former_1_address" placeholder="Street, City, State, ZIP">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Move-In Date</label>
+              <input type="date" class="form-input" name="res_former_1_move_in">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Move-Out Date</label>
+              <input type="date" class="form-input" name="res_former_1_move_out">
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Reference Name</label>
+              <input type="text" class="form-input" name="res_former_1_ref_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reference Phone</label>
+              <input type="tel" class="form-input" name="res_former_1_ref_phone" placeholder="(000) 000-0000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reference Relationship</label>
+            <input type="text" class="form-input" name="res_former_1_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+          </div>
+        </div>
+
+        <!-- Former Address 2 -->
+        <div class="former-address-entry" data-index="2" style="border-top:1px solid var(--border);padding-top:20px;margin-top:20px;">
+          <div class="sub-section-title">2ND FORMER ADDRESS</div>
+          <div class="form-group">
+            <label class="form-label">Full Address</label>
+            <input type="text" class="form-input" name="res_former_2_address" placeholder="Street, City, State, ZIP">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Move-In Date</label>
+              <input type="date" class="form-input" name="res_former_2_move_in">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Move-Out Date</label>
+              <input type="date" class="form-input" name="res_former_2_move_out">
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Reference Name</label>
+              <input type="text" class="form-input" name="res_former_2_ref_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reference Phone</label>
+              <input type="tel" class="form-input" name="res_former_2_ref_phone" placeholder="(000) 000-0000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reference Relationship</label>
+            <input type="text" class="form-input" name="res_former_2_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="addFormerBtn" onclick="addFormerAddress()" style="
+        width:100%; padding:14px; margin-top:16px; background:transparent; border:1px dashed var(--gold-dim);
+        border-radius:8px; color:var(--gold); font-family:'Bebas Neue',cursive; font-size:14px; letter-spacing:3px;
+        cursor:pointer; transition:all 0.2s ease;
+      ">+ ADD ANOTHER FORMER ADDRESS</button>
+      <p class="helper-text" style="margin-top:8px;">Keep adding until your addresses cover the full 10 years. Leave former address sections blank if you don't need them.</p>
+
+      <button type="submit" class="btn-submit">SUBMIT SHORT APPLICATION</button>
+
+      <div class="btn-row" style="margin-top:12px;">
+        <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
+      </div>
+    </div>
+
+    <!-- ========== SUCCESS ========== -->
+    <div class="form-section" id="stepSuccess" style="display:none;">
+      <div class="result-card">
+        <div class="result-icon">
+          <svg viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="30" stroke="#C5A55A" stroke-width="3"/>
+            <path d="M20 33l8 8 16-16" stroke="#C5A55A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="result-title">Short Application Received!</div>
+        <p class="result-message">
+          SGT Andrews now has the information she needs to officially start your application.<br><br>
+          She will be in touch with next steps.
+        </p>
+        <div class="recruiter-card">
+          <div class="name">SGT KARA ANDREWS</div>
+          <div class="detail">Texas Army National Guard Recruiter</div>
+          <div class="detail" style="margin-top:8px;">
+            <a href="tel:9033720877">(903) 372-0877</a>
+          </div>
+          <div class="detail">
+            <a href="mailto:kara.r.andrews.mil@army.mil">kara.r.andrews.mil@army.mil</a>
+          </div>
+        </div>
+        <a class="back-link" href="https://brazenrecruits.com">BACK TO HOME</a>
+      </div>
+    </div>
+
+  </form>
+
+  <p class="disclaimer">
+    Your information is protected and will only be used by SGT Kara Andrews for military recruiting purposes.<br>
+    By submitting this form, you are allowing the Texas Army National Guard to contact you.
+  </p>
+
+</div>
+
+<script>
+  const totalSteps = 3;
+  let currentStep = 1;
+  let formerAddressCount = 2;
+
+  function goTo(step) {
+    if (step > currentStep) {
+      const sec = document.getElementById('step' + currentStep);
+      const req = sec.querySelectorAll('[required]');
+      let valid = true;
+      req.forEach(f => {
+        if (f.type === 'radio') {
+          const grp = sec.querySelectorAll('input[name="' + f.name + '"]');
+          const checked = Array.from(grp).some(r => r.checked);
+          if (!checked) { valid = false; f.closest('.radio-group').style.outline = '2px solid var(--red-highlight)'; }
+          else { f.closest('.radio-group').style.outline = ''; }
+        } else {
+          if (!f.value.trim()) { valid = false; f.style.borderColor = 'var(--red-highlight)'; }
+          else { f.style.borderColor = ''; }
+        }
+      });
+      if (!valid) return;
+    }
+
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    const next = document.getElementById('step' + step);
+    next.style.display = 'block';
+    next.classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    document.getElementById('progressStep').textContent = currentStep + ' of ' + totalSteps;
+    document.getElementById('progressFill').style.width = ((currentStep / totalSteps) * 100) + '%';
+  }
+
+  // SSN auto-format
+  const ssnInput = document.querySelector('input[name="ssn"]');
+  if (ssnInput) {
+    ssnInput.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 9);
+      if (v.length > 5) v = v.slice(0, 3) + '-' + v.slice(3, 5) + '-' + v.slice(5);
+      else if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
+      e.target.value = v;
+    });
+  }
+
+  // Phone auto-format
+  document.querySelectorAll('input[type="tel"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+      if (v.length > 6) v = '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6);
+      else if (v.length > 3) v = '(' + v.slice(0, 3) + ') ' + v.slice(3);
+      e.target.value = v;
+    });
+  });
+
+  // Conditionals
+  document.querySelectorAll('input[name="intl_travel"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('travelGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  document.querySelectorAll('input[name="marital_status"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('marriageDateGroup').classList.toggle('visible', this.value === 'Married');
+    });
+  });
+
+  document.querySelectorAll('input[name="citizenship"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('alienGroup').classList.toggle('visible', this.value === 'Permanent Resident');
+    });
+  });
+
+  // Add former address
+  function addFormerAddress() {
+    formerAddressCount++;
+    const n = formerAddressCount;
+    const ordinals = ['','1ST','2ND','3RD','4TH','5TH','6TH','7TH','8TH','9TH','10TH'];
+    const label = (ordinals[n] || n + 'TH') + ' FORMER ADDRESS';
+    const list = document.getElementById('formerAddressList');
+    const entry = document.createElement('div');
+    entry.className = 'former-address-entry';
+    entry.dataset.index = n;
+    entry.style.cssText = 'border-top:1px solid var(--border);padding-top:20px;margin-top:20px;';
+    entry.innerHTML = `
+      <div class="sub-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>${label}</span>
+        <button type="button" onclick="this.closest('.former-address-entry').remove()" style="
+          background:none;border:1px solid var(--border);border-radius:4px;color:var(--gray);
+          font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Barlow',sans-serif;
+        ">REMOVE</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Address</label>
+        <input type="text" class="form-input" name="res_former_${n}_address" placeholder="Street, City, State, ZIP">
+      </div>
+      <div class="input-row">
+        <div class="form-group"><label class="form-label">Move-In Date</label><input type="date" class="form-input" name="res_former_${n}_move_in"></div>
+        <div class="form-group"><label class="form-label">Move-Out Date</label><input type="date" class="form-input" name="res_former_${n}_move_out"></div>
+      </div>
+      <div class="input-row">
+        <div class="form-group"><label class="form-label">Reference Name</label><input type="text" class="form-input" name="res_former_${n}_ref_name"></div>
+        <div class="form-group"><label class="form-label">Reference Phone</label><input type="tel" class="form-input" name="res_former_${n}_ref_phone" placeholder="(000) 000-0000"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reference Relationship</label>
+        <input type="text" class="form-input" name="res_former_${n}_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+      </div>
+    `;
+    list.appendChild(entry);
+  }
+
+  // ── FORM SUBMISSION ──
+  document.getElementById('shortAppForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'SUBMITTING...';
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => { if (value) data[key] = value; });
+
+    const applicantName = (data.first_name || '') + ' ' + (data.last_name || '');
+    data._applicant_name = applicantName;
+    data._form_source = 'short_application';
+
+    // Save to Supabase (marks as application_complete — same as full application)
+    fetch('/.netlify/functions/save-to-supabase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(() => {});
+
+    // Build email body
+    const lines = [];
+    lines.push('=== SHORT APPLICATION SUBMISSION ===');
+    lines.push('Name: ' + (data.last_name || '') + ', ' + (data.first_name || '') + ' ' + (data.middle_name || ''));
+    lines.push('Gender: ' + (data.gender || '') + '  Age: ' + (data.age || ''));
+    lines.push('Phone: ' + (data.primary_phone || '') + '  Email: ' + (data.email || ''));
+    lines.push('Height: ' + (data.height_inches || '') + ' inches  Weight: ' + (data.weight || '') + ' lbs');
+    lines.push('Race: ' + (data.race || '') + '  Ethnicity: ' + (data.ethnicity || ''));
+    lines.push('Marital Status: ' + (data.marital_status || ''));
+    if (data.marriage_date) lines.push('Marriage Date: ' + data.marriage_date);
+    lines.push('Children Under 18: ' + (data.children_under_18 || '0'));
+    lines.push('');
+    lines.push('International Travel (7yr): ' + (data.intl_travel || 'N/A'));
+    if (data.intl_travel === 'Yes') {
+      lines.push('  Reason: ' + (data.intl_travel_reason || '') + '  From: ' + (data.intl_travel_from || '') + '  To: ' + (data.intl_travel_to || ''));
+    }
+    lines.push('');
+    lines.push('DOB: ' + (data.date_of_birth || '') + '  SSN: ' + (data.ssn || '') + '  Voter: ' + (data.registered_voter || ''));
+    lines.push('Citizenship: ' + (data.citizenship || ''));
+    if (data.alien_registration) lines.push('Alien Reg #: ' + data.alien_registration + '  Country: ' + (data.alien_country || ''));
+    lines.push('Place of Birth: ' + (data.place_of_birth || ''));
+    lines.push('Dual Citizen: ' + (data.dual_citizen || ''));
+    if (data.passport_number) lines.push('Passport #: ' + data.passport_number + '  Issued: ' + (data.passport_issued || '') + '  Expires: ' + (data.passport_expires || ''));
+    lines.push('DL #: ' + (data.drivers_license || '') + '  State: ' + (data.dl_state || '') + '  Expires: ' + (data.dl_expires || ''));
+    lines.push('');
+
+    lines.push('--- CHARACTER REFERENCES ---');
+    for (let i = 1; i <= 3; i++) {
+      if (data['ref' + i + '_name']) {
+        lines.push('Ref ' + i + ': ' + data['ref' + i + '_name']);
+        lines.push('  Phone: ' + (data['ref' + i + '_phone'] || '') + '  Relationship: ' + (data['ref' + i + '_relationship'] || ''));
+        lines.push('  Known Since: ' + (data['ref' + i + '_known_since'] || '') + '  Address: ' + (data['ref' + i + '_address'] || ''));
+      }
+    }
+    lines.push('');
+
+    lines.push('--- RESIDENCES (Last 10 Years) ---');
+    lines.push('Current: ' + (data.res_current_address || ''));
+    lines.push('  Move-In: ' + (data.res_current_move_in || ''));
+    lines.push('  Ref: ' + (data.res_current_ref_name || '') + '  Phone: ' + (data.res_current_ref_phone || '') + '  Rel: ' + (data.res_current_ref_relationship || ''));
+    for (let i = 1; i <= 10; i++) {
+      if (data['res_former_' + i + '_address']) {
+        lines.push('Former #' + i + ': ' + data['res_former_' + i + '_address']);
+        lines.push('  Move-In: ' + (data['res_former_' + i + '_move_in'] || '') + '  Move-Out: ' + (data['res_former_' + i + '_move_out'] || ''));
+        lines.push('  Ref: ' + (data['res_former_' + i + '_ref_name'] || '') + '  Phone: ' + (data['res_former_' + i + '_ref_phone'] || '') + '  Rel: ' + (data['res_former_' + i + '_ref_relationship'] || ''));
+      }
+    }
+
+    const payload = {
+      access_key: '5447d3e3-6d06-470c-b71e-5de21e2284c6',
+      subject: 'Short Application: ' + applicantName,
+      from_name: 'Brazen Recruits Short Application',
+      message: lines.join('\n'),
+      'Applicant Name': applicantName,
+      'Email': data.email || ''
+    };
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) showSuccess();
+      else {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SUBMIT SHORT APPLICATION';
+        alert('Something went wrong. Please try again or contact SGT Andrews at 903-372-0877.');
+      }
+    })
+    .catch(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'SUBMIT SHORT APPLICATION';
+      alert('Something went wrong. Please try again or contact SGT Andrews at 903-372-0877.');
+    });
+  });
+
+  function showSuccess() {
+    for (let i = 1; i <= totalSteps; i++) {
+      document.getElementById('step' + i).style.display = 'none';
+      document.getElementById('step' + i).classList.remove('active');
+    }
+    document.querySelector('.progress-container').style.display = 'none';
+    document.querySelector('.page-subtitle').style.display = 'none';
+    const s = document.getElementById('stepSuccess');
+    s.style.display = 'block';
+    s.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

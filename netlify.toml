@@ -29,6 +29,14 @@
   force = true
   conditions = {Host = ["application.brazenrecruits.com"]}
 
+# Short application — standalone pre-screening form (references, residences, travel, ID)
+[[redirects]]
+  from = "/*"
+  to = "/shortapp.html"
+  status = 200
+  force = true
+  conditions = {Host = ["shortapp.brazenrecruits.com"]}
+
 [[redirects]]
   from = "/*"
   to = "/faq.html"
