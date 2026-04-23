@@ -408,41 +408,6 @@
         </div>
       </div>
 
-      <div class="section-divider">
-        <div class="sub-section-title">ALIASES</div>
-        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">List any other names you have gone by (maiden name, nickname used legally, etc.)</p>
-
-        <div class="form-group">
-          <label class="form-label">Alias 1 — Name</label>
-          <input type="text" class="form-input" name="alias_1_name">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">From</label>
-            <input type="date" class="form-input" name="alias_1_from">
-          </div>
-          <div class="form-group">
-            <label class="form-label">To</label>
-            <input type="date" class="form-input" name="alias_1_to">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-top:12px;">
-          <label class="form-label">Alias 2 — Name</label>
-          <input type="text" class="form-input" name="alias_2_name">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">From</label>
-            <input type="date" class="form-input" name="alias_2_from">
-          </div>
-          <div class="form-group">
-            <label class="form-label">To</label>
-            <input type="date" class="form-input" name="alias_2_to">
-          </div>
-        </div>
-      </div>
-
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
         <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
@@ -623,7 +588,7 @@
     <!-- ========== STEP 4: FAMILY & EMERGENCY ========== -->
     <div class="form-section" id="step4">
       <div class="section-header">Step 4 of 8</div>
-      <div class="section-title">Family & Emergency</div>
+      <div class="section-title">Family & Beneficiary</div>
 
       <div class="form-group">
         <label class="form-label">Marital Status <span class="req">*</span></label>
@@ -727,55 +692,124 @@
       </div>
 
       <div class="section-divider">
-        <div class="sub-section-title">EMERGENCY CONTACT</div>
-        <div class="form-group">
-          <label class="form-label">Name <span class="req">*</span></label>
-          <input type="text" class="form-input" name="emergency_name" required>
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <input type="text" class="form-input" name="emergency_relationship">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone <span class="req">*</span></label>
-            <input type="tel" class="form-input" name="emergency_phone" required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" name="emergency_email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Address</label>
-          <input type="text" class="form-input" name="emergency_address">
-        </div>
-      </div>
-
-      <div class="section-divider">
-        <div class="sub-section-title">PARENT / GUARDIAN</div>
-        <p class="helper-text" style="margin-top:-8px;margin-bottom:12px;">Only required if you are under 18.</p>
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-input" name="parent_name">
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Relationship</label>
-            <input type="text" class="form-input" name="parent_relationship">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone</label>
-            <input type="tel" class="form-input" name="parent_phone">
-          </div>
-        </div>
-      </div>
-
-      <div class="section-divider">
         <div class="sub-section-title">LIFE INSURANCE BENEFICIARY</div>
         <div class="form-group">
           <label class="form-label">In the event something were to happen to you, who would you want your life insurance to go to?</label>
           <textarea class="form-input form-textarea" name="beneficiary_wishes" rows="3" placeholder="e.g. My wife Jane Doe, or split between my mom and my brother, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <div class="sub-section-title">FAMILY MEMBERS</div>
+        <p class="helper-text" style="margin-top:-8px;margin-bottom:16px;">Provide information for your immediate family. Leave blank if not applicable.</p>
+
+        <!-- Mother -->
+        <div style="margin-bottom:20px;">
+          <div class="sub-section-title" style="font-size:13px;letter-spacing:2px;">MOTHER</div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" name="mother_name">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-input" name="mother_dob">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Place of Birth</label>
+              <input type="text" class="form-input" name="mother_pob" placeholder="City, State">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" class="form-input" name="mother_address" placeholder="Street, City, State ZIP">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" name="mother_phone">
+          </div>
+        </div>
+
+        <!-- Father -->
+        <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:20px;">
+          <div class="sub-section-title" style="font-size:13px;letter-spacing:2px;">FATHER</div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" name="father_name">
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-input" name="father_dob">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Place of Birth</label>
+              <input type="text" class="form-input" name="father_pob" placeholder="City, State">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" class="form-input" name="father_address" placeholder="Street, City, State ZIP">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" name="father_phone">
+          </div>
+        </div>
+
+        <!-- Mother-in-Law (conditional on married) -->
+        <div class="conditional" id="inlawsGroup">
+          <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:20px;">
+            <div class="sub-section-title" style="font-size:13px;letter-spacing:2px;">MOTHER-IN-LAW</div>
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" name="mother_in_law_name">
+            </div>
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-input" name="mother_in_law_dob">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Place of Birth</label>
+                <input type="text" class="form-input" name="mother_in_law_pob" placeholder="City, State">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-input" name="mother_in_law_address" placeholder="Street, City, State ZIP">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" name="mother_in_law_phone">
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:20px;">
+            <div class="sub-section-title" style="font-size:13px;letter-spacing:2px;">FATHER-IN-LAW</div>
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" name="father_in_law_name">
+            </div>
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-input" name="father_in_law_dob">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Place of Birth</label>
+                <input type="text" class="form-input" name="father_in_law_pob" placeholder="City, State">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-input" name="father_in_law_address" placeholder="Street, City, State ZIP">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" name="father_in_law_phone">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -859,7 +893,7 @@
               <input type="date" class="form-input" name="prev_address_2_moveout">
             </div>
           </div>
-          <p class="helper-text" style="margin-bottom:8px;">Verification Reference:</p>
+          <p class="helper-text" style="margin-bottom:8px;">Verification Reference 1:</p>
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Name</label>
@@ -873,6 +907,21 @@
           <div class="form-group">
             <label class="form-label">Relationship</label>
             <input type="text" class="form-input" name="prev_address_2_ref_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
+          </div>
+          <p class="helper-text" style="margin-top:12px;margin-bottom:8px;">Verification Reference 2:</p>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-input" name="prev_address_2_ref2_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" name="prev_address_2_ref2_phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Relationship</label>
+            <input type="text" class="form-input" name="prev_address_2_ref2_relationship" placeholder="e.g. Neighbor, Roommate, Landlord">
           </div>
         </div>
       </div>
@@ -1078,9 +1127,15 @@
                 <input type="month" class="form-input" name="employer_1_end">
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Supervisor</label>
-              <input type="text" class="form-input" name="employer_1_supervisor" placeholder="Name — (000) 000-0000">
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label">Supervisor Name <span class="req">*</span></label>
+                <input type="text" class="form-input" name="employer_1_supervisor_name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Supervisor Phone <span class="req">*</span></label>
+                <input type="tel" class="form-input" name="employer_1_supervisor_phone" required>
+              </div>
             </div>
           </div>
         </div>
@@ -1157,30 +1212,6 @@
         <div class="form-group">
           <label class="form-label">Discharge Date</label>
           <input type="date" class="form-input" name="prior_discharge_date">
-        </div>
-      </div>
-
-      <div class="section-divider">
-        <div class="sub-section-title">MEDICAL</div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Insurance Provider</label>
-            <input type="text" class="form-input" name="insurance_provider">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Insurance Address</label>
-            <input type="text" class="form-input" name="insurance_address">
-          </div>
-        </div>
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label">Primary Care Doctor</label>
-            <input type="text" class="form-input" name="doctor_name">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Doctor Address</label>
-            <input type="text" class="form-input" name="doctor_address">
-          </div>
         </div>
       </div>
 
@@ -1353,10 +1384,12 @@
     });
   });
 
-  // Marital Status → spouse section
+  // Marital Status → spouse section + in-laws
   document.querySelectorAll('input[name="marital_status"]').forEach(function(r) {
     r.addEventListener('change', function() {
-      document.getElementById('spouseGroup').classList.toggle('visible', this.value === 'Married');
+      var isMarried = this.value === 'Married';
+      document.getElementById('spouseGroup').classList.toggle('visible', isMarried);
+      document.getElementById('inlawsGroup').classList.toggle('visible', isMarried);
     });
   });
 
@@ -1497,8 +1530,12 @@
         '<div class="form-group"><label class="form-label">Start Date</label><input type="month" class="form-input" name="employer_' + n + '_start"></div>' +
         '<div class="form-group"><label class="form-label">End Date</label><input type="month" class="form-input" name="employer_' + n + '_end"></div>' +
       '</div>' +
-      '<div class="form-group"><label class="form-label">Supervisor</label><input type="text" class="form-input" name="employer_' + n + '_supervisor" placeholder="Name — (000) 000-0000"></div>';
+      '<div class="input-row">' +
+        '<div class="form-group"><label class="form-label">Supervisor Name <span class="req">*</span></label><input type="text" class="form-input" name="employer_' + n + '_supervisor_name" required></div>' +
+        '<div class="form-group"><label class="form-label">Supervisor Phone <span class="req">*</span></label><input type="tel" class="form-input" name="employer_' + n + '_supervisor_phone" required></div>' +
+      '</div>';
     list.appendChild(entry);
+    entry.querySelectorAll('input[type="tel"]').forEach(formatPhoneInput);
   }
 
   // ── SUCCESS SCREEN ──
@@ -1566,8 +1603,6 @@
     lines.push('Ethnicity: ' + (data.ethnicity || ''));
     if (data.religion) lines.push('Religion: ' + data.religion);
     if (data.dl_number) lines.push('DL/ID: ' + data.dl_number + ' (' + (data.dl_state || '') + ') Exp: ' + (data.dl_expiration || ''));
-    if (data.alias_1_name) lines.push('Alias 1: ' + data.alias_1_name + ' (' + (data.alias_1_from || '?') + ' to ' + (data.alias_1_to || '?') + ')');
-    if (data.alias_2_name) lines.push('Alias 2: ' + data.alias_2_name + ' (' + (data.alias_2_from || '?') + ' to ' + (data.alias_2_to || '?') + ')');
     lines.push('');
 
     // Citizenship & Travel
@@ -1588,8 +1623,8 @@
     }
     lines.push('');
 
-    // Family & Emergency
-    lines.push('--- FAMILY & EMERGENCY ---');
+    // Family & Beneficiary
+    lines.push('--- FAMILY ---');
     lines.push('Marital Status: ' + (data.marital_status || ''));
     if (data.marital_status === 'Married') {
       lines.push('Spouse: ' + (data.spouse_name || ''));
@@ -1603,11 +1638,21 @@
       lines.push('Dependents Total: ' + (data.num_dependents_total || '0') + '  Minor: ' + (data.num_dependents_minor || '0'));
       if (data.children_ages) lines.push('Children Ages: ' + data.children_ages);
     }
-    lines.push('Emergency Contact: ' + (data.emergency_name || '') + ' (' + (data.emergency_relationship || '') + ')');
-    lines.push('EC Phone: ' + (data.emergency_phone || '') + (data.emergency_email ? '  Email: ' + data.emergency_email : ''));
-    if (data.emergency_address) lines.push('EC Address: ' + data.emergency_address);
-    if (data.parent_name) lines.push('Parent/Guardian: ' + data.parent_name + ' (' + (data.parent_relationship || '') + ') ' + (data.parent_phone || ''));
     if (data.beneficiary_wishes) lines.push('Beneficiary: ' + data.beneficiary_wishes);
+    lines.push('');
+    lines.push('--- FAMILY MEMBERS ---');
+    if (data.mother_name) lines.push('Mother: ' + data.mother_name + (data.mother_dob ? ' | DOB: ' + data.mother_dob : '') + (data.mother_pob ? ' | POB: ' + data.mother_pob : ''));
+    if (data.mother_address) lines.push('  Address: ' + data.mother_address);
+    if (data.mother_phone) lines.push('  Phone: ' + data.mother_phone);
+    if (data.father_name) lines.push('Father: ' + data.father_name + (data.father_dob ? ' | DOB: ' + data.father_dob : '') + (data.father_pob ? ' | POB: ' + data.father_pob : ''));
+    if (data.father_address) lines.push('  Address: ' + data.father_address);
+    if (data.father_phone) lines.push('  Phone: ' + data.father_phone);
+    if (data.mother_in_law_name) lines.push('Mother-in-Law: ' + data.mother_in_law_name + (data.mother_in_law_dob ? ' | DOB: ' + data.mother_in_law_dob : '') + (data.mother_in_law_pob ? ' | POB: ' + data.mother_in_law_pob : ''));
+    if (data.mother_in_law_address) lines.push('  Address: ' + data.mother_in_law_address);
+    if (data.mother_in_law_phone) lines.push('  Phone: ' + data.mother_in_law_phone);
+    if (data.father_in_law_name) lines.push('Father-in-Law: ' + data.father_in_law_name + (data.father_in_law_dob ? ' | DOB: ' + data.father_in_law_dob : '') + (data.father_in_law_pob ? ' | POB: ' + data.father_in_law_pob : ''));
+    if (data.father_in_law_address) lines.push('  Address: ' + data.father_in_law_address);
+    if (data.father_in_law_phone) lines.push('  Phone: ' + data.father_in_law_phone);
     lines.push('');
 
     // Residence History
@@ -1619,7 +1664,10 @@
           ' | Move-In: ' + (data['prev_address_' + r + '_movein'] || '?') +
           ' Move-Out: ' + (data['prev_address_' + r + '_moveout'] || '?'));
         if (data['prev_address_' + r + '_ref_name']) {
-          lines.push('  Ref: ' + data['prev_address_' + r + '_ref_name'] + ' (' + (data['prev_address_' + r + '_ref_relationship'] || '') + ') ' + (data['prev_address_' + r + '_ref_phone'] || ''));
+          lines.push('  Ref 1: ' + data['prev_address_' + r + '_ref_name'] + ' (' + (data['prev_address_' + r + '_ref_relationship'] || '') + ') ' + (data['prev_address_' + r + '_ref_phone'] || ''));
+        }
+        if (data['prev_address_' + r + '_ref2_name']) {
+          lines.push('  Ref 2: ' + data['prev_address_' + r + '_ref2_name'] + ' (' + (data['prev_address_' + r + '_ref2_relationship'] || '') + ') ' + (data['prev_address_' + r + '_ref2_phone'] || ''));
         }
       }
     }
@@ -1656,7 +1704,7 @@
           (data['employer_' + emp + '_title'] ? ' — ' + data['employer_' + emp + '_title'] : ''));
         if (data['employer_' + emp + '_address']) lines.push('  Address: ' + data['employer_' + emp + '_address']);
         lines.push('  Dates: ' + (data['employer_' + emp + '_start'] || '?') + ' to ' + (data['employer_' + emp + '_end'] || 'Present'));
-        if (data['employer_' + emp + '_supervisor']) lines.push('  Supervisor: ' + data['employer_' + emp + '_supervisor']);
+        if (data['employer_' + emp + '_supervisor_name']) lines.push('  Supervisor: ' + data['employer_' + emp + '_supervisor_name'] + ' — ' + (data['employer_' + emp + '_supervisor_phone'] || ''));
       }
     }
     lines.push('');
@@ -1675,10 +1723,6 @@
       if (data.prior_date_of_rank) lines.push('Date of Rank: ' + data.prior_date_of_rank);
       if (data.prior_discharge_date) lines.push('Discharge Date: ' + data.prior_discharge_date);
     }
-    lines.push('');
-    lines.push('--- MEDICAL ---');
-    if (data.insurance_provider) lines.push('Insurance: ' + data.insurance_provider + (data.insurance_address ? ' — ' + data.insurance_address : ''));
-    if (data.doctor_name) lines.push('Doctor: ' + data.doctor_name + (data.doctor_address ? ' — ' + data.doctor_address : ''));
     lines.push('');
     lines.push('--- TATTOOS ---');
     lines.push('Has Tattoos: ' + (data.has_tattoos || 'No'));
