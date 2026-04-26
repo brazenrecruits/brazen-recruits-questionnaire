@@ -130,6 +130,18 @@
   .back-link { display: inline-block; margin-top: 24px; padding: 14px 28px; border: 1px solid var(--gold); color: var(--gold); font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px; text-decoration: none; border-radius: 6px; transition: all 0.3s ease; }
   .back-link:hover { background: rgba(197, 165, 90, 0.1); color: var(--gold-light); border-color: var(--gold-light); transform: translateY(-1px); }
 
+  /* ── VALIDATION ── */
+  .form-input.input-error, .form-select.input-error, .form-textarea.input-error {
+    border-color: var(--red-highlight) !important; box-shadow: 0 0 0 2px rgba(139, 37, 0, 0.2);
+  }
+  .radio-group.input-error .radio-label { border-color: var(--red-highlight) !important; }
+  .step-error-banner {
+    background: rgba(139, 37, 0, 0.12); border: 1px solid var(--red-highlight); border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #e8a590;
+    display: none; animation: fadeIn 0.3s ease;
+  }
+  .step-error-banner.visible { display: block; }
+
   .disclaimer { text-align: center; font-size: 11px; color: var(--gray); padding: 24px 16px; line-height: 1.5; }
   .helper-text { font-size: 13px; color: var(--gray-light); margin-top: 6px; line-height: 1.4; }
   .conditional { display: none; }
@@ -173,6 +185,7 @@
 
     <!-- ========== STEP 1: PERSONAL INFORMATION ========== -->
     <div class="form-section active" id="step1">
+      <div class="step-error-banner" id="errorBanner1">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 1 of 8</div>
       <div class="section-title">Personal Information</div>
 
@@ -283,19 +296,20 @@
       </div>
 
       <div class="btn-row">
-        <button type="button" class="btn-next" onclick="goTo(2)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(1, 2)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 2: PHYSICAL & DEMOGRAPHICS ========== -->
     <div class="form-section" id="step2">
+      <div class="step-error-banner" id="errorBanner2">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 2 of 8</div>
       <div class="section-title">Physical & Demographics</div>
 
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">Height — Feet</label>
-          <select class="form-select" name="height_feet">
+          <label class="form-label">Height — Feet <span class="req">*</span></label>
+          <select class="form-select" name="height_feet" required>
             <option value="">--</option>
             <option value="4">4</option>
             <option value="5">5</option>
@@ -303,8 +317,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Height — Inches</label>
-          <select class="form-select" name="height_inches">
+          <label class="form-label">Height — Inches <span class="req">*</span></label>
+          <select class="form-select" name="height_inches" required>
             <option value="">--</option>
             <option value="0">0</option>
             <option value="1">1</option>
@@ -321,15 +335,15 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Weight</label>
-          <input type="number" class="form-input" name="weight" placeholder="lbs">
+          <label class="form-label">Weight <span class="req">*</span></label>
+          <input type="number" class="form-input" name="weight" placeholder="lbs" required>
         </div>
       </div>
 
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">Eye Color</label>
-          <select class="form-select" name="eye_color">
+          <label class="form-label">Eye Color <span class="req">*</span></label>
+          <select class="form-select" name="eye_color" required>
             <option value="">--</option>
             <option value="Brown">Brown</option>
             <option value="Blue">Blue</option>
@@ -341,8 +355,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Hair Color</label>
-          <select class="form-select" name="hair_color">
+          <label class="form-label">Hair Color <span class="req">*</span></label>
+          <select class="form-select" name="hair_color" required>
             <option value="">--</option>
             <option value="Black">Black</option>
             <option value="Brown">Brown</option>
@@ -357,8 +371,8 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Race</label>
-        <select class="form-select" name="race">
+        <label class="form-label">Race <span class="req">*</span></label>
+        <select class="form-select" name="race" required>
           <option value="">--</option>
           <option value="American Indian/Alaska Native">American Indian/Alaska Native</option>
           <option value="Asian">Asian</option>
@@ -392,8 +406,8 @@
         <div class="sub-section-title">DRIVER'S LICENSE / STATE ID</div>
 
         <div class="form-group">
-          <label class="form-label">DL / State ID Number</label>
-          <input type="text" class="form-input" name="dl_number" placeholder="DL, Temp Permit, or State ID #">
+          <label class="form-label">DL / State ID Number <span class="req">*</span></label>
+          <input type="text" class="form-input" name="dl_number" placeholder="DL, Temp Permit, or State ID #" required>
         </div>
 
         <div class="input-row">
@@ -410,12 +424,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(1)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(3)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(2, 3)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 3: CITIZENSHIP & TRAVEL ========== -->
     <div class="form-section" id="step3">
+      <div class="step-error-banner" id="errorBanner3">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 3 of 8</div>
       <div class="section-title">Citizenship & Travel</div>
 
@@ -460,10 +475,10 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Dual Citizenship</label>
+        <label class="form-label">Dual Citizenship <span class="req">*</span></label>
         <div class="radio-group">
           <div class="radio-option">
-            <input type="radio" name="dual_citizenship" value="Yes" id="dualY">
+            <input type="radio" name="dual_citizenship" value="Yes" id="dualY" required>
             <label class="radio-label" for="dualY">Yes</label>
           </div>
           <div class="radio-option">
@@ -508,10 +523,10 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Selective Service</label>
+        <label class="form-label">Selective Service <span class="req">*</span></label>
         <div class="radio-group">
           <div class="radio-option">
-            <input type="radio" name="selective_service" value="Yes" id="ssY">
+            <input type="radio" name="selective_service" value="Yes" id="ssY" required>
             <label class="radio-label" for="ssY">Yes</label>
           </div>
           <div class="radio-option">
@@ -537,10 +552,10 @@
       <div class="section-divider">
         <div class="sub-section-title">FOREIGN TRAVEL</div>
         <div class="form-group">
-          <label class="form-label">Have you traveled outside the U.S. in the last 7 years?</label>
+          <label class="form-label">Have you traveled outside the U.S. in the last 7 years? <span class="req">*</span></label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" name="has_foreign_travel" value="Yes" id="travelY">
+              <input type="radio" name="has_foreign_travel" value="Yes" id="travelY" required>
               <label class="radio-label" for="travelY">Yes</label>
             </div>
             <div class="radio-option">
@@ -581,12 +596,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(2)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(4)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(3, 4)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 4: FAMILY & EMERGENCY ========== -->
     <div class="form-section" id="step4">
+      <div class="step-error-banner" id="errorBanner4">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 4 of 8</div>
       <div class="section-title">Family & Beneficiary</div>
 
@@ -661,10 +677,10 @@
       <div class="section-divider">
         <div class="sub-section-title">CHILDREN</div>
         <div class="form-group">
-          <label class="form-label">Do you have children?</label>
+          <label class="form-label">Do you have children? <span class="req">*</span></label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" name="has_children" value="Yes" id="childY">
+              <input type="radio" name="has_children" value="Yes" id="childY" required>
               <label class="radio-label" for="childY">Yes</label>
             </div>
             <div class="radio-option">
@@ -694,8 +710,8 @@
       <div class="section-divider">
         <div class="sub-section-title">LIFE INSURANCE BENEFICIARY</div>
         <div class="form-group">
-          <label class="form-label">In the event something were to happen to you, who would you want your life insurance to go to?</label>
-          <textarea class="form-input form-textarea" name="beneficiary_wishes" rows="3" placeholder="e.g. My wife Jane Doe, or split between my mom and my brother, etc."></textarea>
+          <label class="form-label">In the event something were to happen to you, who would you want your life insurance to go to? <span class="req">*</span></label>
+          <textarea class="form-input form-textarea" name="beneficiary_wishes" rows="3" placeholder="e.g. My wife Jane Doe, or split between my mom and my brother, etc." required></textarea>
         </div>
       </div>
 
@@ -815,12 +831,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(3)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(5)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(4, 5)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 5: RESIDENCE HISTORY ========== -->
     <div class="form-section" id="step5">
+      <div class="step-error-banner" id="errorBanner5">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 5 of 8</div>
       <div class="section-title">Residence History</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">List every address you've lived at for the last 10 years. Start with your most recent previous address — your current address was captured in Step 1.</p>
@@ -931,12 +948,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(4)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(6)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(5, 6)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 6: CHARACTER REFERENCES ========== -->
     <div class="form-section" id="step6">
+      <div class="step-error-banner" id="errorBanner6">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 6 of 8</div>
       <div class="section-title">Character References</div>
       <p class="helper-text" style="margin-top:-14px;margin-bottom:20px;">Three non-family references. At least one must have known you 7+ years.</p>
@@ -1023,12 +1041,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(5)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(7)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(6, 7)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 7: EDUCATION & EMPLOYMENT ========== -->
     <div class="form-section" id="step7">
+      <div class="step-error-banner" id="errorBanner7">Please fill in all required fields marked with <strong>*</strong> before continuing.</div>
       <div class="section-header">Step 7 of 8</div>
       <div class="section-title">Education & Employment</div>
 
@@ -1145,12 +1164,13 @@
 
       <div class="btn-row">
         <button type="button" class="btn-back" onclick="goTo(6)">BACK</button>
-        <button type="button" class="btn-next" onclick="goTo(8)">CONTINUE</button>
+        <button type="button" class="btn-next" onclick="validateAndGoTo(7, 8)">CONTINUE</button>
       </div>
     </div>
 
     <!-- ========== STEP 8: MILITARY, MEDICAL & TATTOOS ========== -->
     <div class="form-section" id="step8">
+      <div class="step-error-banner" id="errorBanner8">Please fill in all required fields marked with <strong>*</strong> before submitting.</div>
       <div class="section-header">Step 8 of 8</div>
       <div class="section-title">Military, Medical & Tattoos</div>
 
@@ -1218,10 +1238,10 @@
       <div class="section-divider">
         <div class="sub-section-title">TATTOOS</div>
         <div class="form-group">
-          <label class="form-label">Do you have any tattoos or brandings?</label>
+          <label class="form-label">Do you have any tattoos or brandings? <span class="req">*</span></label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" name="has_tattoos" value="Yes" id="tattooY">
+              <input type="radio" name="has_tattoos" value="Yes" id="tattooY" required>
               <label class="radio-label" for="tattooY">Yes</label>
             </div>
             <div class="radio-option">
@@ -1292,35 +1312,8 @@
   const totalSteps = 8;
   let currentStep = 1;
 
-  // ── NAVIGATION & VALIDATION ──
+  // ── NAVIGATION ──
   function goTo(step) {
-    if (step > currentStep) {
-      const sec = document.getElementById('step' + currentStep);
-      const req = sec.querySelectorAll('[required]');
-      let valid = true;
-      req.forEach(function(f) {
-        if (f.type === 'radio') {
-          const grp = sec.querySelectorAll('input[name="' + f.name + '"]');
-          const checked = Array.from(grp).some(function(r) { return r.checked; });
-          if (!checked) {
-            valid = false;
-            var rg = f.closest('.radio-group');
-            if (rg) rg.style.outline = '2px solid var(--red-highlight)';
-          } else {
-            var rg = f.closest('.radio-group');
-            if (rg) rg.style.outline = '';
-          }
-        } else {
-          if (!f.value.trim()) {
-            valid = false;
-            f.style.borderColor = 'var(--red-highlight)';
-          } else {
-            f.style.borderColor = '';
-          }
-        }
-      });
-      if (!valid) return;
-    }
     document.getElementById('step' + currentStep).classList.remove('active');
     document.getElementById('step' + currentStep).style.display = 'none';
     currentStep = step;
@@ -1330,6 +1323,69 @@
     updateProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // ── STEP VALIDATION ──
+  function validateStep(stepNum) {
+    var section = document.getElementById('step' + stepNum);
+    var banner = document.getElementById('errorBanner' + stepNum);
+    var valid = true;
+
+    // Clear previous errors
+    section.querySelectorAll('.input-error').forEach(function(el) { el.classList.remove('input-error'); });
+
+    var fields = section.querySelectorAll('input[required], select[required], textarea[required]');
+    var checkedRadioNames = {};
+
+    fields.forEach(function(field) {
+      // Skip fields inside hidden conditional groups
+      var conditional = field.closest('.conditional');
+      if (conditional && !conditional.classList.contains('visible')) return;
+      // Skip fields whose parent is display:none (e.g. menstrualGroup, etc.)
+      if (field.offsetParent === null && field.type !== 'radio') return;
+
+      if (field.type === 'radio') {
+        var name = field.name;
+        if (checkedRadioNames[name] !== undefined) return; // already checked this group
+        var group = section.querySelectorAll('input[name="' + name + '"]');
+        var anyChecked = Array.from(group).some(function(r) { return r.checked; });
+        checkedRadioNames[name] = anyChecked;
+        if (!anyChecked) {
+          var groupContainer = field.closest('.radio-group');
+          if (groupContainer && groupContainer.offsetParent === null) return;
+          valid = false;
+          if (groupContainer) groupContainer.classList.add('input-error');
+        }
+      } else if (field.tagName === 'SELECT') {
+        if (!field.value) { valid = false; field.classList.add('input-error'); }
+      } else {
+        if (!field.value.trim()) { valid = false; field.classList.add('input-error'); }
+      }
+    });
+
+    if (banner) banner.classList.toggle('visible', !valid);
+    return valid;
+  }
+
+  function validateAndGoTo(fromStep, toStep) {
+    if (validateStep(fromStep)) {
+      goTo(toStep);
+    } else {
+      var banner = document.getElementById('errorBanner' + fromStep);
+      if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Clear error styling on user input
+  document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('input-error')) e.target.classList.remove('input-error');
+  });
+  document.addEventListener('change', function(e) {
+    if (e.target.type === 'radio') {
+      var grp = e.target.closest('.radio-group');
+      if (grp) grp.classList.remove('input-error');
+    }
+    if (e.target.classList.contains('input-error')) e.target.classList.remove('input-error');
+  });
 
   function updateProgress() {
     document.getElementById('progressStep').textContent = 'Step ' + currentStep + ' of ' + totalSteps;
@@ -1555,6 +1611,11 @@
   // ── FORM SUBMISSION ──
   document.getElementById('applyForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    if (!validateStep(8)) {
+      var banner = document.getElementById('errorBanner8');
+      if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     var form = e.target;
     var submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn.disabled) return;
