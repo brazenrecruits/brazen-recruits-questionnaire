@@ -184,13 +184,69 @@
   .modal-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
   .modal-success { color: var(--green); font-size: 13px; margin-top: 10px; display: none; }
 
+  /* Mobile card list — hidden on desktop */
+  .mobile-cards { display: none; }
+
+  .mobile-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; margin-bottom: 12px;
+  }
+  .mobile-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .mobile-card-name { font-weight: 600; font-size: 16px; color: var(--gold-light); }
+  .mobile-card-email { font-size: 12px; color: var(--gray); margin-top: 2px; }
+  .mobile-card-date { font-size: 11px; color: var(--gray); white-space: nowrap; }
+  .mobile-card-checks { display: flex; gap: 6px; margin-bottom: 10px; }
+  .mobile-check-item { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+  .mobile-check-label { font-size: 9px; letter-spacing: 1px; color: var(--gray); text-transform: uppercase; font-family: 'Bebas Neue', cursive; }
+  .mobile-card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .mobile-card-bottom .pipeline-select { flex: 1; padding: 8px 10px; font-size: 14px; }
+  .mobile-card-bottom .status-badge { white-space: nowrap; }
+  .mobile-card-expand {
+    width: 100%; margin-top: 10px; padding: 8px; background: rgba(197, 165, 90, 0.08);
+    border: 1px solid var(--border); border-radius: 6px; color: var(--gold-dim);
+    font-family: 'Barlow'; font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; cursor: pointer; text-align: center;
+  }
+  .mobile-card-expand:hover { background: rgba(197, 165, 90, 0.15); color: var(--gold); }
+
+  /* Mobile detail panel (shown inline below card) */
+  .mobile-detail { display: none; margin-top: 12px; }
+  .mobile-detail.open { display: block; }
+  .mobile-detail .detail-grid { grid-template-columns: 1fr; }
+
   @media (max-width: 900px) {
     .detail-grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 700px) {
-    .recruit-table th, .recruit-table td { padding: 8px 6px; font-size: 12px; }
-    .check { width: 24px; height: 24px; font-size: 14px; }
+
+  /* ── MOBILE BREAKPOINT ── */
+  @media (max-width: 768px) {
+    .dashboard { padding: 16px 12px; }
+    .dash-header { flex-direction: column; align-items: stretch; gap: 12px; }
+    .dash-title { font-size: 22px; }
+    .dash-stats { justify-content: space-between; }
+    .stat-card { flex: 1; min-width: 0; padding: 10px 8px; }
+    .stat-number { font-size: 24px; }
+    .stat-label { font-size: 9px; }
+    .add-recruit-btn { width: 100%; justify-content: center; padding: 14px; font-size: 18px; }
+    .search-bar { font-size: 16px; padding: 14px 16px; }
+
+    /* Hide table, show cards */
+    .table-wrapper { display: none; }
+    .mobile-cards { display: block; }
+
+    /* Modal adjustments */
+    .modal-overlay { padding: 10px; align-items: flex-end; }
+    .modal { padding: 24px 20px; border-radius: 16px 16px 0 0; max-width: 100%; max-height: 90vh; overflow-y: auto; }
+    .form-input, .form-select, .form-textarea { font-size: 16px; padding: 14px 12px; }
+    .modal-submit { padding: 16px; font-size: 20px; }
     .form-row.half { grid-template-columns: 1fr; }
+
+    /* Detail panel on mobile */
+    .detail-panel { padding: 12px; }
+    .detail-field { flex-direction: column; gap: 2px; }
+    .detail-value { text-align: left; }
+    .notes-textarea { font-size: 16px; }
+    .notes-save-btn { width: 100%; padding: 12px; font-size: 14px; }
   }
 </style>
 </head>
@@ -257,6 +313,9 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Mobile card view (hidden on desktop via CSS) -->
+  <div class="mobile-cards" id="mobileCards"></div>
 
   <div class="empty-state" id="emptyState" style="display:none;">
     <div class="icon">&#128203;</div>
@@ -370,16 +429,21 @@
 
   function renderRecruits(recruits) {
     const tbody = document.getElementById('recruitsBody');
+    const mobileContainer = document.getElementById('mobileCards');
 
     if (recruits.length === 0) {
       tbody.innerHTML = '';
+      mobileContainer.innerHTML = '';
       document.getElementById('emptyState').style.display = 'block';
       return;
     }
 
     document.getElementById('emptyState').style.display = 'none';
 
-    tbody.innerHTML = recruits.map((r, idx) => {
+    let tableHtml = '';
+    let cardsHtml = '';
+
+    recruits.forEach((r, idx) => {
       const lead = r.lead_capture_complete;
       const appt = r.appointment_complete;
       const elig = r.eligibility_complete;
@@ -409,8 +473,8 @@
 
       const isOpen = openDetailEmail === (r.email || '').toLowerCase();
 
-      // Main row
-      let html = `<tr class="recruit-row" onclick="toggleDetail('${escAttr(r.email)}')">
+      // ── Desktop table row ──
+      tableHtml += `<tr class="recruit-row" onclick="toggleDetail('${escAttr(r.email)}')">
         <td>
           <div class="recruit-name-link">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
           <div class="recruit-email">${escHtml(r.email || '')}</div>
@@ -428,8 +492,8 @@
         <td class="recruit-date">${lastDate}</td>
       </tr>`;
 
-      // Detail row
-      html += `<tr class="detail-row ${isOpen ? 'open' : ''}" id="detail-${idx}">
+      // Desktop detail row
+      tableHtml += `<tr class="detail-row ${isOpen ? 'open' : ''}" id="detail-${idx}">
         <td colspan="8">
           <div class="detail-panel">
             <div class="detail-grid">
@@ -448,8 +512,51 @@
         </td>
       </tr>`;
 
-      return html;
-    }).join('');
+      // ── Mobile card ──
+      cardsHtml += `<div class="mobile-card">
+        <div class="mobile-card-header">
+          <div>
+            <div class="mobile-card-name">${escHtml(r.first_name || '')} ${escHtml(r.last_name || '')}</div>
+            <div class="mobile-card-email">${escHtml(r.email || '')}</div>
+          </div>
+          <div style="text-align:right;">
+            <span class="status-badge ${formsClass}">${formsText}</span>
+            <div class="mobile-card-date">${lastDate}</div>
+          </div>
+        </div>
+        <div class="mobile-card-checks">
+          <div class="mobile-check-item"><span class="mobile-check-label">Lead</span>${checkMark(lead)}</div>
+          <div class="mobile-check-item"><span class="mobile-check-label">Appt</span>${checkMark(appt)}</div>
+          <div class="mobile-check-item"><span class="mobile-check-label">Elig</span>${eligBadge}</div>
+          <div class="mobile-check-item"><span class="mobile-check-label">App</span>${checkMark(app)}</div>
+        </div>
+        <div class="mobile-card-bottom">
+          <select class="pipeline-select" onchange="updatePipeline('${escAttr(r.email)}', this.value)">
+            ${pipelineOptions}
+          </select>
+        </div>
+        <button class="mobile-card-expand" onclick="toggleMobileDetail('m-detail-${idx}')">
+          View Details
+        </button>
+        <div class="mobile-detail ${isOpen ? 'open' : ''}" id="m-detail-${idx}">
+          <div class="detail-grid">
+            ${buildDetailSection('Lead Capture', r.lead_capture_data, r.lead_capture_completed_at)}
+            ${buildDetailSection('Appointment', r.appointment_data, r.appointment_completed_at)}
+            ${buildDetailSection('Eligibility', r.eligibility_data, r.eligibility_completed_at)}
+            ${buildDetailSection('Application', r.application_data, r.application_completed_at)}
+            <div class="detail-section notes-section">
+              <div class="detail-section-title">NOTES</div>
+              <textarea class="notes-textarea" id="m-notes-${idx}" placeholder="Add notes about this recruit...">${escHtml(r.notes || '')}</textarea>
+              <button class="notes-save-btn" onclick="saveNotes('${escAttr(r.email)}', ${idx}, true)">SAVE NOTES</button>
+              <span class="notes-saved" id="m-saved-${idx}">Saved!</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    tbody.innerHTML = tableHtml;
+    mobileContainer.innerHTML = cardsHtml;
   }
 
   function buildDetailSection(title, data, completedAt) {
@@ -547,8 +654,9 @@
     .catch(err => console.error('Failed to update pipeline:', err));
   }
 
-  function saveNotes(email, idx) {
-    const notes = document.getElementById('notes-' + idx).value;
+  function saveNotes(email, idx, isMobile) {
+    const prefix = isMobile ? 'm-' : '';
+    const notes = document.getElementById(prefix + 'notes-' + idx).value;
     fetch('/.netlify/functions/update-recruit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminPassword },
@@ -560,11 +668,16 @@
       const recruit = allRecruits.find(r => (r.email || '').toLowerCase() === email.toLowerCase());
       if (recruit) recruit.notes = notes;
       // Show saved indicator
-      const savedEl = document.getElementById('saved-' + idx);
+      const savedEl = document.getElementById(prefix + 'saved-' + idx);
       savedEl.style.display = 'inline';
       setTimeout(() => { savedEl.style.display = 'none'; }, 2000);
     })
     .catch(err => console.error('Failed to save notes:', err));
+  }
+
+  function toggleMobileDetail(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('open');
   }
 
   function checkMark(done) {
