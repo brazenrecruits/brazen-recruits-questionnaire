@@ -123,6 +123,15 @@
   .notes-save-btn:hover { background: #5C6628; }
   .notes-saved { color: var(--green); font-size: 12px; margin-left: 8px; display: none; }
 
+  /* Delete recruit */
+  .delete-section { grid-column: 1 / -1; display: flex; justify-content: flex-end; padding-top: 4px; }
+  .delete-recruit-btn {
+    padding: 8px 16px; background: transparent; border: 1px solid var(--red); border-radius: 4px;
+    color: var(--red); font-family: 'Barlow'; font-size: 12px; font-weight: 600; cursor: pointer;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .delete-recruit-btn:hover { background: rgba(231, 76, 60, 0.15); }
+
   /* Add Recruit button */
   .add-recruit-btn {
     padding: 10px 20px; background: var(--olive); border: none; border-radius: 6px;
@@ -507,6 +516,9 @@
                 <button class="notes-save-btn" onclick="saveNotes('${escAttr(r.email)}', ${idx})">SAVE NOTES</button>
                 <span class="notes-saved" id="saved-${idx}">Saved!</span>
               </div>
+              <div class="delete-section">
+                <button class="delete-recruit-btn" onclick="deleteRecruit('${escAttr(r.email)}', '${escAttr(r.first_name)} ${escAttr(r.last_name)}')">Remove Recruit</button>
+              </div>
             </div>
           </div>
         </td>
@@ -549,6 +561,9 @@
               <textarea class="notes-textarea" id="m-notes-${idx}" placeholder="Add notes about this recruit...">${escHtml(r.notes || '')}</textarea>
               <button class="notes-save-btn" onclick="saveNotes('${escAttr(r.email)}', ${idx}, true)">SAVE NOTES</button>
               <span class="notes-saved" id="m-saved-${idx}">Saved!</span>
+            </div>
+            <div class="delete-section">
+              <button class="delete-recruit-btn" onclick="deleteRecruit('${escAttr(r.email)}', '${escAttr(r.first_name)} ${escAttr(r.last_name)}')">Remove Recruit</button>
             </div>
           </div>
         </div>
@@ -678,6 +693,35 @@
   function toggleMobileDetail(id) {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('open');
+  }
+
+  function deleteRecruit(email, name) {
+    if (!confirm('Remove ' + name + ' from your CRM? This cannot be undone.')) return;
+
+    fetch('/.netlify/functions/delete-recruit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Password': adminPassword,
+      },
+      body: JSON.stringify({ email }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        alert('Failed to remove: ' + data.error);
+        return;
+      }
+      // Remove from local data and re-render
+      allRecruits = allRecruits.filter(r => (r.email || '').toLowerCase() !== email.toLowerCase());
+      openDetailEmail = null;
+      renderRecruits(getCurrentFilteredRecruits());
+      updateStats(allRecruits);
+    })
+    .catch(err => {
+      console.error('Delete failed:', err);
+      alert('Something went wrong. Please try again.');
+    });
   }
 
   function checkMark(done) {
