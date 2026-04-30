@@ -123,12 +123,74 @@
   .notes-save-btn:hover { background: #5C6628; }
   .notes-saved { color: var(--green); font-size: 12px; margin-left: 8px; display: none; }
 
+  /* Add Recruit button */
+  .add-recruit-btn {
+    padding: 10px 20px; background: var(--olive); border: none; border-radius: 6px;
+    color: #fff; font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .add-recruit-btn:hover { background: #5C6628; }
+  .add-recruit-btn .plus { font-size: 20px; line-height: 1; }
+
+  /* Modal overlay */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 32px; max-width: 480px; width: 100%; position: relative;
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', cursive; font-size: 22px; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 20px;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px; background: none; border: none;
+    color: var(--gray); font-size: 22px; cursor: pointer; line-height: 1;
+  }
+  .modal-close:hover { color: var(--white); }
+  .form-row { margin-bottom: 14px; }
+  .form-row.half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-label {
+    display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 4px; font-weight: 600;
+  }
+  .form-input {
+    width: 100%; padding: 10px 12px; background: #12140F; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--white); font-family: 'Barlow'; font-size: 14px;
+  }
+  .form-input:focus { outline: none; border-color: var(--gold-dim); }
+  .form-input::placeholder { color: var(--gray); }
+  .form-select {
+    width: 100%; padding: 10px 12px; background: #12140F; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--white); font-family: 'Barlow'; font-size: 14px;
+    cursor: pointer;
+  }
+  .form-select:focus { outline: none; border-color: var(--gold-dim); }
+  .form-textarea {
+    width: 100%; min-height: 60px; padding: 10px 12px; background: #12140F; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--white); font-family: 'Barlow'; font-size: 14px; resize: vertical;
+  }
+  .form-textarea:focus { outline: none; border-color: var(--gold-dim); }
+  .modal-submit {
+    width: 100%; padding: 14px; background: var(--olive); border: none; border-radius: 6px;
+    color: #fff; font-family: 'Bebas Neue', cursive; font-size: 18px; letter-spacing: 3px;
+    cursor: pointer; margin-top: 8px;
+  }
+  .modal-submit:hover { background: #5C6628; }
+  .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+  .modal-success { color: var(--green); font-size: 13px; margin-top: 10px; display: none; }
+
   @media (max-width: 900px) {
     .detail-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 700px) {
     .recruit-table th, .recruit-table td { padding: 8px 6px; font-size: 12px; }
     .check { width: 24px; height: 24px; font-size: 14px; }
+    .form-row.half { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -153,19 +215,24 @@
       <div class="dash-title">RECRUIT TRACKER</div>
       <div class="dash-subtitle">SGT Kara Andrews — Texas Army National Guard</div>
     </div>
-    <div class="dash-stats">
-      <div class="stat-card">
-        <div class="stat-number" id="statTotal">-</div>
-        <div class="stat-label">Total</div>
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div class="dash-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="statTotal">-</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statComplete">-</div>
+          <div class="stat-label">Complete</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statInProgress">-</div>
+          <div class="stat-label">In Progress</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="statComplete">-</div>
-        <div class="stat-label">Complete</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="statInProgress">-</div>
-        <div class="stat-label">In Progress</div>
-      </div>
+      <button class="add-recruit-btn" onclick="openAddModal()">
+        <span class="plus">+</span> ADD RECRUIT
+      </button>
     </div>
   </div>
 
@@ -193,7 +260,55 @@
 
   <div class="empty-state" id="emptyState" style="display:none;">
     <div class="icon">&#128203;</div>
-    <div>No recruits yet. Data will appear here as people fill out forms on brazenrecruits.com.</div>
+    <div>No recruits yet. Click <strong>+ ADD RECRUIT</strong> above or share your brazenrecruits.com link.</div>
+  </div>
+</div>
+
+<!-- ADD RECRUIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAddModal()">&times;</button>
+    <div class="modal-title">ADD NEW RECRUIT</div>
+    <div class="form-row half">
+      <div>
+        <label class="form-label">First Name *</label>
+        <input type="text" class="form-input" id="addFirstName" placeholder="First name">
+      </div>
+      <div>
+        <label class="form-label">Last Name *</label>
+        <input type="text" class="form-input" id="addLastName" placeholder="Last name">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Email *</label>
+      <input type="email" class="form-input" id="addEmail" placeholder="recruit@email.com">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Phone</label>
+      <input type="tel" class="form-input" id="addPhone" placeholder="(555) 123-4567">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Pipeline Status</label>
+      <select class="form-select" id="addPipeline">
+        <option value="New Lead">New Lead</option>
+        <option value="Contacted">Contacted</option>
+        <option value="Appointment Set">Appointment Set</option>
+        <option value="Appointment Complete">Appointment Complete</option>
+        <option value="MEPS Scheduled">MEPS Scheduled</option>
+        <option value="MEPS Complete">MEPS Complete</option>
+        <option value="Contract Signed">Contract Signed</option>
+        <option value="Shipped">Shipped</option>
+        <option value="Disqualified">Disqualified</option>
+        <option value="Lost">Lost</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea" id="addNotes" placeholder="Optional notes about this recruit..."></textarea>
+    </div>
+    <button class="modal-submit" id="addSubmitBtn" onclick="submitAddRecruit()">ADD RECRUIT</button>
+    <div class="modal-error" id="addError"></div>
+    <div class="modal-success" id="addSuccess"></div>
   </div>
 </div>
 
@@ -469,6 +584,128 @@
 
   function filterRecruits() {
     renderRecruits(getCurrentFilteredRecruits());
+  }
+
+  // ── Add Recruit Modal ──
+  function openAddModal() {
+    document.getElementById('addModal').classList.add('open');
+    document.getElementById('addFirstName').value = '';
+    document.getElementById('addLastName').value = '';
+    document.getElementById('addEmail').value = '';
+    document.getElementById('addPhone').value = '';
+    document.getElementById('addPipeline').value = 'New Lead';
+    document.getElementById('addNotes').value = '';
+    document.getElementById('addError').style.display = 'none';
+    document.getElementById('addSuccess').style.display = 'none';
+    document.getElementById('addSubmitBtn').disabled = false;
+    setTimeout(() => document.getElementById('addFirstName').focus(), 100);
+  }
+
+  function closeAddModal() {
+    document.getElementById('addModal').classList.remove('open');
+  }
+
+  // Close modal on overlay click
+  document.getElementById('addModal').addEventListener('click', function(e) {
+    if (e.target === this) closeAddModal();
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAddModal();
+  });
+
+  function submitAddRecruit() {
+    const firstName = document.getElementById('addFirstName').value.trim();
+    const lastName = document.getElementById('addLastName').value.trim();
+    const email = document.getElementById('addEmail').value.trim();
+    const phone = document.getElementById('addPhone').value.trim();
+    const pipeline = document.getElementById('addPipeline').value;
+    const notes = document.getElementById('addNotes').value.trim();
+
+    const errorEl = document.getElementById('addError');
+    const successEl = document.getElementById('addSuccess');
+    const submitBtn = document.getElementById('addSubmitBtn');
+
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    if (!firstName || !lastName || !email) {
+      errorEl.textContent = 'First name, last name, and email are required.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorEl.textContent = 'Please enter a valid email address.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'ADDING...';
+
+    fetch('/.netlify/functions/add-recruit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Password': adminPassword,
+      },
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone || undefined,
+        recruit_status: pipeline,
+        notes: notes || undefined,
+      }),
+    })
+    .then(r => r.json().then(d => ({ status: r.status, data: d })))
+    .then(({ status, data }) => {
+      if (status === 409) {
+        errorEl.textContent = 'A recruit with this email already exists.';
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ADD RECRUIT';
+        return;
+      }
+      if (data.error) {
+        errorEl.textContent = data.error;
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ADD RECRUIT';
+        return;
+      }
+
+      successEl.textContent = firstName + ' ' + lastName + ' added successfully!';
+      successEl.style.display = 'block';
+
+      // Refresh the recruits list
+      fetch('/.netlify/functions/get-recruits', {
+        headers: { 'X-Admin-Password': adminPassword }
+      })
+      .then(r => r.json())
+      .then(freshData => {
+        allRecruits = freshData.recruits || [];
+        renderRecruits(getCurrentFilteredRecruits());
+        updateStats(allRecruits);
+      });
+
+      // Close modal after a short delay
+      setTimeout(() => {
+        closeAddModal();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ADD RECRUIT';
+      }, 1200);
+    })
+    .catch(err => {
+      console.error('Add recruit failed:', err);
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      errorEl.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'ADD RECRUIT';
+    });
   }
 </script>
 </body>
