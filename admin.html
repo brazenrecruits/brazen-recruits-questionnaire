@@ -510,6 +510,7 @@
               ${buildDetailSection('Appointment', r.appointment_data, r.appointment_completed_at)}
               ${buildDetailSection('Eligibility', r.eligibility_data, r.eligibility_completed_at)}
               ${buildDetailSection('Application', r.application_data, r.application_completed_at)}
+              ${buildCrmSection(r, idx, false)}
               <div class="detail-section notes-section">
                 <div class="detail-section-title">NOTES</div>
                 <textarea class="notes-textarea" id="notes-${idx}" placeholder="Add notes about this recruit...">${escHtml(r.notes || '')}</textarea>
@@ -556,6 +557,7 @@
             ${buildDetailSection('Appointment', r.appointment_data, r.appointment_completed_at)}
             ${buildDetailSection('Eligibility', r.eligibility_data, r.eligibility_completed_at)}
             ${buildDetailSection('Application', r.application_data, r.application_completed_at)}
+            ${buildCrmSection(r, idx, true)}
             <div class="detail-section notes-section">
               <div class="detail-section-title">NOTES</div>
               <textarea class="notes-textarea" id="m-notes-${idx}" placeholder="Add notes about this recruit...">${escHtml(r.notes || '')}</textarea>
@@ -630,6 +632,89 @@
       <div class="detail-section-title">${title}</div>
       ${fieldsHtml}
     </div>`;
+  }
+
+  function buildCrmSection(r, idx, isMobile) {
+    const prefix = isMobile ? 'm-' : '';
+    const crm = r.crm_data || {};
+    function sel(name, options, current) {
+      return '<select class="pipeline-select" id="' + prefix + 'crm-' + name + '-' + idx + '" style="width:100%;padding:8px 10px;font-size:13px;">' +
+        options.map(o => '<option value="' + o + '"' + (current === o ? ' selected' : '') + '>' + o + '</option>').join('') +
+      '</select>';
+    }
+    return '<div class="detail-section notes-section">' +
+      '<div class="detail-section-title">CRM TRACKING</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Lead Source</label>' +
+          '<input type="text" class="form-input" id="' + prefix + 'crm-lead_source-' + idx + '" value="' + escHtml(crm.lead_source || '') + '" placeholder="e.g. Referral, Event, Online" style="padding:8px 10px;font-size:13px;">' +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Contacted</label>' +
+          sel('contacted', ['', 'Yes', 'No'], crm.contacted || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Qualified</label>' +
+          sel('qualified', ['', 'Yes', 'No', 'Waiver Required'], crm.qualified || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Test Type</label>' +
+          sel('test_type', ['', 'DDPRT', 'EST', 'SASVAB', 'PICAT'], crm.test_type || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Test Score</label>' +
+          '<input type="text" class="form-input" id="' + prefix + 'crm-test_score-' + idx + '" value="' + escHtml(crm.test_score || '') + '" placeholder="Score" style="padding:8px 10px;font-size:13px;">' +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Appointment</label>' +
+          sel('appointment', ['', 'Scheduled', 'Conducted'], crm.appointment || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Pre-Screen</label>' +
+          sel('pre_screen', ['', 'Submitted', 'Cleared'], crm.pre_screen || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Live Scan Results</label>' +
+          sel('live_scan', ['', 'Pending', 'Clear', 'Wrap Sheet'], crm.live_scan || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Projection</label>' +
+          sel('projection', ['', 'TPE', 'TP', 'T', 'WO'], crm.projection || '') +
+        '</div>' +
+        '<div>' +
+          '<label class="form-label" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;display:block;">Projection Date</label>' +
+          '<input type="date" class="form-input" id="' + prefix + 'crm-projection_date-' + idx + '" value="' + escHtml(crm.projection_date || '') + '" style="padding:8px 10px;font-size:13px;">' +
+        '</div>' +
+      '</div>' +
+      '<button class="notes-save-btn" style="margin-top:12px;" onclick="saveCrmData(\'' + escAttr(r.email) + '\', ' + idx + ', ' + isMobile + ')">SAVE CRM</button>' +
+      '<span class="notes-saved" id="' + prefix + 'crm-saved-' + idx + '">Saved!</span>' +
+    '</div>';
+  }
+
+  function saveCrmData(email, idx, isMobile) {
+    const prefix = isMobile ? 'm-' : '';
+    const fields = ['lead_source', 'contacted', 'qualified', 'test_type', 'test_score', 'appointment', 'pre_screen', 'live_scan', 'projection', 'projection_date'];
+    const crm = {};
+    fields.forEach(f => {
+      const el = document.getElementById(prefix + 'crm-' + f + '-' + idx);
+      if (el) crm[f] = el.value;
+    });
+
+    fetch('/.netlify/functions/update-recruit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminPassword },
+      body: JSON.stringify({ email, crm_data: crm })
+    })
+    .then(r => r.json())
+    .then(() => {
+      // Update local data
+      const recruit = allRecruits.find(r => (r.email || '').toLowerCase() === email.toLowerCase());
+      if (recruit) recruit.crm_data = crm;
+      const savedEl = document.getElementById(prefix + 'crm-saved-' + idx);
+      savedEl.style.display = 'inline';
+      setTimeout(() => { savedEl.style.display = 'none'; }, 2000);
+    })
+    .catch(err => console.error('Failed to save CRM data:', err));
   }
 
   function toggleDetail(email) {

@@ -35,7 +35,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { email, recruit_status, notes } = data;
+  const { email, recruit_status, notes, crm_data } = data;
   if (!email) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing email' }) };
   }
@@ -44,6 +44,7 @@ exports.handler = async (event) => {
   const update = { updated_at: new Date().toISOString() };
   if (recruit_status !== undefined) update.recruit_status = recruit_status;
   if (notes !== undefined) update.notes = notes;
+  if (crm_data !== undefined) update.crm_data = crm_data;
 
   try {
     const response = await fetch(
