@@ -55,13 +55,13 @@ const SECTIONS = [
       { key: 'birth_state', label: 'Place of Birth — State' },
       { key: 'birth_county', label: 'Place of Birth — County' },
       { key: 'primary_phone', label: 'Primary Phone' },
-      { key: 'secondary_phone', label: 'Secondary Phone' },
       { key: 'email', label: 'Email' },
       { key: 'street_address', label: 'Current Address — Street' },
       { key: 'city', label: 'City' },
       { key: 'state', label: 'State' },
       { key: 'county', label: 'County' },
       { key: 'zip_code', label: 'ZIP Code' },
+      { key: 'address_move_in', label: 'Move-In Date' },
     ]
   },
   {
@@ -81,10 +81,7 @@ const SECTIONS = [
       { key: 'primary_race', label: 'Primary Race' },
       { key: 'ethnicity', label: 'Ethnic Category' },
       { key: 'religion', label: 'Religion' },
-      { key: '_height', label: 'Height', computed: (d) => {
-        if (d.height_ft || d.height_in) return `${d.height_ft || '?'}'${d.height_in || '0'}"`;
-        return '';
-      }},
+      { key: 'height', label: 'Height' },
       { key: 'weight', label: 'Weight (lbs)' },
       { key: 'eye_color', label: 'Eye Color' },
       { key: 'hair_color', label: 'Hair Color' },
@@ -92,6 +89,8 @@ const SECTIONS = [
       { key: 'dl_state', label: 'DL State' },
       { key: 'dl_expiration', label: 'DL Expiration' },
       { key: 'citizenship', label: 'Citizenship' },
+      { key: 'country_of_birth', label: 'Country of Birth (Born Abroad)' },
+      { key: 'born_abroad_city', label: 'City of Birth (Born Abroad)' },
       { key: 'alien_number', label: 'Alien #' },
     ]
   },
@@ -102,15 +101,13 @@ const SECTIONS = [
       { key: 'has_children', label: 'Children' },
       { key: 'children_ages', label: 'Ages of Children' },
       { key: 'registered_voter', label: 'Registered to Vote' },
-      { key: 'last_menstrual_cycle', label: 'Last Menstrual Cycle (Females Only)' },
-      { key: 'alias_1_name', label: 'Alias / Maiden Name #1' },
-      { key: '_alias_1_dates', label: 'Alias #1 Dates', computed: (d) => {
-        if (d.alias_1_from) return `${d.alias_1_from} to ${d.alias_1_to || 'present'}`;
-        return '';
-      }},
-      { key: 'alias_2_name', label: 'Alias / Maiden Name #2' },
-      { key: '_alias_2_dates', label: 'Alias #2 Dates', computed: (d) => {
-        if (d.alias_2_from) return `${d.alias_2_from} to ${d.alias_2_to || 'present'}`;
+      { key: 'mother_name', label: "Mother's Full Name" },
+      { key: 'father_name', label: "Father's Full Name" },
+      { key: 'met_recruiter', label: 'Met with Military Recruiter Before' },
+      { key: 'taken_asvab', label: 'Taken the ASVAB' },
+      { key: '_asvab_result', label: 'ASVAB Score', computed: (d) => {
+        if (d.asvab_dont_know) return "Don't Know";
+        if (d.asvab_score) return d.asvab_score;
         return '';
       }},
     ]

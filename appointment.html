@@ -236,7 +236,8 @@
   /* ── CHECKBOX GROUP ── */
   .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
   .checkbox-option { position: relative; }
-  .checkbox-option input[type="checkbox"] { display: none; }
+  .checkbox-option input[type="checkbox"],
+  .checkbox-option input[type="radio"] { display: none; }
   .checkbox-label {
     display: flex;
     align-items: center;
@@ -263,12 +264,14 @@
     flex-shrink: 0;
     transition: all 0.2s ease;
   }
-  .checkbox-option input[type="checkbox"]:checked + .checkbox-label {
+  .checkbox-option input[type="checkbox"]:checked + .checkbox-label,
+  .checkbox-option input[type="radio"]:checked + .checkbox-label {
     border-color: var(--gold);
     background: rgba(184, 150, 12, 0.1);
     color: var(--gold-light);
   }
-  .checkbox-option input[type="checkbox"]:checked + .checkbox-label::before {
+  .checkbox-option input[type="checkbox"]:checked + .checkbox-label::before,
+  .checkbox-option input[type="radio"]:checked + .checkbox-label::before {
     background: var(--gold);
     border-color: var(--gold);
   }
@@ -319,14 +322,6 @@
     margin-top: 24px;
   }
   .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-  .females-only {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--red-highlight);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
 
   /* ── RESULT ── */
   .result-card { text-align: center; padding: 40px 24px; }
@@ -450,8 +445,8 @@
           <input type="text" class="form-input" name="first_name" required>
         </div>
         <div class="form-group">
-          <label class="form-label">Middle Name</label>
-          <input type="text" class="form-input" name="middle_name">
+          <label class="form-label">Middle Name <span class="req">*</span></label>
+          <input type="text" class="form-input" name="middle_name" required>
         </div>
       </div>
 
@@ -525,19 +520,14 @@
           <input type="text" class="form-input" name="birth_state" required>
         </div>
         <div class="form-group">
-          <label class="form-label">County</label>
-          <input type="text" class="form-input" name="birth_county">
+          <label class="form-label">County <span class="req">*</span></label>
+          <input type="text" class="form-input" name="birth_county" required>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Primary Phone <span class="req">*</span></label>
         <input type="tel" class="form-input" name="primary_phone" placeholder="(000) 000-0000" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Secondary Phone</label>
-        <input type="tel" class="form-input" name="secondary_phone" placeholder="(000) 000-0000">
       </div>
 
       <div class="form-group">
@@ -563,13 +553,18 @@
 
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">County</label>
-          <input type="text" class="form-input" name="county">
+          <label class="form-label">County <span class="req">*</span></label>
+          <input type="text" class="form-input" name="county" required>
         </div>
         <div class="form-group">
           <label class="form-label">ZIP Code <span class="req">*</span></label>
           <input type="text" class="form-input" name="zip_code" maxlength="10" required>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">When Did You Move In? <span class="req">*</span></label>
+        <input type="month" class="form-input" name="address_move_in" required>
       </div>
 
       <div class="btn-row">
@@ -589,8 +584,8 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">High School Graduation Date</label>
-        <input type="month" class="form-input" name="hs_grad_date">
+        <label class="form-label">High School Graduation Date <span class="req">*</span></label>
+        <input type="month" class="form-input" name="hs_grad_date" required>
       </div>
 
       <div class="form-group">
@@ -621,8 +616,8 @@
       <div class="section-title">Physical & Identification</div>
 
       <div class="form-group">
-        <label class="form-label">Primary Race</label>
-        <select class="form-select" name="primary_race">
+        <label class="form-label">Primary Race <span class="req">*</span></label>
+        <select class="form-select" name="primary_race" required>
           <option value="">Select...</option>
           <option value="American Indian/Alaska Native">American Indian / Alaska Native</option>
           <option value="Asian">Asian</option>
@@ -635,10 +630,10 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Ethnic Category</label>
+        <label class="form-label">Ethnic Category <span class="req">*</span></label>
         <div class="radio-group">
           <div class="radio-option">
-            <input type="radio" name="ethnicity" value="Hispanic or Latino" id="ethHisp">
+            <input type="radio" name="ethnicity" value="Hispanic or Latino" id="ethHisp" required>
             <label class="radio-label" for="ethHisp">Hispanic / Latino</label>
           </div>
           <div class="radio-option">
@@ -649,14 +644,14 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Religion</label>
-        <input type="text" class="form-input" name="religion" placeholder="e.g. Christian, Muslim, None, etc.">
+        <label class="form-label">Religion <span class="req">*</span></label>
+        <input type="text" class="form-input" name="religion" placeholder="e.g. Christian, Muslim, None, etc." required>
       </div>
 
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">Eye Color</label>
-          <select class="form-select" name="eye_color">
+          <label class="form-label">Eye Color <span class="req">*</span></label>
+          <select class="form-select" name="eye_color" required>
             <option value="">Select...</option>
             <option value="Brown">Brown</option>
             <option value="Blue">Blue</option>
@@ -667,8 +662,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Hair Color</label>
-          <select class="form-select" name="hair_color">
+          <label class="form-label">Hair Color <span class="req">*</span></label>
+          <select class="form-select" name="hair_color" required>
             <option value="">Select...</option>
             <option value="Black">Black</option>
             <option value="Brown">Brown</option>
@@ -682,19 +677,30 @@
         </div>
       </div>
 
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Height <span class="req">*</span></label>
+          <input type="text" class="form-input" name="height" placeholder="e.g. 5'10&quot;" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (lbs) <span class="req">*</span></label>
+          <input type="number" class="form-input" name="weight" placeholder="e.g. 175" min="80" max="400" required>
+        </div>
+      </div>
+
       <div class="form-group">
-        <label class="form-label">Driver's License #</label>
-        <input type="text" class="form-input" name="drivers_license" placeholder="DL, Temp Permit, or State ID #">
+        <label class="form-label">Driver's License # <span class="req">*</span></label>
+        <input type="text" class="form-input" name="drivers_license" placeholder="DL, Temp Permit, or State ID #" required>
       </div>
 
       <div class="input-row">
         <div class="form-group">
-          <label class="form-label">DL State</label>
-          <input type="text" class="form-input" name="dl_state" value="TX">
+          <label class="form-label">DL State <span class="req">*</span></label>
+          <input type="text" class="form-input" name="dl_state" value="TX" required>
         </div>
         <div class="form-group">
-          <label class="form-label">DL Expiration</label>
-          <input type="date" class="form-input" name="dl_expiration">
+          <label class="form-label">DL Expiration <span class="req">*</span></label>
+          <input type="date" class="form-input" name="dl_expiration" required>
         </div>
       </div>
 
@@ -710,15 +716,26 @@
             <label class="radio-label" for="citAbroad">Born Abroad</label>
           </div>
           <div class="radio-option">
-            <input type="radio" name="citizenship" value="Immigrant Alien" id="citImmigrant">
-            <label class="radio-label" for="citImmigrant">Immigrant Alien</label>
+            <input type="radio" name="citizenship" value="Permanent Resident" id="citPermanentRes">
+            <label class="radio-label" for="citPermanentRes">Permanent Resident</label>
           </div>
+        </div>
+      </div>
+
+      <div class="conditional" id="bornAbroadGroup">
+        <div class="form-group">
+          <label class="form-label">Country of Birth <span class="req">*</span></label>
+          <input type="text" class="form-input" name="country_of_birth" placeholder="e.g. Germany, South Korea" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">City of Birth</label>
+          <input type="text" class="form-input" name="born_abroad_city">
         </div>
       </div>
 
       <div class="form-group conditional" id="alienNumberGroup">
         <label class="form-label">Alien # <span class="req">*</span></label>
-        <input type="text" class="form-input" name="alien_number">
+        <input type="text" class="form-input" name="alien_number" required>
       </div>
 
       <div class="btn-row">
@@ -773,8 +790,8 @@
       </div>
 
       <div class="form-group conditional" id="childrenAgesGroup">
-        <label class="form-label">Ages of Children</label>
-        <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 12">
+        <label class="form-label">Ages of Children <span class="req">*</span></label>
+        <input type="text" class="form-input" name="children_ages" placeholder="e.g. 3, 7, 12" required>
       </div>
 
       <div class="form-group">
@@ -791,38 +808,57 @@
         </div>
       </div>
 
-      <!-- Females Only -->
-      <div class="form-group conditional" id="menstrualGroup">
-        <label class="form-label"><span class="females-only">Females Only</span> — Last Menstrual Cycle</label>
-        <input type="date" class="form-input" name="last_menstrual_cycle">
+      <div class="form-group">
+        <label class="form-label">Mother's Full Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="mother_name" required>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Aliases / Maiden Names</label>
-        <p class="helper-text" style="margin-top:0;margin-bottom:8px;">Include any previous names, with dates used.</p>
-        <input type="text" class="form-input" name="alias_1_name" placeholder="Full Name" style="margin-bottom:8px;">
-        <div class="input-row">
-          <div class="form-group" style="margin-bottom:0;">
-            <input type="date" class="form-input" name="alias_1_from" title="From Date">
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <input type="date" class="form-input" name="alias_1_to" title="To Date">
-          </div>
-        </div>
-        <p class="helper-text">From → To</p>
+        <label class="form-label">Father's Full Name <span class="req">*</span></label>
+        <input type="text" class="form-input" name="father_name" required>
       </div>
 
       <div class="form-group">
-        <input type="text" class="form-input" name="alias_2_name" placeholder="Second Alias (if applicable)" style="margin-bottom:8px;">
-        <div class="input-row">
-          <div class="form-group" style="margin-bottom:0;">
-            <input type="date" class="form-input" name="alias_2_from" title="From Date">
+        <label class="form-label">Have you ever met with a military recruiter before? <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="met_recruiter" value="Yes" id="recruiterYes" required>
+            <label class="radio-label" for="recruiterYes">Yes</label>
           </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <input type="date" class="form-input" name="alias_2_to" title="To Date">
+          <div class="radio-option">
+            <input type="radio" name="met_recruiter" value="No" id="recruiterNo">
+            <label class="radio-label" for="recruiterNo">No</label>
           </div>
         </div>
-        <p class="helper-text">From → To</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Have you ever taken the ASVAB? <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="taken_asvab" value="Yes" id="asvabYes" required>
+            <label class="radio-label" for="asvabYes">Yes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="taken_asvab" value="No" id="asvabNo">
+            <label class="radio-label" for="asvabNo">No</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group conditional" id="asvabScoreGroup">
+        <label class="form-label">What was your score?</label>
+        <div class="input-row">
+          <div class="form-group">
+            <input type="number" class="form-input" name="asvab_score" placeholder="Score" min="1" max="99">
+          </div>
+          <div class="form-group">
+            <div class="checkbox-option">
+              <input type="checkbox" name="asvab_dont_know" value="Don't Know" id="asvabDK">
+              <label class="checkbox-label" for="asvabDK">Don't Know</label>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="btn-row">
@@ -854,49 +890,49 @@
       <div id="priorServiceDetails" class="conditional">
         <div class="input-row">
           <div class="form-group">
-            <label class="form-label">Service Branch</label>
-            <input type="text" class="form-input" name="service_branch">
+            <label class="form-label">Service Branch <span class="req">*</span></label>
+            <input type="text" class="form-input" name="service_branch" required>
           </div>
           <div class="form-group">
-            <label class="form-label">RE-Code</label>
-            <input type="text" class="form-input" name="re_code">
+            <label class="form-label">RE-Code <span class="req">*</span></label>
+            <input type="text" class="form-input" name="re_code" required>
           </div>
         </div>
 
         <div class="input-row">
           <div class="form-group">
-            <label class="form-label">MOS</label>
-            <input type="text" class="form-input" name="mos">
+            <label class="form-label">MOS <span class="req">*</span></label>
+            <input type="text" class="form-input" name="mos" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Pay Grade</label>
-            <input type="text" class="form-input" name="pay_grade">
+            <label class="form-label">Pay Grade <span class="req">*</span></label>
+            <input type="text" class="form-input" name="pay_grade" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Narrative Reason for Separation</label>
-          <input type="text" class="form-input" name="separation_reason">
+          <label class="form-label">Narrative Reason for Separation <span class="req">*</span></label>
+          <input type="text" class="form-input" name="separation_reason" required>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Separation Code</label>
-          <input type="text" class="form-input" name="separation_code">
+          <label class="form-label">Separation Code <span class="req">*</span></label>
+          <input type="text" class="form-input" name="separation_code" required>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Enlistment Date</label>
-          <input type="date" class="form-input" name="enlistment_date">
+          <label class="form-label">Enlistment Date <span class="req">*</span></label>
+          <input type="date" class="form-input" name="enlistment_date" required>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Date of Rank</label>
-          <input type="date" class="form-input" name="date_of_rank">
+          <label class="form-label">Date of Rank <span class="req">*</span></label>
+          <input type="date" class="form-input" name="date_of_rank" required>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Discharge Date</label>
-          <input type="date" class="form-input" name="discharge_date">
+          <label class="form-label">Discharge Date <span class="req">*</span></label>
+          <input type="date" class="form-input" name="discharge_date" required>
         </div>
       </div>
 
@@ -957,6 +993,10 @@
       const requiredFields = currentSection.querySelectorAll('[required]');
       let valid = true;
       requiredFields.forEach(f => {
+        // Skip fields inside hidden conditional sections
+        const cond = f.closest('.conditional');
+        if (cond && !cond.classList.contains('visible')) return;
+
         if (f.type === 'radio') {
           const group = currentSection.querySelectorAll('input[name="' + f.name + '"]');
           const checked = Array.from(group).some(r => r.checked);
@@ -1003,18 +1043,11 @@
     });
   });
 
-  // Citizenship → Alien # conditional
+  // Citizenship → Born Abroad / Permanent Resident conditionals
   document.querySelectorAll('input[name="citizenship"]').forEach(r => {
     r.addEventListener('change', function() {
-      const show = this.value === 'Immigrant Alien' || this.value === 'Born Abroad';
-      document.getElementById('alienNumberGroup').classList.toggle('visible', show);
-    });
-  });
-
-  // Gender → Females Only conditional
-  document.querySelectorAll('input[name="gender"]').forEach(r => {
-    r.addEventListener('change', function() {
-      document.getElementById('menstrualGroup').classList.toggle('visible', this.value === 'Female');
+      document.getElementById('bornAbroadGroup').classList.toggle('visible', this.value === 'Born Abroad');
+      document.getElementById('alienNumberGroup').classList.toggle('visible', this.value === 'Permanent Resident');
     });
   });
 
@@ -1022,6 +1055,13 @@
   document.querySelectorAll('input[name="has_children"]').forEach(r => {
     r.addEventListener('change', function() {
       document.getElementById('childrenAgesGroup').classList.toggle('visible', this.value === 'Yes');
+    });
+  });
+
+  // ASVAB → Score conditional
+  document.querySelectorAll('input[name="taken_asvab"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('asvabScoreGroup').classList.toggle('visible', this.value === 'Yes');
     });
   });
 
@@ -1035,6 +1075,25 @@
   // ── FORM SUBMISSION ──
   document.getElementById('appointmentForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    // Validate current step (Step 6) before submitting
+    const currentSection = document.getElementById('step' + currentStep);
+    const requiredFields = currentSection.querySelectorAll('[required]');
+    let valid = true;
+    requiredFields.forEach(f => {
+      const cond = f.closest('.conditional');
+      if (cond && !cond.classList.contains('visible')) return;
+      if (f.type === 'radio') {
+        const group = currentSection.querySelectorAll('input[name="' + f.name + '"]');
+        const checked = Array.from(group).some(r => r.checked);
+        if (!checked) { valid = false; f.closest('.radio-group, .checkbox-group').style.outline = '2px solid var(--red-highlight)'; }
+        else { f.closest('.radio-group, .checkbox-group').style.outline = ''; }
+      } else {
+        if (!f.value.trim()) { valid = false; f.style.borderColor = 'var(--red-highlight)'; }
+        else { f.style.borderColor = ''; }
+      }
+    });
+    if (!valid) return;
+
     const form = e.target;
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn.disabled) return;
@@ -1100,9 +1159,10 @@
     lines.push('DOB: ' + (data.date_of_birth || '') + '  |  Age: ' + (data.age || ''));
     lines.push('Place of Birth: ' + (data.birth_city || '') + ', ' + (data.birth_state || '') + (data.birth_county ? ' (' + data.birth_county + ' Co.)' : ''));
     lines.push('');
-    lines.push('Phone: ' + (data.primary_phone || '') + (data.secondary_phone ? '  |  Alt: ' + data.secondary_phone : ''));
+    lines.push('Phone: ' + (data.primary_phone || ''));
     lines.push('Email: ' + (data.email || ''));
     lines.push('Address: ' + (data.street_address || '') + ', ' + (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip_code || '') + (data.county ? ' (' + data.county + ' Co.)' : ''));
+    if (data.address_move_in) lines.push('Moved In: ' + data.address_move_in);
     lines.push('');
     lines.push('High School: ' + (data.high_school_name || '') + (data.hs_grad_date ? '  Grad: ' + data.hs_grad_date : ''));
     if (data.college_name) lines.push('College: ' + data.college_name + (data.college_grad_date ? '  Grad: ' + data.college_grad_date : ''));
@@ -1110,17 +1170,17 @@
     lines.push('');
     lines.push('Race: ' + (data.primary_race || '') + '  |  Ethnicity: ' + (data.ethnicity || ''));
     lines.push('Religion: ' + (data.religion || 'N/A'));
-    // Height & weight removed per Kara's feedback
+    lines.push('Height: ' + (data.height || '') + '  |  Weight: ' + (data.weight || '') + ' lbs');
     lines.push('Eyes: ' + (data.eye_color || '') + '  |  Hair: ' + (data.hair_color || ''));
     lines.push('DL: ' + (data.drivers_license || '') + '  State: ' + (data.dl_state || '') + '  Exp: ' + (data.dl_expiration || ''));
-    lines.push('Citizenship: ' + (data.citizenship || '') + (data.alien_number ? '  Alien #: ' + data.alien_number : ''));
+    lines.push('Citizenship: ' + (data.citizenship || '') + (data.alien_number ? '  Alien #: ' + data.alien_number : '') + (data.country_of_birth ? '  Country of Birth: ' + data.country_of_birth : '') + (data.born_abroad_city ? '  City of Birth: ' + data.born_abroad_city : ''));
     lines.push('');
     lines.push('Marital Status: ' + (data.marital_status || ''));
     lines.push('Children: ' + (data.has_children || '') + (data.children_ages ? '  Ages: ' + data.children_ages : ''));
     lines.push('Registered Voter: ' + (data.registered_voter || ''));
-    if (data.last_menstrual_cycle) lines.push('Last Menstrual Cycle: ' + data.last_menstrual_cycle);
-    if (data.alias_1_name) lines.push('Alias 1: ' + data.alias_1_name + (data.alias_1_from ? ' (' + data.alias_1_from + ' to ' + (data.alias_1_to || 'present') + ')' : ''));
-    if (data.alias_2_name) lines.push('Alias 2: ' + data.alias_2_name + (data.alias_2_from ? ' (' + data.alias_2_from + ' to ' + (data.alias_2_to || 'present') + ')' : ''));
+    lines.push('Mother: ' + (data.mother_name || '') + '  |  Father: ' + (data.father_name || ''));
+    lines.push('Met Recruiter Before: ' + (data.met_recruiter || ''));
+    lines.push('Taken ASVAB: ' + (data.taken_asvab || '') + (data.asvab_score ? '  Score: ' + data.asvab_score : '') + (data.asvab_dont_know ? '  (Don\'t Know)' : ''));
     lines.push('');
     lines.push('Prior Service: ' + (data.prior_service || 'No'));
     if (data.prior_service === 'Yes') {
