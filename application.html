@@ -578,8 +578,9 @@
           else { f.style.borderColor = ''; }
         }
       });
-      if (!valid) return;
+      if (!valid) { showMissing(document.getElementById('step' + currentStep)); return; }
     }
+    document.querySelectorAll('.missing-msg').forEach(b => { b.style.display = 'none'; });
     document.getElementById('step' + currentStep).classList.remove('active');
     document.getElementById('step' + currentStep).style.display = 'none';
     currentStep = step;
@@ -588,6 +589,48 @@
     next.classList.add('active');
     updateProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Tell the person what is missing instead of failing silently
+  function showMissing(sec) {
+    let box = sec.querySelector('.missing-msg');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'missing-msg';
+      box.setAttribute('role', 'alert');
+      box.style.cssText = 'margin:16px 0;padding:12px 16px;border:1px solid var(--red-highlight);border-radius:8px;background:rgba(231,76,60,.15);color:#fff;font-size:14px;font-weight:600;';
+      box.textContent = 'Please fill in the fields outlined in red, then continue.';
+      const anchor = sec.querySelector('.btn-submit') || sec.querySelector('.btn-row');
+      anchor.parentNode.insertBefore(box, anchor);
+    }
+    box.style.display = 'block';
+    const first = Array.from(sec.querySelectorAll('input, select, textarea, .radio-group, .checkbox-group'))
+      .find(el => el.style.borderColor || el.style.outline);
+    (first || box).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Check every required field that is showing on the current step
+  function stepIsComplete() {
+    const sec = document.getElementById('step' + currentStep);
+    let valid = true;
+    sec.querySelectorAll('[required]').forEach(f => {
+      const cond = f.closest('.conditional');
+      if (cond && !cond.classList.contains('visible')) return;
+      if (f.type === 'radio') {
+        const box = f.closest('.radio-group, .checkbox-group');
+        if (!box || box.offsetParent === null) return;
+        const checked = Array.from(sec.querySelectorAll('input[name="' + f.name + '"]')).some(r => r.checked);
+        box.style.outline = checked ? '' : '2px solid var(--red-highlight)';
+        if (!checked) valid = false;
+      } else {
+        if (f.offsetParent === null) return;
+        const ok = !!f.value.trim();
+        f.style.borderColor = ok ? '' : 'var(--red-highlight)';
+        if (!ok) valid = false;
+      }
+    });
+    if (!valid) showMissing(sec);
+    return valid;
   }
 
   function updateProgress() {
@@ -704,6 +747,8 @@
   // ── FORM SUBMISSION ──
   document.getElementById('applicationForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    // The last step was never checked before sending; check it now
+    if (!stepIsComplete()) return;
     const form = e.target;
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn.disabled) return;

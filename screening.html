@@ -1481,7 +1481,7 @@
       } else {
         // If the function fails, fall back to direct Web3Forms submission
         console.warn('Packet function failed, falling back to Web3Forms:', result.error);
-        fallbackToWeb3Forms(data, lines, applicantName);
+        fallbackToWeb3Forms(data, lines, applicantName, submitBtn);
       }
     })
     .catch(() => {

@@ -375,6 +375,34 @@
         }
 
         /* ===== CONDITIONAL FIELDS ===== */
+        /* Stop notice, inline error, locked questions */
+        .stop-notice {
+            display: none;
+            margin: 20px 0 4px;
+            padding: 14px 16px;
+            border: 1px solid var(--red);
+            border-left: 4px solid var(--red);
+            border-radius: 8px;
+            background: var(--red-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .form-error {
+            display: none;
+            margin: 16px 0 4px;
+            padding: 12px 16px;
+            border: 1px solid var(--flag-yellow);
+            border-radius: 8px;
+            background: var(--flag-yellow-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .form-group.locked {
+            display: none;
+        }
+
         .conditional {
             display: none;
             margin-top: 16px;
@@ -925,6 +953,7 @@
                         <label class="form-label">What year are you? <span class="required">*</span></label>
                         <select class="form-select" id="hsGrade">
                             <option value="" disabled selected>Select...</option>
+                            <option value="underclass">Freshman or Sophomore</option>
                             <option value="junior">Junior</option>
                             <option value="senior">Senior</option>
                         </select>
@@ -1502,24 +1531,40 @@
         let hardStop = false;
         let hardStopReason = '';
         let flags = [];
+        let submitted = false;
+
+        const AGE_UNDER = 'Under 17';
+        const AGE_OVER = '43 or older';
+        // Sections that contain an answer that ends the survey
+        const STOP_SECTIONS = [1, 2, 3, 6, 7, 10];
 
         // ===== INIT =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Populate age dropdown (17-42)
+            // Populate age dropdown (Under 17, 17-42, 43 or older)
             const ageSelect = document.getElementById('age');
-            for (let i = 17; i <= 42; i++) {
+            const addAge = function(value) {
                 const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = i;
+                opt.value = value;
+                opt.textContent = value;
                 ageSelect.appendChild(opt);
-            }
+            };
+            addAge(AGE_UNDER);
+            for (let i = 17; i <= 42; i++) addAge(String(i));
+            addAge(AGE_OVER);
 
             // Disclosure detail toggle
             document.querySelectorAll('input[name="disclosure"]').forEach(r => {
                 r.addEventListener('change', function() {
                     const detail = document.getElementById('disclosure-detail-q');
                     detail.style.display = this.value === 'yes' ? 'block' : 'none';
+                    if (this.value !== 'yes') document.getElementById('disclosureDetail').value = '';
                 });
+            });
+
+            // Any answer change: clear the error message and re-check for a stop
+            document.addEventListener('change', function() {
+                clearError();
+                if (currentSection) refreshStop(currentSection);
             });
 
             updateProgress();
@@ -1527,6 +1572,7 @@
 
         // ===== NAVIGATION =====
         function goToSection(num) {
+            clearError();
             // Hide all
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 
@@ -1536,6 +1582,7 @@
             } else {
                 document.getElementById('section-' + num).classList.add('active');
                 currentSection = num;
+                refreshStop(num);
             }
 
             updateProgress();
@@ -1560,192 +1607,267 @@
             document.getElementById('progressText').textContent = 'Step ' + currentSection + ' of ' + totalSections;
         }
 
+        // ===== INLINE ERROR MESSAGE =====
+        function fail(msg) {
+            const section = document.getElementById('section-' + currentSection);
+            if (!section) return;
+            let box = section.querySelector('.form-error');
+            if (!box) {
+                box = document.createElement('div');
+                box.className = 'form-error';
+                box.setAttribute('role', 'alert');
+                const row = section.querySelector('.btn-row');
+                row.parentNode.insertBefore(box, row);
+            }
+            box.textContent = msg;
+            box.style.display = 'block';
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function clearError() {
+            document.querySelectorAll('.form-error').forEach(b => { b.style.display = 'none'; });
+        }
+
         // ===== VALIDATION & BRANCHING =====
         function getRadioValue(name) {
             const el = document.querySelector('input[name="' + name + '"]:checked');
             return el ? el.value : null;
         }
 
+        function groupOf(selector) {
+            const el = document.querySelector(selector);
+            return el ? el.closest('.form-group') : null;
+        }
+
+        // Returns the answer in this section that makes the person not eligible, if any.
+        function getStop(sec) {
+            switch (sec) {
+                case 1: {
+                    const age = document.getElementById('age').value;
+                    if (age === AGE_UNDER) return { reason: 'Under 17 years old', el: groupOf('#age') };
+                    if (age === AGE_OVER) return { reason: 'Age 43 or older', el: groupOf('#age') };
+                    return null;
+                }
+                case 2:
+                    if (getRadioValue('citizen') === 'no' && getRadioValue('greencard') === 'no') {
+                        return { reason: 'Not a U.S. Citizen or Permanent Resident', el: groupOf('#greencard-no') };
+                    }
+                    return null;
+                case 3: {
+                    const inHS = getRadioValue('inHighSchool');
+                    if (inHS === 'yes' && document.getElementById('hsGrade').value === 'underclass') {
+                        return { reason: 'High school freshman or sophomore', el: groupOf('#hsGrade') };
+                    }
+                    if (inHS === 'no' && getRadioValue('diploma') === 'no') {
+                        return { reason: 'No High School Diploma or GED', el: groupOf('#diploma-no') };
+                    }
+                    return null;
+                }
+                case 6:
+                    if (getRadioValue('selfHarmScars') === 'yes') {
+                        return { reason: 'Scars or burns that could indicate self harm', el: groupOf('#scars-yes') };
+                    }
+                    return null;
+                case 7:
+                    if (getRadioValue('hasTattoos') === 'yes' && getRadioValue('tattooFaceNeckHands') === 'yes') {
+                        return { reason: 'Tattoos on face, neck, or hands', el: groupOf('#tfnh-yes') };
+                    }
+                    return null;
+                case 10:
+                    if (getRadioValue('willingTraining') === 'no') {
+                        return { reason: 'Not willing to attend Basic Training', el: groupOf('#wt-no') };
+                    }
+                    return null;
+            }
+            return null;
+        }
+
+        // The moment a stop answer is chosen: hide the questions after it,
+        // explain why, and turn Continue into Finish.
+        function refreshStop(sec) {
+            if (STOP_SECTIONS.indexOf(sec) === -1) return;
+            const section = document.getElementById('section-' + sec);
+            if (!section) return;
+            const stop = getStop(sec);
+            const row = section.querySelector('.btn-row');
+            const btn = row.querySelector('.btn-primary');
+            let notice = section.querySelector('.stop-notice');
+
+            section.querySelectorAll('.form-group').forEach(g => {
+                const after = !!(stop && stop.el && stop.el !== g &&
+                    (stop.el.compareDocumentPosition(g) & Node.DOCUMENT_POSITION_FOLLOWING));
+                g.classList.toggle('locked', after);
+                g.inert = after;
+            });
+
+            if (stop) {
+                if (!notice) {
+                    notice = document.createElement('div');
+                    notice.className = 'stop-notice';
+                    notice.setAttribute('role', 'status');
+                    notice.innerHTML = '<strong>You can stop here.</strong> Based on this answer you are not currently eligible, so there is no need to answer the rest. If you picked it by mistake, change your answer. Otherwise tap Finish.';
+                    row.parentNode.insertBefore(notice, row);
+                }
+                notice.style.display = 'block';
+                btn.textContent = 'Finish';
+            } else {
+                if (notice) notice.style.display = 'none';
+                btn.textContent = 'Continue';
+            }
+        }
+
+        function endAsNotEligible(reason) {
+            hardStop = true;
+            hardStopReason = reason;
+            submitAndShowResult();
+        }
+
         function validateAndNext(currentSec) {
+            clearError();
             hardStop = false;
             hardStopReason = '';
 
+            // Contact details are needed before anything is sent, even on a stop
+            if (currentSec === 1) {
+                if (!document.getElementById('fullName').value.trim()) return fail('Please enter your full name.');
+                const phoneDigits = document.getElementById('phone').value.replace(/\D/g, '');
+                if (phoneDigits.length < 10) return fail('Please enter your 10-digit phone number.');
+                const emailVal = document.getElementById('email').value.trim();
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return fail('Please enter a valid email address.');
+                if (!document.getElementById('age').value) return fail('Please select your age.');
+            }
+
+            // One answer that makes them not eligible ends the survey right here
+            const stop = getStop(currentSec);
+            if (stop) return endAsNotEligible(stop.reason);
+
             switch(currentSec) {
                 case 1: // Basic Info
-                    if (!document.getElementById('fullName').value.trim()) return alert('Please enter your full name.');
-                    if (!document.getElementById('phone').value.trim()) return alert('Please enter your phone number.');
-                    if (!document.getElementById('email').value.trim()) return alert('Please enter your email address.');
-                    if (!document.getElementById('age').value) return alert('Please select your age.');
-                    if (!document.getElementById('heightFt').value) return alert('Please select your height (feet).');
-                    if (!document.getElementById('heightIn').value) return alert('Please select your height (inches).');
-                    if (!document.getElementById('weight').value) return alert('Please select your weight range.');
+                    if (!document.getElementById('heightFt').value) return fail('Please select your height (feet).');
+                    if (!document.getElementById('heightIn').value) return fail('Please select your height (inches).');
+                    if (!document.getElementById('weight').value) return fail('Please select your weight range.');
                     goToSection(2);
                     break;
 
-                case 2: // Citizenship
+                case 2: { // Citizenship
                     const citizen = getRadioValue('citizen');
-                    if (!citizen) return alert('Please answer the citizenship question.');
-                    if (citizen === 'yes') {
-                        // U.S. Citizen — no further questions needed, proceed
-                        goToSection(3);
-                        return;
-                    }
-                    // They said No to U.S. Citizen — check green card
-                    const gcQ = document.getElementById('greencard-q');
-                    if (gcQ.classList.contains('visible')) {
-                        const gc = getRadioValue('greencard');
-                        if (!gc) return alert('Please answer the Green Card question.');
-                        if (gc === 'yes') {
-                            // Permanent Resident with valid Green Card — proceed
-                            goToSection(3);
-                            return;
-                        }
-                        // No Green Card — hard stop
-                        hardStop = true;
-                        hardStopReason = 'Not a U.S. Citizen or Permanent Resident';
-                        submitAndShowResult();
-                        return;
-                    }
+                    if (!citizen) return fail('Please answer the citizenship question.');
+                    if (citizen === 'no' && !getRadioValue('greencard')) return fail('Please answer the Green Card question.');
                     goToSection(3);
                     break;
+                }
 
-                case 3: // Education
+                case 3: { // Education
                     const inHS = getRadioValue('inHighSchool');
-                    if (!inHS) return alert('Please answer whether you\'re in high school.');
+                    if (!inHS) return fail('Please answer whether you\'re in high school.');
                     if (inHS === 'yes' && !document.getElementById('hsGrade').value) {
-                        return alert('Please select your year in high school.');
+                        return fail('Please select your year in high school.');
                     }
-                    // If not in HS, check diploma
-                    if (inHS === 'no') {
-                        const diploma = getRadioValue('diploma');
-                        if (!diploma) return alert('Please answer the diploma/GED question.');
-                        if (diploma === 'no') {
-                            hardStop = true;
-                            hardStopReason = 'No High School Diploma or GED';
-                            submitAndShowResult();
-                            return;
-                        }
-                    }
+                    if (inHS === 'no' && !getRadioValue('diploma')) return fail('Please answer the diploma/GED question.');
                     goToSection(4);
                     break;
+                }
 
                 case 4: // Legal
-                    const unpaidTickets = getRadioValue('unpaidTickets');
-                    const arrested = getRadioValue('arrested');
-                    const chargesDismissed = getRadioValue('chargesDismissed');
-                    if (!unpaidTickets) return alert('Please answer the unpaid tickets/court appearances question.');
-                    if (!arrested) return alert('Please answer the arrest history question.');
-                    if (!chargesDismissed) return alert('Please answer the dismissed/expunged charges question.');
-                    if (unpaidTickets === 'yes') flags.push('Unpaid tickets or future court appearances (needs review)');
-                    if (arrested === 'yes') flags.push('Prior arrest (needs review)');
-                    if (chargesDismissed === 'yes') flags.push('Charges dismissed, dropped, deferred, expunged or sealed (needs review)');
+                    if (!getRadioValue('unpaidTickets')) return fail('Please answer the unpaid tickets/court appearances question.');
+                    if (!getRadioValue('arrested')) return fail('Please answer the arrest history question.');
+                    if (!getRadioValue('chargesDismissed')) return fail('Please answer the dismissed/expunged charges question.');
                     goToSection(5);
                     break;
 
-                case 5: // Dependents
+                case 5: { // Dependents
                     const numChildren = document.getElementById('numChildren').value;
-                    if (!numChildren && numChildren !== '0') return alert('Please select how many children you have.');
-                    const maritalBoxes = document.querySelectorAll('input[name="maritalStatus"]:checked');
-                    if (maritalBoxes.length === 0) return alert('Please select your marital status.');
-                    const maritalValues = Array.from(maritalBoxes).map(c => c.value);
-                    const childCount = parseInt(numChildren);
-                    if (childCount > 0 && !maritalValues.includes('Married')) {
-                        flags.push('Unmarried with children (dependency waiver may be needed)');
-                    }
-                    if (childCount >= 3) {
-                        flags.push('3+ children (dependency waiver may be needed)');
-                    }
+                    if (!numChildren && numChildren !== '0') return fail('Please select how many children you have.');
+                    if (document.querySelectorAll('input[name="maritalStatus"]:checked').length === 0) return fail('Please select your marital status.');
                     goToSection(6);
                     break;
+                }
 
                 case 6: // Medical
-                    const meds = getRadioValue('meds');
-                    const epipen = getRadioValue('epipen');
-                    const selfHarmScars = getRadioValue('selfHarmScars');
-                    if (!meds) return alert('Please answer the prescription medication question.');
-                    if (!epipen) return alert('Please answer the EpiPen allergy question.');
-                    if (!selfHarmScars) return alert('Please answer the scars/burns question.');
-
-                    // Check at least one checkbox selected
-                    const condBoxes = document.querySelectorAll('input[name="conditions"]:checked');
-                    if (condBoxes.length === 0) return alert('Please select at least one option in the conditions list (or "None of the above").');
-
-                    if (selfHarmScars === 'yes') {
-                        hardStop = true;
-                        hardStopReason = 'Scars or burns that could indicate self harm';
-                        submitAndShowResult();
-                        return;
-                    }
-                    if (meds === 'yes') flags.push('Prescription medication (medical review needed)');
-                    if (epipen === 'yes') flags.push('EpiPen-level allergies (medical review needed)');
-
-                    const condValues = Array.from(condBoxes).map(c => c.value);
-                    if (!condValues.includes('None')) {
-                        flags.push('Medical/education conditions: ' + condValues.join(', '));
-                    }
-
-                    const otherCond = document.getElementById('otherConditions').value.trim();
-                    if (otherCond) {
-                        flags.push('Other conditions noted: ' + otherCond);
-                    }
+                    if (!getRadioValue('meds')) return fail('Please answer the prescription medication question.');
+                    if (!getRadioValue('epipen')) return fail('Please answer the EpiPen allergy question.');
+                    if (!getRadioValue('selfHarmScars')) return fail('Please answer the scars/burns question.');
+                    if (document.querySelectorAll('input[name="conditions"]:checked').length === 0) return fail('Please select at least one option in the conditions list (or "None of the above").');
                     goToSection(7);
                     break;
 
-                case 7: // Tattoos
+                case 7: { // Tattoos
                     const hasTattoos = getRadioValue('hasTattoos');
-                    if (!hasTattoos) return alert('Please answer the tattoo question.');
-                    if (hasTattoos === 'yes') {
-                        const tfnh = getRadioValue('tattooFaceNeckHands');
-                        if (!tfnh) return alert('Please answer whether you have tattoos on your face, neck, or hands.');
-                        if (tfnh === 'yes') {
-                            hardStop = true;
-                            hardStopReason = 'Tattoos on face, neck, or hands';
-                            submitAndShowResult();
-                            return;
-                        }
-                    }
+                    if (!hasTattoos) return fail('Please answer the tattoo question.');
+                    if (hasTattoos === 'yes' && !getRadioValue('tattooFaceNeckHands')) return fail('Please answer whether you have tattoos on your face, neck, or hands.');
                     goToSection(8);
                     break;
+                }
 
-                case 8: // Drugs
+                case 8: { // Drugs
                     const drugs = getRadioValue('drugs');
-                    if (!drugs) return alert('Please answer the drug screening question.');
-                    if (drugs === 'no') {
-                        const rd = getRadioValue('recentDrugs');
-                        if (!rd) return alert('Please answer the recent substance use question.');
-                        flags.push('Cannot pass drug test today (drug review needed)');
-                        if (rd === 'yes') {
-                            flags.push('Substance use in last 30 days (processing delay likely)');
-                        }
-                    }
+                    if (!drugs) return fail('Please answer the drug screening question.');
+                    if (drugs === 'no' && !getRadioValue('recentDrugs')) return fail('Please answer the recent substance use question.');
                     goToSection(9);
                     break;
+                }
 
                 case 9: // Body comp
-                    const bc = getRadioValue('bodyComp');
-                    if (!bc) return alert('Please answer the height/weight standards question.');
-                    if (bc === 'no' || bc === 'unsure') {
-                        flags.push('May not meet height/weight standards (body composition review needed)');
-                    }
+                    if (!getRadioValue('bodyComp')) return fail('Please answer the height/weight standards question.');
                     goToSection(10);
                     break;
 
                 case 10: // Commitment
-                    const tl = getRadioValue('timeline');
-                    const mr = getRadioValue('meetRecruiter');
-                    const wt = getRadioValue('willingTraining');
-                    if (!tl) return alert('Please select how soon you\'re looking to join.');
-                    if (!mr) return alert('Please answer whether you can meet with a recruiter.');
-                    if (!wt) return alert('Please answer the Basic Training question.');
-                    if (wt === 'no') {
-                        hardStop = true;
-                        hardStopReason = 'Not willing to attend Basic Training';
-                        submitAndShowResult();
-                        return;
-                    }
+                    if (!getRadioValue('timeline')) return fail('Please select how soon you\'re looking to join.');
+                    if (!getRadioValue('meetRecruiter')) return fail('Please answer whether you can meet with a recruiter.');
+                    if (!getRadioValue('willingTraining')) return fail('Please answer the Basic Training question.');
                     goToSection(11);
                     break;
             }
+        }
+
+        // Review items are rebuilt from the current answers every time, so going
+        // back and changing an answer can never leave an old or repeated item behind.
+        function computeFlags() {
+            const list = [];
+
+            // Legal
+            if (getRadioValue('unpaidTickets') === 'yes') list.push('Unpaid tickets or future court appearances (needs review)');
+            if (getRadioValue('arrested') === 'yes') list.push('Prior arrest (needs review)');
+            if (getRadioValue('chargesDismissed') === 'yes') list.push('Charges dismissed, dropped, deferred, expunged or sealed (needs review)');
+
+            // Dependents
+            const numChildren = document.getElementById('numChildren').value;
+            const childCount = numChildren ? parseInt(numChildren, 10) : 0;
+            const maritalValues = Array.from(document.querySelectorAll('input[name="maritalStatus"]:checked')).map(c => c.value);
+            if (childCount > 0 && maritalValues.length > 0 && !maritalValues.includes('Married')) {
+                list.push('Unmarried with children (dependency waiver may be needed)');
+            }
+            if (childCount >= 3) list.push('3+ children (dependency waiver may be needed)');
+
+            // Medical
+            if (getRadioValue('meds') === 'yes') list.push('Prescription medication (medical review needed)');
+            if (getRadioValue('epipen') === 'yes') list.push('EpiPen-level allergies (medical review needed)');
+            const condValues = Array.from(document.querySelectorAll('input[name="conditions"]:checked')).map(c => c.value);
+            if (condValues.length > 0 && !condValues.includes('None')) {
+                list.push('Medical/education conditions: ' + condValues.join(', '));
+            }
+            const otherCond = document.getElementById('otherConditions').value.trim();
+            if (otherCond) list.push('Other conditions noted: ' + otherCond);
+
+            // Drugs
+            if (getRadioValue('drugs') === 'no') {
+                list.push('Cannot pass drug test today (drug review needed)');
+                if (getRadioValue('recentDrugs') === 'yes') list.push('Substance use in last 30 days (processing delay likely)');
+            }
+
+            // Body comp
+            const bc = getRadioValue('bodyComp');
+            if (bc === 'no' || bc === 'unsure') list.push('May not meet height/weight standards (body composition review needed)');
+
+            // Final disclosure
+            if (getRadioValue('disclosure') === 'yes') {
+                list.push('Self-disclosed potential disqualifying factor');
+                const detail = document.getElementById('disclosureDetail').value.trim();
+                if (detail) list.push('Disclosure detail: ' + detail);
+            }
+
+            return list;
         }
 
         // ===== CONDITIONAL HANDLERS =====
@@ -1768,9 +1890,12 @@
             if (val === 'yes') {
                 gradeQ.classList.add('visible');
                 diplomaQ.style.display = 'none';
+                // Clear the diploma answer so an old "No" cannot carry over
+                document.querySelectorAll('input[name="diploma"]').forEach(r => r.checked = false);
             } else {
                 gradeQ.classList.remove('visible');
                 diplomaQ.style.display = 'block';
+                document.getElementById('hsGrade').value = '';
             }
         }
 
@@ -1798,6 +1923,8 @@
                 rdQ.classList.add('visible');
             } else {
                 rdQ.classList.remove('visible');
+                // Clear the follow-up so an old answer cannot carry over
+                document.querySelectorAll('input[name="recentDrugs"]').forEach(r => r.checked = false);
             }
         }
 
@@ -1813,17 +1940,21 @@
         // ===== FORM SUBMISSION =====
         function collectAllData() {
             const data = {};
-            data['Full Name'] = document.getElementById('fullName').value;
-            data['Phone'] = document.getElementById('phone').value;
-            data['Email'] = document.getElementById('email').value;
+            data['Full Name'] = document.getElementById('fullName').value.trim();
+            data['Phone'] = document.getElementById('phone').value.trim();
+            data['Email'] = document.getElementById('email').value.trim();
             data['Age'] = document.getElementById('age').value;
-            data['Height'] = document.getElementById('heightFt').value + '\'' + document.getElementById('heightIn').value + '"';
-            data['Weight'] = document.getElementById('weight').value;
-            data['US Citizen'] = getRadioValue('citizen') || 'N/A';
-            data['Valid Green Card'] = getRadioValue('greencard') || 'N/A';
-            data['Currently in High School'] = getRadioValue('inHighSchool') || 'N/A';
-            data['HS Grade'] = document.getElementById('hsGrade').value || 'N/A';
-            data['Diploma/GED'] = getRadioValue('diploma') || 'N/A';
+            const ft = document.getElementById('heightFt').value;
+            const inch = document.getElementById('heightIn').value;
+            data['Height'] = (ft && inch) ? ft + '\'' + inch + '"' : 'N/A';
+            data['Weight'] = document.getElementById('weight').value || 'N/A';
+            const citizen = getRadioValue('citizen');
+            data['US Citizen'] = citizen || 'N/A';
+            data['Valid Green Card'] = (citizen === 'no' && getRadioValue('greencard')) || 'N/A';
+            const inHS = getRadioValue('inHighSchool');
+            data['Currently in High School'] = inHS || 'N/A';
+            data['HS Grade'] = (inHS === 'yes' && document.getElementById('hsGrade').value) || 'N/A';
+            data['Diploma/GED'] = (inHS === 'no' && getRadioValue('diploma')) || 'N/A';
             // Law Violations
             data['Unpaid Tickets/Court Dates'] = getRadioValue('unpaidTickets') || 'N/A';
             data['Ever Arrested'] = getRadioValue('arrested') || 'N/A';
@@ -1840,11 +1971,13 @@
             data['Conditions'] = Array.from(condBoxes2).map(c => c.value).join(', ') || 'N/A';
             data['Other Conditions'] = document.getElementById('otherConditions').value.trim() || 'N/A';
             // Tattoos
-            data['Has Tattoos'] = getRadioValue('hasTattoos') || 'N/A';
-            data['Tattoos on Face/Neck/Hands'] = getRadioValue('tattooFaceNeckHands') || 'N/A';
+            const hasTattoos = getRadioValue('hasTattoos');
+            data['Has Tattoos'] = hasTattoos || 'N/A';
+            data['Tattoos on Face/Neck/Hands'] = (hasTattoos === 'yes' && getRadioValue('tattooFaceNeckHands')) || 'N/A';
             // Drugs
-            data['Can Pass Drug Test Today'] = getRadioValue('drugs') || 'N/A';
-            data['Substance Use Last 30 Days'] = getRadioValue('recentDrugs') || 'N/A';
+            const drugs = getRadioValue('drugs');
+            data['Can Pass Drug Test Today'] = drugs || 'N/A';
+            data['Substance Use Last 30 Days'] = (drugs === 'no' && getRadioValue('recentDrugs')) || 'N/A';
             // Body Comp
             data['Meets Height/Weight'] = getRadioValue('bodyComp') || 'N/A';
             // Commitment
@@ -1853,9 +1986,16 @@
             data['Willing for Basic Training'] = getRadioValue('willingTraining') || 'N/A';
             data['Life Goals'] = document.getElementById('lifeGoals').value.trim() || 'N/A';
             // Disclosure
-            data['Additional Disclosure'] = getRadioValue('disclosure') || 'N/A';
-            data['Disclosure Detail'] = document.getElementById('disclosureDetail').value || 'N/A';
+            const disclosure = getRadioValue('disclosure');
+            data['Additional Disclosure'] = disclosure || 'N/A';
+            data['Disclosure Detail'] = (disclosure === 'yes' && document.getElementById('disclosureDetail').value.trim()) || 'N/A';
             return data;
+        }
+
+        function resultLabelFor(result) {
+            if (result === 'RED') return 'NOT ELIGIBLE';
+            if (result === 'YELLOW') return 'CONDITIONAL - NEEDS REVIEW';
+            return 'APPEARS QUALIFIED';
         }
 
         function buildEmailBody(data, result, flagList) {
@@ -1864,8 +2004,14 @@
 
             if (result === 'RED') {
                 body += '*** RESULT: NOT ELIGIBLE ***\n';
-                body += 'Hard Stop Reason: ' + hardStopReason + '\n\n';
-            } else if (flagList.length > 0) {
+                body += 'Reason: ' + hardStopReason + '\n';
+                body += 'The survey ended at this answer. Questions after it show N/A.\n\n';
+                if (flagList.length > 0) {
+                    body += 'OTHER ITEMS FROM THE ANSWERS GIVEN:\n';
+                    flagList.forEach(f => body += '  - ' + f + '\n');
+                    body += '\n';
+                }
+            } else if (result === 'YELLOW') {
                 body += '*** RESULT: CONDITIONAL - NEEDS REVIEW ***\n\n';
                 body += 'FLAGS:\n';
                 flagList.forEach(f => body += '  - ' + f + '\n');
@@ -1884,8 +2030,7 @@
 
         async function sendToWeb3Forms(data, result, flagList) {
             const emailBody = buildEmailBody(data, result, flagList);
-
-            const resultLabel = result === 'RED' ? 'NOT ELIGIBLE' : (flagList.length > 0 ? 'CONDITIONAL - NEEDS REVIEW' : 'APPEARS QUALIFIED');
+            const resultLabel = resultLabelFor(result);
 
             const payload = {
                 access_key: WEB3FORMS_KEY,
@@ -1897,6 +2042,7 @@
                 'Phone': data['Phone'],
                 'Email': data['Email'],
                 'Result': resultLabel,
+                'Not Eligible Reason': result === 'RED' ? hardStopReason : 'None',
                 'Flags': flagList.length > 0 ? flagList.join('; ') : 'None',
                 'Referred By': referralSource,
             };
@@ -1905,7 +2051,8 @@
                 const resp = await fetch('https://api.web3forms.com/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    keepalive: true
                 });
                 const json = await resp.json();
                 return json.success;
@@ -1917,7 +2064,6 @@
 
         async function sendSMS(data, result) {
             const firstName = data['Full Name'].split(' ')[0];
-            const resultLabel = hardStop ? 'RED' : (flags.length > 0 ? 'YELLOW' : 'GREEN');
             try {
                 await fetch('/.netlify/functions/send-sms', {
                     method: 'POST',
@@ -1925,8 +2071,9 @@
                     body: JSON.stringify({
                         phone: data['Phone'],
                         firstName: firstName,
-                        result: resultLabel
-                    })
+                        result: result
+                    }),
+                    keepalive: true
                 });
             } catch (e) {
                 console.error('SMS send failed:', e);
@@ -1934,25 +2081,34 @@
         }
 
         async function submitAndShowResult() {
-            const data = collectAllData();
-            const result = hardStop ? 'RED' : 'GREEN';
+            // One submission per person, even on a double tap
+            if (submitted) return;
+            submitted = true;
 
-            // Save to Supabase (non-blocking)
+            flags = computeFlags();
+            const data = collectAllData();
+            // One result, used everywhere: RED (not eligible), YELLOW (needs review), GREEN
+            const result = hardStop ? 'RED' : (flags.length > 0 ? 'YELLOW' : 'GREEN');
+            const savedFlags = hardStop ? ['NOT ELIGIBLE: ' + hardStopReason].concat(flags) : flags;
+
+            // Save to Supabase (non-blocking; keepalive lets it finish if they tap a link)
             try {
               const fullName = data['Full Name'] || '';
-              const nameParts = fullName.trim().split(' ');
+              const nameParts = fullName.trim().split(/\s+/);
               const firstName = nameParts[0] || '';
               const lastName = nameParts.slice(1).join(' ') || firstName;
               fetch('/.netlify/functions/save-to-supabase', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                keepalive: true,
                 body: JSON.stringify({
                   form_type: 'eligibility',
                   first_name: firstName,
                   last_name: lastName,
                   email: data['Email'] || '',
                   eligibility_result: result,
-                  eligibility_flags: flags,
+                  eligibility_flags: savedFlags,
+                  hard_stop_reason: hardStop ? hardStopReason : '',
                   ...data
                 })
               }).catch(() => {});
@@ -1962,14 +2118,22 @@
             sendToWeb3Forms(data, result, flags);
             sendSMS(data, result);
 
-            if (hardStop) {
+            if (result === 'RED') {
                 showResult('red');
-            } else if (flags.length > 0) {
+            } else if (result === 'YELLOW') {
                 // Show yellow result with flags
                 const yellowContainer = document.getElementById('yellowFlags');
-                yellowContainer.innerHTML = '<div class="result-flags"><div class="result-flags-title">Items for Recruiter Review</div>' +
-                    flags.map(f => '<div class="flag-item"><div class="flag-dot yellow"></div>' + f + '</div>').join('') +
-                    '</div>';
+                yellowContainer.innerHTML = '<div class="result-flags"><div class="result-flags-title">Items for Recruiter Review</div></div>';
+                const listEl = yellowContainer.firstChild;
+                flags.forEach(f => {
+                    const item = document.createElement('div');
+                    item.className = 'flag-item';
+                    const dot = document.createElement('div');
+                    dot.className = 'flag-dot yellow';
+                    item.appendChild(dot);
+                    item.appendChild(document.createTextNode(f));
+                    listEl.appendChild(item);
+                });
                 showResult('yellow');
             } else {
                 showResult('green');
@@ -1977,14 +2141,8 @@
         }
 
         async function submitForm() {
-            const disc = getRadioValue('disclosure');
-            if (!disc) return alert('Please answer the final disclosure question.');
-
-            if (disc === 'yes') {
-                flags.push('Self-disclosed potential disqualifying factor');
-                const detail = document.getElementById('disclosureDetail').value;
-                if (detail) flags.push('Disclosure detail: ' + detail);
-            }
+            clearError();
+            if (!getRadioValue('disclosure')) return fail('Please answer the final disclosure question.');
 
             const btn = document.getElementById('submitBtn');
             const spinner = document.getElementById('submitSpinner');

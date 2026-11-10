@@ -33,7 +33,9 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { form_type, first_name, last_name, email } = data;
+  const { first_name, last_name, email } = data;
+  // The full application page sends form_type "apply"; the table only has application_* columns
+  const form_type = data.form_type === 'apply' ? 'application' : data.form_type;
   if (!form_type || !first_name || !last_name || !email) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing required fields (form_type, first_name, last_name, email)' }) };
   }
@@ -86,6 +88,10 @@ exports.handler = async (event) => {
         }
       );
       const result = await updateRes.json();
+      if (!updateRes.ok) {
+        console.error(`Supabase update FAILED for ${emailLower} (${form_type}):`, updateRes.status, JSON.stringify(result));
+        return { statusCode: 200, headers, body: JSON.stringify({ success: true, saved: false, warning: 'Database save failed but form submission succeeded' }) };
+      }
       console.log(`Updated recruit ${emailLower} with ${form_type} data`);
       return { statusCode: 200, headers, body: JSON.stringify({ success: true, action: 'updated', recruit: emailLower }) };
     } else {
@@ -105,6 +111,10 @@ exports.handler = async (event) => {
         }
       );
       const result = await insertRes.json();
+      if (!insertRes.ok) {
+        console.error(`Supabase insert FAILED for ${emailLower} (${form_type}):`, insertRes.status, JSON.stringify(result));
+        return { statusCode: 200, headers, body: JSON.stringify({ success: true, saved: false, warning: 'Database save failed but form submission succeeded' }) };
+      }
       console.log(`Created recruit ${emailLower} with ${form_type} data`);
       return { statusCode: 200, headers, body: JSON.stringify({ success: true, action: 'created', recruit: emailLower }) };
     }
