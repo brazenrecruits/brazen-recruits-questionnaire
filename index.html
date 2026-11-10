@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Fallback router: if a subdomain's home address ever lands on this page,
+        // send the visitor to the page that subdomain is for.
+        (function () {
+            var pages = { form: 'appointment', apply: 'apply', application: 'apply', shortapp: 'shortapp',
+                faq: 'faq', '3things': 'faq', parttime: 'part-time', refer: 'refer', packet: 'packet' };
+            var sub = location.hostname.split('.')[0];
+            if (/\.brazenrecruits\.com$/.test(location.hostname) && pages[sub] && (location.pathname === '/' || location.pathname === '/index.html')) {
+                location.replace('/' + pages[sub] + '.html' + location.search);
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TXARNG Pre-Qualification | SGT Kara Andrews</title>

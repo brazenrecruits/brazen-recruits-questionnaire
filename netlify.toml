@@ -2,77 +2,66 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# Host-based routing: serve the correct page for each subdomain
-# The "from" catches all paths, "to" serves the right HTML file
-# Status 200 = rewrite (URL stays clean, content changes)
+# Domain routing: each subdomain's home address serves its own page.
+# The earlier rules used conditions = {Host = [...]}, which Netlify does not apply,
+# so every subdomain was showing the eligibility survey. These use the full
+# address in "from" instead. Only "/" is rewritten, so images and functions
+# on every subdomain keep working. index.html also carries a fallback router.
+# admin.brazenrecruits.com is a separate Netlify site (brazenrecruits-command).
 
 [[redirects]]
-  from = "/*"
+  from = "https://form.brazenrecruits.com/"
   to = "/appointment.html"
   status = 200
   force = true
-  conditions = {Host = ["form.brazenrecruits.com"]}
 
-# Admin dashboard — recruit tracker for Kara (password-protected)
 [[redirects]]
-  from = "/*"
-  to = "/admin.html"
-  status = 200
-  force = true
-  conditions = {Host = ["admin.brazenrecruits.com"]}
-
-# Master application — full standalone form capturing everything Kara needs
-# Also serves the legacy application.brazenrecruits.com URL
-[[redirects]]
-  from = "/*"
+  from = "https://apply.brazenrecruits.com/"
   to = "/apply.html"
   status = 200
   force = true
-  conditions = {Host = ["apply.brazenrecruits.com", "application.brazenrecruits.com"]}
 
-# Short application — standalone pre-screening form (references, residences, travel, ID)
 [[redirects]]
-  from = "/*"
+  from = "https://application.brazenrecruits.com/"
+  to = "/apply.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://shortapp.brazenrecruits.com/"
   to = "/shortapp.html"
   status = 200
   force = true
-  conditions = {Host = ["shortapp.brazenrecruits.com"]}
 
 [[redirects]]
-  from = "/*"
+  from = "https://faq.brazenrecruits.com/"
   to = "/faq.html"
   status = 200
   force = true
-  conditions = {Host = ["faq.brazenrecruits.com"]}
 
 [[redirects]]
-  from = "/*"
+  from = "https://3things.brazenrecruits.com/"
+  to = "/faq.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://parttime.brazenrecruits.com/"
   to = "/part-time.html"
   status = 200
   force = true
-  conditions = {Host = ["parttime.brazenrecruits.com"]}
 
 [[redirects]]
-  from = "/*"
+  from = "https://refer.brazenrecruits.com/"
   to = "/refer.html"
   status = 200
   force = true
-  conditions = {Host = ["refer.brazenrecruits.com"]}
-
-# 3things serves the same page as faq
-[[redirects]]
-  from = "/*"
-  to = "/faq.html"
-  status = 200
-  force = true
-  conditions = {Host = ["3things.brazenrecruits.com"]}
 
 [[redirects]]
-  from = "/*"
+  from = "https://packet.brazenrecruits.com/"
   to = "/packet.html"
   status = 200
   force = true
-  conditions = {Host = ["packet.brazenrecruits.com"]}
 
 # eligibility.brazenrecruits.com serves index.html (the default),
 # so no redirect rule is needed — it just works.
